@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#050505">
   <title>تماريني | Galaxy Gym</title>
-  <meta name="description" content="خطّط لتمرينك واحسب أقراص البار">
+  <meta name="description" content="سجّل تمارينك وشوف ملخّص شهرك">
   <meta name="robots" content="noindex, nofollow">
   <link rel="canonical" href="https://yallarideapp.github.io/galaxy-gym/workout/">
   <link rel="alternate" hreflang="ar" href="https://yallarideapp.github.io/galaxy-gym/workout/">
   <link rel="alternate" hreflang="en" href="https://yallarideapp.github.io/galaxy-gym/en/workout/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="تماريني | Galaxy Gym">
-  <meta property="og:description" content="خطّط لتمرينك واحسب أقراص البار">
+  <meta property="og:description" content="سجّل تمارينك وشوف ملخّص شهرك">
   <meta property="og:url" content="https://yallarideapp.github.io/galaxy-gym/workout/">
   <meta property="og:image" content="https://yallarideapp.github.io/galaxy-gym/assets/gym.webp">
   <link rel="icon" href="/galaxy-gym/assets/brand.webp" type="image/webp">
@@ -22,8 +22,9 @@
   <link rel="stylesheet" href="/galaxy-gym/site.css">
 
   <link rel="stylesheet" href="/galaxy-gym/workout.css">
-  <script id="workout-copy" type="application/json">{"empty":"اختر تمريناً لتبدأ خطتك.","totals":"التمارين {0}، المجموعات {1}","saved":"تم حفظ الخطة في هذا المتصفح.","noStorage":"تعذّر حفظ الخطة في هذا المتصفح. قد تفقد التغييرات عند إغلاق الصفحة.","removed":"تم حذف التمرين.","confirmReset":"هل تريد مسح جميع تمارين الخطة؟","resetDone":"تم مسح الخطة.","invalidCount":"أدخل عدداً صحيحاً من {0} إلى {1}.","rowControl":"{0}: {1}","targetLowerThanBar":"اكتب وزناً كلياً يساوي وزن البار أو يزيد عنه.","plateExact":"الوزن الكلي {0} كغ","plateApproximate":"أقرب وزن ممكن {0} كغ","perSide":"{0} كغ على كل جانب","emptyBar":"ارفع البار فارغاً بهذه الاختيارات."}</script>
+  <script id="workout-copy" type="application/json">{"empty":"اختر تمريناً لتبدأ خطتك.","totals":"التمارين {0}، المجموعات {1}","saved":"تم حفظ الخطة في هذا المتصفح.","noStorage":"تعذّر حفظ الخطة في هذا المتصفح. قد تفقد التغييرات عند إغلاق الصفحة.","removed":"تم حذف التمرين.","confirmReset":"هل تريد مسح جميع تمارين الخطة؟","resetDone":"تم مسح الخطة.","invalidCount":"أدخل عدداً صحيحاً من {0} إلى {1}.","rowControl":"{0}: {1}","targetLowerThanBar":"اكتب وزناً كلياً يساوي وزن البار أو يزيد عنه.","plateExact":"الوزن الكلي {0} كغ","plateApproximate":"أقرب وزن ممكن {0} كغ","perSide":"{0} كغ على كل جانب","emptyBar":"ارفع البار فارغاً بهذه الاختيارات.","logEmpty":"ما في تمارين مسجّلة بهذا الشهر.","logSaved":"انضاف التمرين إلى سجلّك.","logRemoved":"انحذف التمرين من السجل.","logConfirmRemove":"بدك تحذف هذا التمرين من السجل؟","logNoStorage":"تعذّر الحفظ في هذا المتصفح.","nameRequired":"اكتب شو لعبت.","minutesInvalid":"اكتب المدة بالدقائق، من 1 إلى 600.","dateInvalid":"اختر تاريخاً لا يتجاوز اليوم.","timeHM":"{0} س {1} د","timeH":"{0} س","timeM":"{0} د","compareMore":"أكثر من الشهر الماضي بـ {0}","compareLess":"أقل من الشهر الماضي بـ {0}","compareSame":"نفس عدد تمارين الشهر الماضي","recap":"ملخّص {0}: التمارين {1}، أيام التمرين {2}، الوقت {3}.","dayCount":"{0}، التمارين {1}","remove":"حذف","removeLabel":"حذف: {0}","showAll":"عرض كل تمارين الشهر ({0})","showLess":"عرض أقل","weightSaved":"انحفظ وزن اليوم.","weightInvalid":"اكتب وزناً من 20 إلى 400 كغ.","weightRemoved":"انحذف القياس.","weightEmpty":"ما في قياسات بعد.","weightChange":"التغيّر في {0}: {1} كغ","weightChart":"خط الوزن لآخر {0} قياسات، من {1} إلى {2} كغ","kg":"كغ","fatReading":"الدهون {0}%","exported":"نزلت النسخة.","imported":"رجعت النسخة. التمارين {0}، قياسات الوزن {1}.","importFailed":"الملف مش نسخة من السجل.","planNote":"التمارين {0}، المجموعات {1}","planNameMore":"{0} وغيرها","planNeedsExercise":"أضف تمريناً للخطة أولاً.","planReady":"عدّل الاسم والمدة ثم اضغط «سجّل التمرين»."}</script>
   <script src="/galaxy-gym/workout.js" defer></script>
+  <script src="/galaxy-gym/workout-log.js" type="module"></script>
 
   <script src="/galaxy-gym/site.js" defer></script>
 </head>
@@ -44,13 +45,76 @@
   <dialog class="site-menu panel-dialog" id="site-menu" aria-label="القائمة">
     <div class="panel-dialog-body">
       <div class="panel-dialog-head"><a class="brand" href="/galaxy-gym/"><span class="brand-mark" aria-hidden="true"><img src="/galaxy-gym/assets/brand.webp" alt="" width="40" height="40"></span><span class="brand-type"><strong dir="ltr">GALAXY <span>GYM</span></strong><small>نادي المجرة</small></span></a><button data-close-dialog class="icon-button" type="button" aria-label="إغلاق" autofocus><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
-      <nav aria-label="القائمة"><a href="/galaxy-gym/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg></span><span><strong>الرئيسية</strong><small>الصفحة الرئيسية لنادي المجرة</small></span></a><a href="/galaxy-gym/calculators/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M9 12h.01M15 12h.01M9 16h.01M15 16h.01"/></svg></span><span><strong>حاسبة اللياقة</strong><small>دخّل بياناتك مرة وحدة واحسب السعرات والبروتين ومؤشرات اللياقة</small></span></a><a href="/galaxy-gym/training/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 17.5 11-11M5 14l5 5m4-14 5 5M3 16l5 5m8-18 5 5"/></svg></span><span><strong>التدريب</strong><small>القوة واللياقة ومتابعة المدرّبين</small></span></a><a href="/galaxy-gym/club/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 20 7v10l-8 4.5L4 17V7Z"/><path d="M12 12v9.5M4 7l8 5 8-5"/></svg></span><span><strong>النادي</strong><small>جولة بالصور داخل الصالة</small></span></a><a href="/galaxy-gym/prices/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span><strong>الاشتراكات</strong><small>جهّز استفسارك عن الاشتراك</small></span></a><a href="/galaxy-gym/workout/" aria-current="page"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h11M9 12h11M9 19h11M4 5h.01M4 12h.01M4 19h.01"/></svg></span><span><strong>تماريني</strong><small>خطّط لتمرينك واحسب أقراص البار</small></span></a><a href="/galaxy-gym/contact/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span><strong>تواصل</strong><small>الموقع والاتجاهات والاستفسارات</small></span></a></nav>
+      <nav aria-label="القائمة"><a href="/galaxy-gym/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg></span><span><strong>الرئيسية</strong><small>الصفحة الرئيسية لنادي المجرة</small></span></a><a href="/galaxy-gym/calculators/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M9 12h.01M15 12h.01M9 16h.01M15 16h.01"/></svg></span><span><strong>حاسبة اللياقة</strong><small>دخّل بياناتك مرة وحدة واحسب السعرات والبروتين ومؤشرات اللياقة</small></span></a><a href="/galaxy-gym/training/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 17.5 11-11M5 14l5 5m4-14 5 5M3 16l5 5m8-18 5 5"/></svg></span><span><strong>التدريب</strong><small>القوة واللياقة ومتابعة المدرّبين</small></span></a><a href="/galaxy-gym/club/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 20 7v10l-8 4.5L4 17V7Z"/><path d="M12 12v9.5M4 7l8 5 8-5"/></svg></span><span><strong>النادي</strong><small>جولة بالصور داخل الصالة</small></span></a><a href="/galaxy-gym/prices/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span><strong>الاشتراكات</strong><small>جهّز استفسارك عن الاشتراك</small></span></a><a href="/galaxy-gym/workout/" aria-current="page"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h11M9 12h11M9 19h11M4 5h.01M4 12h.01M4 19h.01"/></svg></span><span><strong>تماريني</strong><small>سجّل تمارينك وشوف ملخّص شهرك</small></span></a><a href="/galaxy-gym/contact/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span><strong>تواصل</strong><small>الموقع والاتجاهات والاستفسارات</small></span></a></nav>
       <div class="menu-contact"><a class="button" href="tel:+962791081877"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-4l-5-2-2 2a14 14 0 0 1-6-6l2-2-2-5Z"/></svg><bdi dir="ltr">079 108 1877</bdi></a><a class="button button-quiet" href="https://wa.me/962791081877?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D9%85%D9%85%D9%83%D9%86%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AC%D8%A7%D9%84%D8%A7%D9%83%D8%B3%D9%8A%20%D8%AC%D9%8A%D9%85%D8%9F" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 9 9 0 0 1-3.6-.8L4 21l1.8-4.9a9 9 0 0 1-.8-3.6A8.4 8.4 0 0 1 13.5 4h.5a8.4 8.4 0 0 1 7 7Z"/><path d="M10 12h.01m3 0h.01m3 0h.01"/></svg>راسلنا على واتساب</a></div>
     </div>
   </dialog>
-  <main id="main" tabindex="-1"><section class="container page-hero"><h1>خطّط لتمرينك.</h1><p>رتّب تمارينك قبل ما تبدأ، واحسب الأقراص اللي بتحطها على البار.</p></section>
+  <main id="main" tabindex="-1"><section class="container page-hero"><h1>تمارينك وسجلّك.</h1><p>سجّل كل تمرين بتلعبه وشوف ملخّص شهرك، خطّط تمرينك الجاي، واحسب أقراص البار.</p></section>
   <div class="container workout">
     <noscript><p class="workout-notice">فعّل JavaScript في متصفحك لتستخدم هذه الأدوات.</p></noscript>
+    <nav class="workout-jump" aria-label="انتقل إلى"><a href="#log">سجلّي</a><a href="#plan">خطة التمرين</a><a href="#plates">أقراص البار</a></nav>
+    <section class="workout-panel workout-log" id="log" aria-labelledby="log-title" data-log>
+      <h2 id="log-title">سجلّي</h2>
+      <p class="workout-summary">سجّل تمرينك بعد ما تخلص، وآخر الشهر بتشوف كم مرة لعبت وكم ساعة.</p>
+      <p class="log-recap" data-log-recap hidden></p>
+      <div class="log-layout">
+        <div class="log-month">
+          <div class="log-month-nav">
+            <button class="icon-button" type="button" data-log-previous aria-label="الشهر السابق"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+            <h3 data-log-title aria-live="polite"></h3>
+            <button class="icon-button" type="button" data-log-next aria-label="الشهر التالي"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+          </div>
+          <dl class="log-stats"><div class="log-stat-main"><dd data-log-stat="sessions">—</dd><dt>التمارين</dt></div><div><dd data-log-stat="time">—</dd><dt>الوقت</dt></div><div><dd data-log-stat="days">—</dd><dt>أيام التمرين</dt></div><div><dd data-log-stat="average">—</dd><dt>معدل التمرين</dt></div></dl>
+          <p class="log-compare" data-log-compare hidden></p>
+          <div class="log-calendar" data-log-calendar role="group" aria-label="أيام الشهر. اختر يوماً لتسجّل تمرينه."></div>
+        </div>
+        <form class="log-form" data-log-form autocomplete="off" novalidate>
+          <h3>سجّل تمرين</h3>
+          <label>شو لعبت؟<input name="name" type="text" maxlength="60" placeholder="مثال: صدر وترايسبس" enterkeyhint="done"></label>
+          <div class="log-quick" role="group" aria-label="اختيارات سريعة"><button type="button" data-log-quick>صدر</button><button type="button" data-log-quick>ظهر</button><button type="button" data-log-quick>أرجل</button><button type="button" data-log-quick>أكتاف</button><button type="button" data-log-quick>ذراعين</button><button type="button" data-log-quick>كارديو</button><button type="button" data-log-quick>جسم كامل</button></div>
+          <div class="log-form-row">
+            <label>التاريخ<input name="date" type="date" required></label>
+            <label>المدة<span class="workout-input"><input name="minutes" type="number" inputmode="numeric" min="1" max="600" step="1" value="60" required><span class="workout-unit">دقيقة</span></span></label>
+          </div>
+          <label>ملاحظة (اختياري)<input name="note" type="text" maxlength="120" placeholder="مثال: زدت وزن السكوات" enterkeyhint="done"></label>
+          <button class="button" type="submit">سجّل التمرين</button>
+          <p class="workout-status" data-log-status role="status"></p>
+        </form>
+      </div>
+      <div class="log-sessions">
+        <h3>تمارين الشهر</h3>
+        <p class="workout-empty" data-log-empty>ما في تمارين مسجّلة بهذا الشهر.</p>
+        <ul class="log-list is-short" data-log-list></ul>
+        <button class="text-link log-more" type="button" data-log-more hidden></button>
+      </div>
+      <template id="log-row">
+        <li class="log-row">
+          <span class="log-row-day"><b data-log-day></b><small data-log-weekday></small></span>
+          <div><strong data-log-name></strong><span data-log-note></span></div>
+          <b data-log-minutes></b>
+          <button type="button" class="log-remove" data-log-remove><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </li>
+      </template>
+      <div class="log-weight">
+        <div class="log-weight-head">
+          <div><h3>وزني</h3><p class="workout-summary">سجّل وزنك كل فترة وشوف كيف بيتغيّر.</p></div>
+          <p class="log-weight-latest" data-weight-latest hidden><b></b> <span>كغ</span></p>
+        </div>
+        <svg class="log-weight-chart" data-weight-chart viewBox="0 0 600 120" preserveAspectRatio="none" role="img" hidden><polyline fill="none"/><g></g></svg>
+        <p class="log-compare" data-weight-change hidden></p>
+        <form class="log-weight-form" data-weight-form autocomplete="off" novalidate>
+          <label>وزن اليوم<span class="workout-input"><input name="kg" type="number" inputmode="decimal" min="20" max="400" step="0.1" required><span class="workout-unit">كغ</span></span></label>
+          <button class="button button-quiet" type="submit">أضف الوزن</button>
+        </form>
+        <p class="workout-status" data-weight-status role="status"></p>
+        <details class="log-weight-all" data-weight-all hidden><summary>كل القياسات</summary><ul class="log-list" data-weight-list></ul></details>
+      </div>
+      <div class="log-backup">
+        <p>السجل محفوظ على هذا الجهاز فقط، وما في حساب. نزّل نسخة قبل ما تغيّر تلفونك أو تمسح بيانات المتصفح.</p>
+        <div><button class="button button-quiet button-small" type="button" data-log-export>نزّل نسخة من سجلّي</button><button class="button button-quiet button-small" type="button" data-log-import-open>استرجع نسخة</button><input type="file" accept="application/json,.json" data-log-import hidden></div>
+        <p class="workout-status" data-backup-status role="status"></p>
+      </div>
+    </section>
     <section class="workout-panel" id="plan" aria-labelledby="plan-title">
       <h2 id="plan-title">خطة التمرين</h2>
       <p class="workout-summary">أضف تمارينك وعدّل المجموعات والتكرارات. تُحفظ الخطة في هذا المتصفح.</p>
@@ -92,7 +156,7 @@
       </template>
       <div class="workout-plan-footer">
         <output id="plan-totals" aria-live="polite"></output>
-        <button id="reset-workout" class="button button-quiet button-small" type="button" disabled>مسح الخطة</button>
+        <div class="workout-plan-actions"><button id="log-plan" class="button button-small" type="button" disabled>سجّل الخطة كتمرين</button><button id="reset-workout" class="button button-quiet button-small" type="button" disabled>مسح الخطة</button></div>
       </div>
       <p class="workout-status" id="plan-status" role="status"></p>
     </section>

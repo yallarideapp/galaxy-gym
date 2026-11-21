@@ -3,6 +3,7 @@ import {
   restingEnergyFromLeanMass, fatFreeMass, bodyFatLevel, muscleLevel, healthyFatWeightRange,
   calorieTarget, goalMacros, proteinPerKg, waterRange, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
+import { recordWeight, today } from "./training-log.js";
 
 const t = JSON.parse(document.getElementById("fitness-copy").textContent);
 const root = document.querySelector("[data-calc]");
@@ -285,4 +286,19 @@ root.addEventListener("change", (event) => {
   if (event.target.matches('input[type="radio"], select')) update();
 });
 root.querySelector("form").addEventListener("submit", (event) => event.preventDefault());
+
+// "Save today's weight to my log": only on this button does anything from the calculator get stored.
+const saveStatus = root.querySelector("[data-save-status]");
+root.querySelector("[data-save-weight]").addEventListener("click", () => {
+  const weight = read("weight");
+  if (weight === null) {
+    inputs.get("weight").control.focus();
+    return;
+  }
+  const fat = read("bodyfat", { optional: true });
+  const saved = recordWeight(today(), weight, fat ?? undefined);
+  saveStatus.hidden = false;
+  saveStatus.querySelector("span").textContent = saved ? t.weightSaved : t.saveFailed;
+  saveStatus.querySelector("a").hidden = !saved;
+});
 update();

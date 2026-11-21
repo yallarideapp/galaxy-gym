@@ -16,6 +16,7 @@ const empty = document.querySelector('#empty-workout');
 const totals = document.querySelector('#plan-totals');
 const status = document.querySelector('#plan-status');
 const resetButton = document.querySelector('#reset-workout');
+const logPlanButton = document.querySelector('#log-plan');
 const exerciseNames = new Map([...exercise.options].filter((option) => option.value).map((option) => [option.value, option.textContent]));
 const maxSets = Number(sets.max);
 const maxReps = Number(reps.max);
@@ -62,6 +63,7 @@ function renderTotals() {
   empty.hidden = plan.length > 0;
   totals.textContent = interpolate(strings.totals, number.format(plan.length), number.format(plan.reduce((sum, item) => sum + item.sets, 0)));
   resetButton.disabled = !plan.length;
+  logPlanButton.disabled = !plan.length;
 }
 
 function renderPlan() {
@@ -119,6 +121,14 @@ planForm.addEventListener('submit', (event) => {
   renderPlan();
   savePlan(strings.saved);
   exercise.focus();
+});
+
+// Hands the finished plan to the log (workout-log.js), which fills in its form for the member to confirm.
+logPlanButton.addEventListener('click', () => {
+  if (!plan.length) return;
+  document.dispatchEvent(new CustomEvent('galaxy:log-plan', {
+    detail: { names: plan.map((entry) => exerciseNames.get(entry.id)), sets: plan.reduce((sum, entry) => sum + entry.sets, 0) },
+  }));
 });
 
 resetButton.addEventListener('click', () => {
