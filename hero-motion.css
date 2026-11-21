@@ -1,0 +1,61 @@
+/* Home hero: a night sky, and a cluster of hexagon lights that switch on once when the page opens. */
+.hero{position:relative;isolation:isolate;overflow:clip}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url("/galaxy-gym/assets/stars.svg") 0 0/60rem auto;
+  -webkit-mask-image:linear-gradient(#000 40%,transparent 97%);mask-image:linear-gradient(#000 40%,transparent 97%)}
+.hero::after{content:"";position:absolute;inset:0;z-index:-3;
+  background:
+    radial-gradient(52% 60% at 24% 58%,rgba(246,174,69,.13),transparent 72%),
+    radial-gradient(42% 52% at 88% 6%,rgba(99,213,230,.11),transparent 70%)}
+[dir="ltr"] .hero::after{transform:scaleX(-1)}
+
+.hero-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(1.5rem,4vw,4rem);min-block-size:min(47rem,calc(100svh - var(--header)));padding-block:clamp(1.75rem,4.5vw,3.5rem)}
+.hero h1{font-size:clamp(3.1rem,7.4vw,6.4rem);font-weight:800;line-height:1.24;letter-spacing:-.015em}
+html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
+.hero h1 span{display:block}
+.hero-lede{max-inline-size:30rem;margin-block:1.1rem 1.7rem;color:var(--muted);font-size:clamp(1rem,1.5vw,1.14rem)}
+.hero-place{display:inline-flex;align-items:center;gap:.45rem;min-block-size:2.75rem;margin-block-start:1rem;color:var(--muted);font-size:.94rem}
+.hero-place svg{color:var(--sun)}
+.hero-place:hover{color:var(--text)}
+
+.hex-cluster{position:relative;justify-self:center;inline-size:min(100%,34rem,60svh);aspect-ratio:.792;--px:0;--py:0}
+.hex-tiles{display:contents}
+.hex{position:absolute;inset-inline-start:calc(var(--x) - var(--w) / 2);inset-block-start:var(--y);inline-size:var(--w);aspect-ratio:100/115.47;translate:calc(var(--px) * var(--depth) * 1px) calc(-50% + var(--py) * var(--depth) * 1px)}
+.hex-window{position:absolute;inset:0;overflow:hidden;background:var(--deck);-webkit-mask:var(--hex-mask) center/100% 100% no-repeat;mask:var(--hex-mask) center/100% 100% no-repeat}
+.hex-window img{inline-size:100%;block-size:100%;object-fit:cover;transition:transform .7s var(--ease)}
+.hex-window::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(9,13,28,.86),rgba(9,13,28,0) 46%)}
+.hex-rim{position:absolute;inset:0;inline-size:100%;block-size:100%;overflow:visible;fill:none;stroke:rgba(241,239,232,.6);stroke-width:1.5;filter:drop-shadow(0 0 7px rgba(241,239,232,.35));transition:stroke .25s,filter .25s;pointer-events:none}
+.hex-rim path{vector-effect:non-scaling-stroke}
+.hex-caption{position:absolute;inset-inline:12%;inset-block-end:15%;font-weight:600;font-size:clamp(.74rem,1.25vw,.92rem);line-height:1.4;text-align:center}
+.hex-main .hex-caption{inset-block-end:17%;font-size:clamp(.9rem,1.5vw,1.08rem)}
+.hex-photo:hover .hex-rim,.hex-photo:focus-visible .hex-rim{stroke:var(--sun);filter:drop-shadow(0 0 10px rgba(246,174,69,.85))}
+.hex-photo:hover .hex-window img{transform:scale(1.07)}
+.hex-photo:focus-visible{outline:0}
+.hex-light .hex-rim{stroke-width:1.6}
+.hex-ion .hex-rim{fill:rgba(99,213,230,.07);stroke:var(--ion);filter:drop-shadow(0 0 9px rgba(99,213,230,.75))}
+.hex-sun .hex-rim{fill:rgba(246,174,69,.08);stroke:var(--sun);filter:drop-shadow(0 0 9px rgba(246,174,69,.75))}
+
+.hex-orbit{position:absolute;z-index:-1;inset-inline-start:-30%;inset-block-start:50%;inline-size:160%;translate:0 -50%;overflow:visible}
+[dir="rtl"] .hex-orbit{scale:-1 1}
+.hex-orbit path{fill:none;stroke:rgba(169,175,203,.26);stroke-width:1;vector-effect:non-scaling-stroke}
+.hex-orbit circle{fill:var(--sun);filter:drop-shadow(0 0 5px var(--sun))}
+
+@media (prefers-reduced-motion:no-preference){
+  .hex-rim{animation:hex-on .85s linear both;animation-delay:calc(var(--i) * 95ms + 120ms)}
+  .hex-window,.hex-caption{animation:hex-develop .75s var(--ease) both;animation-delay:calc(var(--i) * 95ms + 330ms)}
+  .hex-orbit{animation:hex-develop 1.2s ease-out .9s both}
+}
+@keyframes hex-on{0%{opacity:0}9%{opacity:.95}15%{opacity:.12}24%{opacity:1}31%{opacity:.35}42%,100%{opacity:1}}
+@keyframes hex-develop{from{opacity:0}}
+
+@media (prefers-reduced-motion:reduce){
+  .hex-orbit circle{display:none}
+}
+
+@media (max-width:47rem){
+  .hero-layout{grid-template-columns:minmax(0,1fr);gap:1.25rem;min-block-size:0;padding-block:1.6rem 2.25rem}
+  .hero h1{font-size:clamp(2.9rem,14.5vw,4.4rem)}
+  .hero-lede{margin-block:.8rem 1.25rem}
+  .hero-place{margin-block-start:.6rem}
+  .hex-cluster{inline-size:min(100%,23rem)}
+  .hex-photo:not(.hex-main) .hex-caption{font-size:.72rem;inset-block-end:13%}
+}

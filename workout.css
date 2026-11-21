@@ -1,0 +1,68 @@
+/* My workout: the plan on one side, the barbell loader on the other. */
+.workout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start;gap:1rem;padding-block-end:clamp(2.75rem,6vw,5rem)}
+.workout-notice{grid-column:1/-1;color:var(--alert)}
+.workout-panel{min-inline-size:0;padding:clamp(1.15rem,2.6vw,1.9rem);border:1px solid var(--rim);border-radius:1.75rem;background:var(--deck)}
+.workout-panel h2{font-size:clamp(1.35rem,2.4vw,1.75rem)}
+.workout-summary{margin-block:.3rem 1.2rem;color:var(--muted)}
+
+.workout label{display:grid;gap:.35rem;min-inline-size:0;font-weight:600;font-size:.92rem}
+.workout :is(input:not([type="checkbox"]),select){inline-size:100%;min-inline-size:0;min-block-size:2.9rem;padding:.35rem .8rem;border:1px solid var(--rim);border-radius:.9rem;background:var(--night);color:var(--text);font-weight:400;font-size:1rem}
+.workout input[type="number"]{font:700 1.08rem/1.2 var(--display);font-variant-numeric:tabular-nums}
+.workout :is(input,select):focus-visible{border-color:var(--ion);outline:2px solid var(--ion);outline-offset:1px}
+.workout select option{background:var(--deck);color:var(--text)}
+.workout-input{position:relative;display:block}
+.workout-input input{padding-inline-end:2.6rem}
+.workout-unit{position:absolute;inset-block:0;inset-inline-end:.85rem;display:grid;align-items:center;color:var(--muted);font-weight:400;font-size:.86rem;pointer-events:none}
+.workout .button:disabled{opacity:.45;cursor:default}
+
+#add-exercise{display:grid;grid-template-columns:minmax(0,1fr) 5.25rem 5.25rem;align-items:end;gap:.7rem}
+#add-exercise .button{grid-column:1/-1;justify-self:start}
+.workout-empty{margin-block-start:1.1rem;padding:.85rem 1rem;border:1px dashed var(--rim);border-radius:1rem;color:var(--muted)}
+.workout-list{display:grid;gap:.55rem;margin-block-start:1.1rem}
+.workout-list:empty{margin:0}
+.workout-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem 1.25rem;padding:.7rem .9rem;border:1px solid var(--rim);border-radius:1.1rem;background:var(--night)}
+.workout-row strong{font:700 1.05rem/1.5 var(--display)}
+.workout-row-fields{display:grid;grid-template-columns:4.75rem 4.75rem auto;align-items:end;gap:.5rem}
+.workout-row-fields label{color:var(--muted);font-weight:400;font-size:.82rem}
+.workout-row-fields input{min-block-size:2.6rem;background:var(--deck)}
+.workout-remove{min-block-size:2.6rem;padding-inline:.5rem;border:0;background:none;color:var(--muted);text-decoration:underline;text-underline-offset:.25em;cursor:pointer}
+.workout-remove:hover{color:var(--alert)}
+.workout-plan-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-block-start:1.1rem}
+.workout-plan-footer output,.workout-status{color:var(--muted);font-size:.9rem}
+.workout-status:not(:empty){margin-block-start:.6rem}
+
+#plates-form{display:grid;gap:1rem}
+#plates-form > .button{justify-self:start}
+.workout-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}
+.workout-plates{min-inline-size:0;margin:0;padding:0;border:0}
+.workout-plates legend{padding:0;font-weight:600;font-size:.92rem}
+.plate-options{display:flex;flex-wrap:wrap;gap:.4rem;margin-block-start:.45rem}
+.plate-options label{position:relative;display:block}
+.plate-options input{position:absolute;inset:0;inline-size:100%;block-size:100%;margin:0;opacity:0;cursor:pointer}
+.plate-options span{display:grid;place-items:center;min-inline-size:3.1rem;min-block-size:2.6rem;padding-inline:.6rem;border:1px solid var(--rim);border-radius:99rem;color:var(--muted);font:700 .95rem var(--display);transition:background .2s,color .2s,border-color .2s}
+.plate-options input:checked + span{border-color:var(--sun);background:var(--sun);color:var(--sun-ink)}
+.plate-options input:focus-visible + span{outline:2px solid var(--ion);outline-offset:2px}
+
+.workout-output{display:grid;gap:.25rem;padding:1rem 1.1rem;border:1px solid var(--rim);border-radius:1.1rem;background:var(--night)}
+.workout-output strong{color:var(--ion);font:800 1.5rem/1.3 var(--display)}
+.workout-output #plate-side{color:var(--text);font-weight:600}
+.workout-output #plate-breakdown{justify-self:start;color:var(--muted);font-size:.92rem}
+[dir="rtl"] .workout-output #plate-breakdown{justify-self:end}
+/* One side of the loaded bar: a sleeve with the plates on it. */
+.plate-stack{position:relative;display:flex;align-items:center;flex-wrap:nowrap;gap:3px;height:6.25rem;margin-block:.6rem .35rem;padding-left:1.6rem;overflow:hidden}
+.plate-stack::before{content:"";position:absolute;left:0;right:0;top:calc(50% - .3rem);height:.6rem;border-radius:99rem;background:var(--rim)}
+.plate-stack i{position:relative;display:grid;place-items:center;flex:0 1 2.15rem;min-width:1.5rem;height:calc(38% + var(--size) * 2.48%);border-radius:.45rem;background:var(--sun);color:var(--sun-ink);font:700 .7rem/1 var(--display);font-style:normal}
+.plate-stack i:nth-child(even){background:var(--sun-bright)}
+.workout-more{margin-block-start:1.2rem;padding-block-start:1rem;border-block-start:1px solid var(--rim);color:var(--muted)}
+
+@media (max-width:58rem){
+  .workout{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:47rem){
+  .workout-panel{border-radius:1.5rem}
+  .workout-row-fields{inline-size:100%;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto}
+}
+@media (max-width:23rem){
+  #add-exercise{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #add-exercise label:first-child{grid-column:1/-1}
+}

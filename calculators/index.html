@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090d1c">
+  <title>الحاسبة | Galaxy Gym</title>
+  <meta name="description" content="دخّل بياناتك مرة وحدة واحسب السعرات والبروتين ومؤشرات اللياقة">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://yallarideapp.github.io/galaxy-gym/calculators/">
+  <link rel="alternate" hreflang="ar" href="https://yallarideapp.github.io/galaxy-gym/calculators/">
+  <link rel="alternate" hreflang="en" href="https://yallarideapp.github.io/galaxy-gym/en/calculators/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="الحاسبة | Galaxy Gym">
+  <meta property="og:description" content="دخّل بياناتك مرة وحدة واحسب السعرات والبروتين ومؤشرات اللياقة">
+  <meta property="og:url" content="https://yallarideapp.github.io/galaxy-gym/calculators/">
+  <meta property="og:image" content="https://yallarideapp.github.io/galaxy-gym/assets/gym.webp">
+  <link rel="icon" href="/galaxy-gym/assets/brand.webp" type="image/webp">
+  <link rel="preload" href="/galaxy-gym/assets/fonts/alexandria-arabic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/galaxy-gym/assets/fonts/plex-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/galaxy-gym/site.css">
+
+  <link rel="stylesheet" href="/galaxy-gym/calculators.css">
+  <script id="fitness-copy" type="application/json">{"required":"أدخل قيمة.","invalid":"أدخل رقماً صالحاً.","integer":"أدخل عدداً صحيحاً.","range":"من {min} إلى {max}","kg":"كغ","grams":"غ","protein":"البروتين","targetNotes":{"lose":"للتنشيف: ثباتك ناقص 500 سعرة","keep":"للحفاظ على وزنك الحالي","gain":"للتضخيم: ثباتك زائد 300 سعرة"},"proteinRule":"{0} غ لكل كغ من وزنك","waterCups":"حوالي {0} إلى {1} كاسات (250 مل)","bmiBands":["أقل من النطاق المرجعي","ضمن النطاق المرجعي","أعلى من النطاق المرجعي","أعلى من النطاق المرجعي بشكل ملحوظ"],"bmiAdult":"النطاقات المرجعية للبالغين من عمر 20 سنة.","waistMale":"البطن","waistMaleHint":"عند مستوى السرّة","waistFemale":"الخصر","waistFemaleHint":"عند أضيق نقطة"}</script>
+  <script src="/galaxy-gym/calculators.js" type="module"></script>
+
+  <script src="/galaxy-gym/site.js" defer></script>
+</head>
+<body data-route="calculators">
+  <a class="skip" href="#main">انتقل إلى المحتوى</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/galaxy-gym/" class="brand" aria-label="Galaxy Gym"><span class="brand-mark" aria-hidden="true"><img src="/galaxy-gym/assets/brand.webp" alt="" width="40" height="40"></span><span class="brand-type"><strong dir="ltr">GALAXY <span>GYM</span></strong><small>نادي المجرة</small></span></a>
+      <nav class="primary-nav" aria-label="القائمة"><a href="/galaxy-gym/training/">التدريب</a><a href="/galaxy-gym/calculators/" aria-current="page">الحاسبة</a><a href="/galaxy-gym/club/">النادي</a><a href="/galaxy-gym/prices/">الاشتراكات</a><a href="/galaxy-gym/workout/">تماريني</a><a href="/galaxy-gym/contact/">تواصل</a></nav>
+      <div class="header-actions">
+        <a class="language" data-language href="/galaxy-gym/en/calculators/" hreflang="en" lang="en">EN</a>
+        <a class="button button-small header-join" href="/galaxy-gym/prices/">اسأل عن الاشتراك</a>
+        <button class="icon-button nav-toggle" type="button" aria-label="القائمة" aria-expanded="false" aria-controls="site-menu" data-open-dialog="site-menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button>
+      </div>
+    </div>
+  </header>
+  <dialog class="site-menu panel-dialog" id="site-menu" aria-label="القائمة">
+    <div class="panel-dialog-body">
+      <div class="panel-dialog-head"><a class="brand" href="/galaxy-gym/"><span class="brand-mark" aria-hidden="true"><img src="/galaxy-gym/assets/brand.webp" alt="" width="40" height="40"></span><span class="brand-type"><strong dir="ltr">GALAXY <span>GYM</span></strong><small>نادي المجرة</small></span></a><button data-close-dialog class="icon-button" type="button" aria-label="إغلاق" autofocus><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <nav aria-label="القائمة"><a href="/galaxy-gym/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg></span><span><strong>الرئيسية</strong><small>الصفحة الرئيسية لنادي المجرة</small></span></a><a href="/galaxy-gym/calculators/" aria-current="page"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M9 12h.01M15 12h.01M9 16h.01M15 16h.01"/></svg></span><span><strong>الحاسبة</strong><small>دخّل بياناتك مرة وحدة واحسب السعرات والبروتين ومؤشرات اللياقة</small></span></a><a href="/galaxy-gym/training/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 17.5 11-11M5 14l5 5m4-14 5 5M3 16l5 5m8-18 5 5"/></svg></span><span><strong>التدريب</strong><small>القوة واللياقة ومتابعة المدرّبين</small></span></a><a href="/galaxy-gym/club/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 20 7v10l-8 4.5L4 17V7Z"/><path d="M12 12v9.5M4 7l8 5 8-5"/></svg></span><span><strong>النادي</strong><small>جولة بالصور داخل الصالة</small></span></a><a href="/galaxy-gym/prices/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span><strong>الاشتراكات</strong><small>جهّز استفسارك عن الاشتراك</small></span></a><a href="/galaxy-gym/workout/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h11M9 12h11M9 19h11M4 5h.01M4 12h.01M4 19h.01"/></svg></span><span><strong>تماريني</strong><small>خطّط لتمرينك واحسب أقراص البار</small></span></a><a href="/galaxy-gym/contact/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span><strong>تواصل</strong><small>الموقع والاتجاهات والاستفسارات</small></span></a></nav>
+      <div class="menu-contact"><a class="button" href="tel:+962791081877"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-4l-5-2-2 2a14 14 0 0 1-6-6l2-2-2-5Z"/></svg><bdi dir="ltr">079 108 1877</bdi></a><a class="button button-quiet" href="https://wa.me/962791081877?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D9%85%D9%85%D9%83%D9%86%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AC%D8%A7%D9%84%D8%A7%D9%83%D8%B3%D9%8A%20%D8%AC%D9%8A%D9%85%D8%9F" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 9 9 0 0 1-3.6-.8L4 21l1.8-4.9a9 9 0 0 1-.8-3.6A8.4 8.4 0 0 1 13.5 4h.5a8.4 8.4 0 0 1 7 7Z"/><path d="M10 12h.01m3 0h.01m3 0h.01"/></svg>راسلنا على واتساب</a></div>
+    </div>
+  </dialog>
+  <main id="main" tabindex="-1"><section class="container page-hero calc-hero"><h1>احسب أرقامك.</h1><p>دخّل بياناتك مرة وحدة، وكل الحسابات بتتحدّث لحالها: السعرات، البروتين، مؤشر الكتلة، نسبة الدهون، النبض وأقصى وزن.</p></section>
+  <noscript><p class="container calc-noscript">فعّل جافاسكربت لاستخدام الحاسبة.</p></noscript>
+  <div class="container calc" data-calc>
+    <form class="calc-profile" aria-labelledby="calc-profile-title" autocomplete="off" novalidate>
+      <h2 id="calc-profile-title">بياناتك</h2>
+      <div class="calc-glance" aria-hidden="true"><span><b data-out="glance-target">—</b>سعرة</span><span><b data-out="glance-protein">—</b>غ بروتين</span><span><b data-out="glance-bmi">—</b>مؤشر الكتلة</span></div>
+      <fieldset class="calc-segment">
+      <legend>الجنس</legend>
+      <div><label><input type="radio" name="sex" value="m" checked><span>ذكر</span></label><label><input type="radio" name="sex" value="f"><span>أنثى</span></label></div>
+    </fieldset>
+      <div class="calc-profile-fields">
+        <div class="calc-field" data-field="age">
+      <label for="calc-age" data-label>العمر</label>
+      <span class="calc-input"><input id="calc-age" type="text" inputmode="numeric" autocomplete="off" data-input="age" data-min="18" data-max="100" data-step="1" data-integer value="25" aria-describedby="calc-age-error"><span class="calc-unit">سنة</span></span>
+      <input class="calc-slider" type="range" min="18" max="80" step="1" value="25" data-slider="age" tabindex="-1" aria-hidden="true">
+
+      <small class="calc-error" id="calc-age-error" data-error hidden></small>
+    </div>
+        <div class="calc-field" data-field="height">
+      <label for="calc-height" data-label>الطول</label>
+      <span class="calc-input"><input id="calc-height" type="text" inputmode="decimal" autocomplete="off" data-input="height" data-min="100" data-max="250" data-step="1" value="175" aria-describedby="calc-height-error"><span class="calc-unit">سم</span></span>
+      <input class="calc-slider" type="range" min="140" max="210" step="1" value="175" data-slider="height" tabindex="-1" aria-hidden="true">
+
+      <small class="calc-error" id="calc-height-error" data-error hidden></small>
+    </div>
+        <div class="calc-field" data-field="weight">
+      <label for="calc-weight" data-label>الوزن</label>
+      <span class="calc-input"><input id="calc-weight" type="text" inputmode="decimal" autocomplete="off" data-input="weight" data-min="25" data-max="350" data-step="0.5" value="75" aria-describedby="calc-weight-error"><span class="calc-unit">كغ</span></span>
+      <input class="calc-slider" type="range" min="40" max="160" step="0.5" value="75" data-slider="weight" tabindex="-1" aria-hidden="true">
+
+      <small class="calc-error" id="calc-weight-error" data-error hidden></small>
+    </div>
+      </div>
+      <div class="calc-field">
+        <label for="calc-activity">نشاطك الأسبوعي</label>
+        <span class="calc-input calc-select"><select id="calc-activity" data-activity><option value="1.2">قليل الحركة</option><option value="1.375">خفيف: تمرين 1–3 أيام</option><option value="1.55" selected>متوسط: تمرين 3–5 أيام</option><option value="1.725">عالٍ: تمرين 6–7 أيام</option></select></span>
+      </div>
+      <fieldset class="calc-segment">
+      <legend>هدفك</legend>
+      <div><label><input type="radio" name="goal" value="lose"><span>تنشيف</span></label><label><input type="radio" name="goal" value="keep" checked><span>ثبات</span></label><label><input type="radio" name="goal" value="gain"><span>تضخيم</span></label></div>
+    </fieldset>
+      <p class="calc-privacy">تُحسب النتائج على جهازك وتبقى بياناتك في هذا المتصفح.</p>
+    </form>
+    <div class="calc-results">
+      <nav class="calc-jump" aria-label="انتقل إلى"><a href="#fuel">السعرات والأكل</a><a href="#body">الجسم</a><a href="#training">التمرين</a></nav>
+      <section class="calc-group" id="fuel" aria-labelledby="group-fuel">
+        <h2 id="group-fuel">السعرات والأكل</h2>
+        <div class="calc-grid"><article class="calc-card calc-card-wide" data-card="energy" aria-labelledby="card-energy">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-4-4-8-5-12 0 4-5 5-5 9-1-1-1-3-1-4-2 3-3 5-3 7a7 7 0 0 0 7 7Z"/></svg></span><h3 id="card-energy">السعرات اليومية</h3></header>
+
+      <div class="calc-values" data-values hidden>
+        <div class="calc-split">
+          <div><p class="calc-figure"><b data-out="target"></b> <span>سعرة في اليوم</span></p><p class="calc-note" data-out="target-note"></p><p class="calc-note calc-warn" data-out="floor-note" hidden>ثُبّت الهدف عند حد أدنى آمن. راجع مختصاً قبل النزول أكثر.</p></div>
+          <dl class="calc-list"><div><dt>سعرات الثبات</dt><dd data-out="maintenance"></dd></div><div><dt>سعرات الراحة</dt><dd data-out="resting"></dd></div></dl>
+        </div></div>
+      <p class="calc-empty" data-empty>أدخل عمرك وطولك ووزنك لتظهر سعراتك.</p>
+    </article><article class="calc-card" data-card="macros" aria-labelledby="card-macros">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9zM15 3.5a8 8 0 0 1 5.5 5.5H15Z"/></svg></span><h3 id="card-macros">توزيع المغذّيات</h3></header>
+
+      <div class="calc-values" data-values hidden>
+        <div class="calc-bar" aria-hidden="true"><i data-share="protein"></i><i data-share="carbs"></i><i data-share="fat"></i></div>
+        <dl class="calc-list calc-macros">
+          <div data-macro="protein"><dt>البروتين</dt><dd><span data-out="protein"></span><small data-out="protein-share"></small></dd></div><div data-macro="carbs"><dt>الكربوهيدرات</dt><dd><span data-out="carbs"></span><small data-out="carbs-share"></small></dd></div><div data-macro="fat"><dt>الدهون</dt><dd><span data-out="fat"></span><small data-out="fat-share"></small></dd></div>
+        </dl>
+        <p class="calc-note" data-out="protein-rule"></p></div>
+      <p class="calc-empty" data-empty>يظهر التوزيع بعد حساب السعرات.</p>
+    </article><article class="calc-card" data-card="water" aria-labelledby="card-water">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2C9 7 5 10 5 15a7 7 0 0 0 14 0c0-5-4-8-7-13Z"/></svg></span><h3 id="card-water">الماء اليومي</h3></header>
+
+      <div class="calc-values" data-values hidden>
+        <p class="calc-figure"><b data-out="water"></b> <span>لتر في اليوم</span></p>
+        <p class="calc-note" data-out="water-cups"></p>
+        <p class="calc-note">تزيد حاجتك مع التمرين والحر.</p></div>
+      <p class="calc-empty" data-empty>أدخل وزنك ليظهر تقدير الماء.</p>
+    </article></div>
+      </section><section class="calc-group" id="body" aria-labelledby="group-body">
+        <h2 id="group-body">الجسم</h2>
+        <div class="calc-grid"><article class="calc-card" data-card="bmi" aria-labelledby="card-bmi">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19a8 8 0 1 1 16 0M12 19l4-7"/></svg></span><h3 id="card-bmi">مؤشر كتلة الجسم</h3></header>
+
+      <div class="calc-values" data-values hidden>
+        <p class="calc-figure"><b data-out="bmi"></b></p>
+        <p class="calc-band" data-out="bmi-band"></p>
+        <div class="calc-scale" dir="ltr" aria-hidden="true">
+          <div class="calc-scale-track"><span></span><span></span><span></span><span></span><i data-marker="bmi"></i></div>
+          <div class="calc-scale-ticks"><span style="left:17.5%">18.5</span><span style="left:50%">25</span><span style="left:75%">30</span></div>
+        </div>
+        <dl class="calc-list"><div><dt>الوزن المرجعي لطولك</dt><dd data-out="bmi-range"></dd></div></dl>
+        <p class="calc-note">المؤشر لا يفرّق بين العضل والدهون. قياس نسبة الدهون يكمّل الصورة.</p></div>
+      <p class="calc-empty" data-empty>أدخل طولك ووزنك ليظهر المؤشر.</p>
+    </article><article class="calc-card" data-card="fat" aria-labelledby="card-fat">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h18v8H3zM7 8v3m4-3v4m4-4v3m4-3v4"/></svg></span><h3 id="card-fat">نسبة الدهون بشريط القياس</h3></header>
+      <div class="calc-inline">
+        <div class="calc-field" data-field="neck">
+      <label for="calc-neck" data-label>الرقبة</label>
+      <span class="calc-input"><input id="calc-neck" type="text" inputmode="decimal" autocomplete="off" data-input="neck" data-min="20" data-max="80" data-step="0.5" aria-describedby="calc-neck-hint calc-neck-error"><span class="calc-unit">سم</span></span>
+
+      <small class="calc-hint" id="calc-neck-hint" data-hint>أسفل الحنجرة مباشرةً</small>
+      <small class="calc-error" id="calc-neck-error" data-error hidden></small>
+    </div>
+        <div class="calc-field" data-field="waist">
+      <label for="calc-waist" data-label>البطن</label>
+      <span class="calc-input"><input id="calc-waist" type="text" inputmode="decimal" autocomplete="off" data-input="waist" data-min="40" data-max="250" data-step="0.5" aria-describedby="calc-waist-hint calc-waist-error"><span class="calc-unit">سم</span></span>
+
+      <small class="calc-hint" id="calc-waist-hint" data-hint>عند مستوى السرّة</small>
+      <small class="calc-error" id="calc-waist-error" data-error hidden></small>
+    </div>
+        <div class="calc-field" data-field="hip" hidden>
+      <label for="calc-hip" data-label>الورك</label>
+      <span class="calc-input"><input id="calc-hip" type="text" inputmode="decimal" autocomplete="off" data-input="hip" data-min="45" data-max="270" data-step="0.5" aria-describedby="calc-hip-hint calc-hip-error" disabled><span class="calc-unit">سم</span></span>
+
+      <small class="calc-hint" id="calc-hip-hint" data-hint>عند أعرض نقطة</small>
+      <small class="calc-error" id="calc-hip-error" data-error hidden></small>
+    </div>
+      </div>
+      <p class="calc-note calc-warn" data-out="fat-invalid" hidden>راجع القياسات: محيط البطن أو الخصر يجب أن يكون أكبر من الرقبة.</p>
+      <div class="calc-values" data-values hidden>
+        <p class="calc-figure"><b data-out="fat-percent"></b> <span>%</span></p>
+        <dl class="calc-list"><div><dt>كتلة الدهون</dt><dd data-out="fat-mass"></dd></div><div><dt>الكتلة الخالية من الدهون</dt><dd data-out="lean-mass"></dd></div></dl></div>
+      <p class="calc-empty" data-empty>خذ قياساتك بشريط مرن وأدخلها بالسنتيمتر.</p>
+    </article></div>
+      </section><section class="calc-group" id="training" aria-labelledby="group-training">
+        <h2 id="group-training">التمرين</h2>
+        <div class="calc-grid"><article class="calc-card" data-card="heart" aria-labelledby="card-heart">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 5.5a4.9 4.9 0 0 0-7 0L12 7l-1.5-1.5a4.95 4.95 0 0 0-7 7l8.5 8.5 8.5-8.5a4.9 4.9 0 0 0 0-7Z"/><path d="M4 12h4l2-3 3 6 2-3h5"/></svg></span><h3 id="card-heart">مناطق نبض القلب</h3></header>
+
+      <div class="calc-values" data-values hidden>
+        <p class="calc-figure"><b data-out="max-heart"></b> <span>نبضة/د</span></p>
+        <p class="calc-note">أقصى نبض تقديري</p>
+        <ol class="calc-zones"><li style="--level:0"><span><b>المنطقة 1</b>خفيف جداً</span><bdi dir="ltr" data-out="zone-0"></bdi></li><li style="--level:1"><span><b>المنطقة 2</b>خفيف</span><bdi dir="ltr" data-out="zone-1"></bdi></li><li style="--level:2"><span><b>المنطقة 3</b>متوسط</span><bdi dir="ltr" data-out="zone-2"></bdi></li><li style="--level:3"><span><b>المنطقة 4</b>عالٍ</span><bdi dir="ltr" data-out="zone-3"></bdi></li><li style="--level:4"><span><b>المنطقة 5</b>أقصى جهد</span><bdi dir="ltr" data-out="zone-4"></bdi></li></ol></div>
+      <p class="calc-empty" data-empty>أدخل عمرك لتظهر مناطق النبض.</p>
+    </article><article class="calc-card" data-card="lift" aria-labelledby="card-lift">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 17.5 11-11M5 14l5 5m4-14 5 5M3 16l5 5m8-18 5 5"/></svg></span><h3 id="card-lift">أقصى وزن لتكرار واحد</h3></header>
+      <div class="calc-inline">
+        <div class="calc-field" data-field="lift">
+      <label for="calc-lift" data-label>الوزن المرفوع</label>
+      <span class="calc-input"><input id="calc-lift" type="text" inputmode="decimal" autocomplete="off" data-input="lift" data-min="0.5" data-max="999" data-step="2.5" value="60" aria-describedby="calc-lift-error"><span class="calc-unit">كغ</span></span>
+
+      <small class="calc-error" id="calc-lift-error" data-error hidden></small>
+    </div>
+        <div class="calc-field" data-field="reps">
+      <label for="calc-reps" data-label>التكرارات</label>
+      <span class="calc-input"><input id="calc-reps" type="text" inputmode="numeric" autocomplete="off" data-input="reps" data-min="1" data-max="12" data-step="1" data-integer value="5" aria-describedby="calc-reps-error"></span>
+
+      <small class="calc-error" id="calc-reps-error" data-error hidden></small>
+    </div>
+      </div>
+      <div class="calc-values" data-values hidden>
+        <p class="calc-figure"><b data-out="one-rep"></b> <span>كغ</span></p>
+        <p class="calc-note">تقدير أقصى وزن</p>
+        <dl class="calc-list calc-percents"><div><dt><bdi dir="ltr">90%</bdi></dt><dd data-out="lift-90"></dd></div><div><dt><bdi dir="ltr">80%</bdi></dt><dd data-out="lift-80"></dd></div><div><dt><bdi dir="ltr">70%</bdi></dt><dd data-out="lift-70"></dd></div><div><dt><bdi dir="ltr">60%</bdi></dt><dd data-out="lift-60"></dd></div></dl>
+        <a class="text-link" href="/galaxy-gym/workout/#plates">احسب أقراص البار</a></div>
+      <p class="calc-empty" data-empty>أدخل وزناً رفعته وعدد التكرارات في نفس المجموعة.</p>
+    </article></div>
+      </section>
+      <details class="calc-method"><summary>طريقة الحساب والمصادر</summary>
+        <dl><div><dt>السعرات اليومية</dt><dd>تقدّر معادلة ميفلين وسانت جيور سعرات الراحة من العمر والطول والوزن والجنس، ثم تُضرب بمعامل النشاط لتقدير سعرات الثبات. هدف التنشيف يطرح 500 سعرة بحد أدنى 1500 للرجال و1200 للسيدات، وهدف التضخيم يضيف 300 سعرة. هذه نقاط بداية تُعدَّل حسب تقدّمك. <a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener noreferrer">المصدر</a></dd></div><div><dt>توزيع المغذّيات</dt><dd>البروتين 1.6 غ لكل كغ عند الثبات، 1.8 عند التضخيم و2.0 عند التنشيف، ضمن نطاق 1.4 إلى 2.0 غ لكل كغ الذي توصي به الجمعية الدولية للتغذية الرياضية للمتمرّنين. الدهون 25% من السعرات والباقي كربوهيدرات. كل غرام بروتين أو كربوهيدرات 4 سعرات، وكل غرام دهون 9 سعرات. <a href="https://pubmed.ncbi.nlm.nih.gov/28642676/" target="_blank" rel="noopener noreferrer">المصدر</a></dd></div><div><dt>الماء اليومي</dt><dd>قاعدة تقريبية شائعة: 30 إلى 35 مل لكل كغ من وزن الجسم يومياً. للمقارنة، مرجع الأكاديميات الوطنية الأمريكية لإجمالي الماء اليومي من الطعام والمشروبات 3.7 لتر للرجال و2.7 لتر للسيدات. <a href="https://www.nationalacademies.org/read/10925/chapter/6" target="_blank" rel="noopener noreferrer">المصدر</a></dd></div><div><dt>مؤشر كتلة الجسم</dt><dd>يُقسم الوزن بالكيلوغرام على مربع الطول بالمتر. النطاق المرجعي للبالغين من 18.5 إلى 24.9. <a href="https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html" target="_blank" rel="noopener noreferrer">المصدر</a></dd></div><div><dt>نسبة الدهون بشريط القياس</dt><dd>طريقة البحرية الأمريكية بمحيطات الجسم: الطول والرقبة والبطن للرجال، والطول والرقبة والخصر والورك للسيدات. <a href="https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA370158.xhtml" target="_blank" rel="noopener noreferrer">المصدر</a></dd></div><div><dt>مناطق نبض القلب</dt><dd>تقدّر معادلة تاناكا أقصى نبض بطرح 0.7 مضروباً في العمر من 208. مناطق الشدة نسب من هذا التقدير، ونبضك الفعلي قد يختلف. <a href="https://pubmed.ncbi.nlm.nih.gov/11153730/" target="_blank" rel="noopener noreferrer">المصدر</a></dd></div><div><dt>أقصى وزن لتكرار واحد</dt><dd>معادلة إبلي: الوزن × (1 + التكرارات ÷ 30) لمجموعة من تكرارين إلى 12 تكراراً. عند تكرار واحد تعرض الوزن نفسه. <a href="https://revistas.rcaap.pt/motricidade/article/download/2948/4846/15810" target="_blank" rel="noopener noreferrer">المصدر</a></dd></div></dl>
+      </details>
+      <p class="calc-disclaimer">تقديرات عامة للبالغين وليست نصيحة طبية. إذا كانت لديك حالة صحية أو كنتِ حاملاً، استشر طبيبك أولاً.</p>
+    </div>
+  </div></main>
+  <footer class="site-footer"><div class="container">
+    <div class="footer-main">
+      <div class="footer-brand"><a href="/galaxy-gym/" class="brand" aria-label="Galaxy Gym"><span class="brand-mark" aria-hidden="true"><img src="/galaxy-gym/assets/brand.webp" alt="" width="40" height="40"></span><span class="brand-type"><strong dir="ltr">GALAXY <span>GYM</span></strong><small>نادي المجرة</small></span></a><p>لياقة بدنية وبناء أجسام في إيدون، إربد.</p></div>
+      <nav class="footer-nav" aria-label="القائمة"><a href="/galaxy-gym/">الرئيسية</a><a href="/galaxy-gym/calculators/" aria-current="page">الحاسبة</a><a href="/galaxy-gym/training/">التدريب</a><a href="/galaxy-gym/club/">النادي</a><a href="/galaxy-gym/prices/">الاشتراكات</a><a href="/galaxy-gym/workout/">تماريني</a><a href="/galaxy-gym/contact/">تواصل</a></nav>
+      <div class="footer-contact">
+        <a href="https://www.google.com/maps?cid=13503154910704371947" target="_blank" rel="noopener noreferrer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>إربد، إيدون، 100 متر شرق دوار العيادات سابقاً.</a>
+        <a href="tel:+962791081877"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-4l-5-2-2 2a14 14 0 0 1-6-6l2-2-2-5Z"/></svg><bdi dir="ltr">079 108 1877</bdi></a>
+        <div class="footer-social"><a href="https://www.instagram.com/galaxy_gym_jo/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg></a><a href="https://www.facebook.com/GalaxyGymJo/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1 .5-2 2-2h2V2h-3c-3 0-5 2-5 5v2H7v4h3v8"/></svg></a></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><p><bdi>© 2026 Galaxy Gym.</bdi> الأسماء والعلامات التجارية مملوكة لأصحابها.</p><div><a href="/galaxy-gym/privacy/">سياسة الخصوصية</a><a href="/galaxy-gym/terms/">الشروط والأحكام</a></div></div>
+  </div></footer>
+  <nav class="dock" aria-label="القائمة">
+    <a href="/galaxy-gym/"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg></span><span>الرئيسية</span></a><a href="/galaxy-gym/calculators/" aria-current="page"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M9 12h.01M15 12h.01M9 16h.01M15 16h.01"/></svg></span><span>الحاسبة</span></a><a href="/galaxy-gym/prices/"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span>الاشتراكات</span></a><a href="/galaxy-gym/workout/"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h11M9 12h11M9 19h11M4 5h.01M4 12h.01M4 19h.01"/></svg></span><span>تماريني</span></a>
+    <button type="button" data-open-dialog="contact-sheet" aria-controls="contact-sheet" aria-expanded="false"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 9 9 0 0 1-3.6-.8L4 21l1.8-4.9a9 9 0 0 1-.8-3.6A8.4 8.4 0 0 1 13.5 4h.5a8.4 8.4 0 0 1 7 7Z"/><path d="M10 12h.01m3 0h.01m3 0h.01"/></svg></span><span>تواصل</span></button>
+  </nav>
+  <dialog class="contact-sheet panel-dialog" id="contact-sheet" aria-label="تواصل">
+    <div class="panel-dialog-body">
+      <div class="panel-dialog-head"><h2>تواصل مع جالاكسي</h2><button data-close-dialog class="icon-button" type="button" aria-label="إغلاق" autofocus><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <div class="sheet-links"><a class="button" href="tel:+962791081877"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-4l-5-2-2 2a14 14 0 0 1-6-6l2-2-2-5Z"/></svg>اتصل بالنادي</a><a class="button button-quiet" href="https://wa.me/962791081877?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D8%8C%20%D9%85%D9%85%D9%83%D9%86%20%D8%A3%D8%B9%D8%B1%D9%81%20%D8%AA%D9%81%D8%A7%D8%B5%D9%8A%D9%84%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AC%D8%A7%D9%84%D8%A7%D9%83%D8%B3%D9%8A%20%D8%AC%D9%8A%D9%85%D8%9F" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 9 9 0 0 1-3.6-.8L4 21l1.8-4.9a9 9 0 0 1-.8-3.6A8.4 8.4 0 0 1 13.5 4h.5a8.4 8.4 0 0 1 7 7Z"/><path d="M10 12h.01m3 0h.01m3 0h.01"/></svg>راسلنا على واتساب</a><a class="button button-quiet" href="https://www.google.com/maps?cid=13503154910704371947" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>افتح الاتجاهات</a><a class="text-link" href="/galaxy-gym/contact/">الموقع والتواصل</a></div>
+    </div>
+  </dialog>
+</body>
+</html>

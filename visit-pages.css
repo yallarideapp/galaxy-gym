@@ -1,0 +1,61 @@
+/* Membership and contact pages: choose a few preferences and send them to the gym on WhatsApp. */
+.vp-photo{position:relative;isolation:isolate}
+.vp-photo img{object-position:center 40%}
+.vp-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(9,13,28,.85),transparent 45%);pointer-events:none}
+.vp-photo figcaption{position:absolute;z-index:1;inset-inline-start:1.2rem;inset-block-end:1rem;font-weight:600;font-size:.92rem}
+.vp-address{display:flex;align-items:flex-start;gap:.55rem;margin-block-start:1rem}
+.vp-address svg{flex:none;margin-block-start:.3em;color:var(--sun)}
+.page-hero .vp-address{color:var(--text)}
+
+.vp-split{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);align-items:stretch;gap:1rem}
+.vp-controls,.vp-draft,.vp-next,.vp-faq{padding:clamp(1.15rem,2.7vw,2rem);border:1px solid var(--rim);border-radius:1.75rem;background:var(--deck)}
+.vp-controls h2,.vp-faq h2{margin-block-end:.4rem;font-size:clamp(1.5rem,2.8vw,2.1rem)}
+.vp-next h2{font-size:clamp(1.25rem,2.2vw,1.6rem)}
+.vp-controls p,.vp-next p,.vp-draft-note{color:var(--muted)}
+
+.vp-choice-set{min-inline-size:0;margin:1.3rem 0 0;padding:0;border:0}
+.vp-choice-set legend,.vp-select > span{margin-block-end:.5rem;padding:0;font-weight:600;font-size:.94rem}
+.vp-options{display:flex;flex-wrap:wrap;gap:.45rem}
+.vp-options label{position:relative;display:block}
+.vp-options input{position:absolute;inset:0;inline-size:100%;block-size:100%;margin:0;opacity:0;cursor:pointer}
+.vp-options span{display:grid;place-items:center;min-block-size:2.75rem;padding:.3rem 1.05rem;border:1px solid var(--rim);border-radius:99rem;background:var(--night);color:var(--muted);font-weight:600;font-size:.93rem;transition:background .2s,color .2s,border-color .2s}
+.vp-options input:hover + span{color:var(--text)}
+.vp-options input:checked + span{border-color:var(--sun);background:var(--sun);color:var(--sun-ink)}
+.vp-options input:focus-visible + span{outline:2px solid var(--ion);outline-offset:2px}
+
+.vp-draft{display:flex;flex-direction:column;align-items:flex-start;gap:.9rem;border-color:color-mix(in srgb,var(--ion) 45%,var(--rim))}
+.vp-draft h3{font-size:1.15rem}
+.vp-message{inline-size:100%;padding:.9rem 1.05rem;border-radius:1.1rem;border-start-start-radius:.3rem;background:var(--night);color:var(--muted);overflow-wrap:anywhere}
+.vp-message p + p:not([hidden]){margin-block-start:.4rem}
+.vp-message [data-draft-preferences]{color:var(--ion);white-space:pre-line}
+.vp-draft-note{font-size:.88rem}
+
+.vp-next{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.9rem 1.5rem;margin-block-start:1rem}
+.vp-contact-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin-block-end:1rem}
+.vp-contact-links a{display:flex;align-items:center;gap:.9rem;min-inline-size:0;padding:.9rem 1.1rem;border:1px solid var(--rim);border-radius:1.5rem;background:var(--deck);transition:border-color .2s}
+.vp-contact-links a:hover{border-color:var(--sun)}
+.vp-contact-links .hex-badge{inline-size:2.75rem}
+.vp-contact-links strong,.vp-contact-links small{display:block}
+.vp-contact-links strong{font:700 1.05rem/1.5 var(--display)}
+.vp-contact-links small{color:var(--muted);font-size:.9rem;overflow-wrap:anywhere}
+
+.vp-visit-inputs:not([hidden]){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin-block-start:1.3rem}
+.vp-select{display:flex;flex-direction:column}
+.vp-select select{inline-size:100%;min-block-size:2.9rem;padding-inline:.8rem;border:1px solid var(--rim);border-radius:.9rem;background:var(--night);color:var(--text)}
+.vp-select select:focus-visible{border-color:var(--ion);outline:2px solid var(--ion);outline-offset:1px}
+
+.vp-faq{margin-block-start:1rem}
+.vp-faq h2{margin-block-end:.6rem}
+.vp-faq details{border-block-start:1px solid var(--rim)}
+.vp-faq summary{padding-block:.95rem;font-weight:600;cursor:pointer}
+.vp-faq summary:hover{color:var(--sun)}
+.vp-faq details p{max-inline-size:46rem;padding-block-end:1rem;color:var(--muted)}
+
+@media (max-width:48rem){
+  .vp-split{grid-template-columns:minmax(0,1fr)}
+  .vp-controls,.vp-draft,.vp-next,.vp-faq{border-radius:1.5rem}
+  .vp-contact-links{grid-template-columns:minmax(0,1fr);gap:.55rem}
+}
+@media (max-width:24rem){
+  .vp-visit-inputs:not([hidden]){grid-template-columns:minmax(0,1fr)}
+}
