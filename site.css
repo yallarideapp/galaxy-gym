@@ -204,7 +204,7 @@ h3{font-size:1.25rem}
 .site-menu{inset:0;inline-size:100%;block-size:100%;border:0;background:var(--night)}
 .site-menu[open]{animation:menu-in .3s var(--ease) both}
 @keyframes menu-in{from{opacity:0;transform:scale(1.03)}}
-.site-menu .panel-dialog-body{display:grid;grid-template-rows:auto 1fr auto;min-block-size:100%;inline-size:min(100%,34rem);margin-inline:auto;padding-block-end:calc(1.4rem + env(safe-area-inset-bottom))}
+.site-menu .panel-dialog-body{display:grid;grid-template-rows:auto 1fr auto auto;min-block-size:100%;inline-size:min(100%,34rem);margin-inline:auto;padding-block-end:calc(1.4rem + env(safe-area-inset-bottom))}
 .site-menu nav{display:grid;align-content:start;gap:.2rem}
 .site-menu nav a{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:1rem;padding:.6rem .5rem;border-radius:1.25rem}
 .site-menu nav a:hover{background:var(--deck)}
@@ -213,6 +213,23 @@ h3{font-size:1.25rem}
 .site-menu nav a .hex-badge{inline-size:2.9rem;background:var(--deck-2);color:var(--sun)}
 .site-menu nav a[aria-current="page"] .hex-badge{background:var(--sun);color:var(--sun-ink)}
 .menu-contact{display:grid;gap:.6rem;margin-block-start:1.25rem}
+/* Web app: the install block (menu and account page) and the installed app itself */
+.install{display:grid;gap:.6rem}
+.install[hidden],.install-help[hidden]{display:none}
+.install-button{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:.9rem;inline-size:100%;padding:.75rem .9rem;border:1px solid var(--rim);border-radius:1.25rem;background:var(--deck);color:var(--text);font:inherit;text-align:start;cursor:pointer;transition:border-color .2s}
+.install-button:hover,.install-button[aria-expanded="true"]{border-color:var(--sun)}
+.install-button img{inline-size:2.9rem;block-size:2.9rem;border-radius:.85rem;box-shadow:0 0 0 1px var(--rim)}
+.install-button strong{display:block;font:700 1rem/1.45 var(--display)}
+.install-button small{display:block;color:var(--muted);font-size:.85rem;line-height:1.55}
+.install-help{display:grid;gap:.45rem;margin:0;padding:.85rem 1.1rem;padding-inline-start:2.3rem;border-radius:1.1rem;background:var(--deck-2);font-size:.92rem;line-height:1.65}
+.install-help li::marker{color:var(--sun);font-weight:700}
+.install-help svg{display:inline-block;vertical-align:-.2em;color:var(--sun)}
+.site-menu .install{margin-block-start:1.1rem}
+@media (display-mode:standalone){
+  html{-webkit-tap-highlight-color:transparent}
+  .site-header{padding-block-start:env(safe-area-inset-top)}
+  img{-webkit-touch-callout:none}
+}
 .contact-sheet{inset:auto 0 0;inline-size:min(100%,32rem);margin-inline:auto;border-block-end:0;border-radius:1.75rem 1.75rem 0 0}
 .contact-sheet[open]{animation:sheet-in .3s var(--ease) both}
 @keyframes sheet-in{from{transform:translateY(100%)}}

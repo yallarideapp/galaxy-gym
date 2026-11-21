@@ -147,6 +147,7 @@
 .plan-details[open] summary::before{content:"−"}
 .plan-details summary:hover{color:var(--sun)}
 .plan-details[open] summary{margin-block-end:.3rem}
+.install-account{max-inline-size:34rem}
 .account-data{display:grid;gap:.4rem;padding:.25rem clamp(.25rem,1vw,.5rem);color:var(--muted);font-size:.9rem}
 .account-data-actions .text-link{min-height:2.5rem;border:0;background:none;padding:0;font:inherit;font-weight:600;cursor:pointer}
 .account-data-actions{gap:.25rem 1.4rem!important}
