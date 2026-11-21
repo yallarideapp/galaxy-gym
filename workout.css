@@ -16,7 +16,7 @@
 .account-ring:hover span{color:var(--sun)}
 .account-id{min-inline-size:0}
 .account-id h1{font-size:clamp(2.3rem,5.4vw,4.1rem);font-weight:800;overflow-wrap:anywhere}
-.account-plan{margin-block-start:.35rem;font-weight:600;font-size:clamp(1rem,1.6vw,1.12rem)}
+.account-plan{text-wrap:balance;margin-block-start:.35rem;font-weight:600;font-size:clamp(1rem,1.6vw,1.12rem)}
 .account-since{color:var(--muted);font-size:.9rem}
 .account-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem 1rem;margin-block-start:.5rem}
 .account-actions .text-link{border:0;background:none;padding:0;cursor:pointer}
@@ -62,7 +62,7 @@
 [data-phase="active"] .member-status{border-color:var(--sun);background:var(--sun);color:var(--sun-ink)}
 [data-phase="ending"] .member-status{border-color:var(--alert);color:var(--alert)}
 [data-phase="upcoming"] .member-status{border-color:var(--lamp);color:var(--text)}
-.member-range{color:var(--muted)}
+.member-range{color:var(--muted);text-wrap:balance}
 .member-progress{block-size:.5rem;overflow:hidden;border-radius:99rem;background:var(--rim)}
 .member-progress i{display:block;block-size:100%;inline-size:0;border-radius:inherit;background:var(--sun);transition:inline-size .6s var(--ease)}
 [data-phase="ending"] .member-progress i{background:var(--alert)}
