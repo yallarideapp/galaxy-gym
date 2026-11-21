@@ -83,7 +83,8 @@ h3{font-size:1.25rem}
 .brand-type strong span{color:var(--sun)}
 .brand-type small{color:var(--muted);font-size:.74rem;line-height:1.4}
 .primary-nav{display:flex;align-items:center;gap:.15rem;font-size:.95rem;font-weight:600}
-.primary-nav a{position:relative;padding:.45rem .85rem;border-radius:99rem;color:var(--muted);transition:color .18s,background .18s}
+.primary-nav a{position:relative;padding:.45rem .85rem;border-radius:99rem;color:var(--muted);white-space:nowrap;transition:color .18s,background .18s}
+.header-join{white-space:nowrap}
 .primary-nav a:hover{color:var(--text);background:var(--deck)}
 .primary-nav a[aria-current="page"]{color:var(--text);background:var(--deck-2)}
 .header-actions{display:flex;align-items:center;gap:.6rem}
@@ -237,6 +238,14 @@ main{view-transition-name:page-content}
 @keyframes page-out{to{opacity:0}}
 @keyframes page-in{from{opacity:0;filter:blur(6px)}}
 
+/* The English menu is wider, so its header button and its inline menu give way a little earlier. */
+@media (max-width:76.5rem){
+  html[lang="en"] .header-join{display:none}
+}
+@media (max-width:60rem){
+  html[lang="en"] .primary-nav{display:none}
+  html[lang="en"] .nav-toggle{display:grid}
+}
 @media (max-width:68rem){
   .header-join{display:none}
   .primary-nav a{padding-inline:.65rem}

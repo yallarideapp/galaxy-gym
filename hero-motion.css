@@ -56,13 +56,25 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
 @keyframes hero-rise{from{opacity:0;transform:translateY(.3em)}}
 @keyframes galaxy-turn{to{rotate:1turn}}
 
+/* On a phone the whole banner fits the first screen: the headline on one line, the buttons, and the full
+   cluster above the dock. --fit is the height left for the cluster; the paragraph moves under it. */
 @media (max-width:47rem){
-  .hero-layout{grid-template-columns:minmax(0,1fr);gap:1.25rem;min-block-size:0;padding-block:1.6rem 2.25rem}
-  .hero h1{font-size:clamp(2.9rem,14.5vw,4.4rem)}
-  .hero-lede{margin-block:.8rem 1.25rem}
-  .hero-place{margin-block-start:.6rem}
-  .hex-cluster{inline-size:min(100%,23rem)}
-  .hex-photo:not(.hex-main) .hex-caption{font-size:.72rem;inset-block-end:13%}
+  .hero-layout{grid-template-columns:minmax(0,1fr);gap:.85rem;min-block-size:0;padding-block:.9rem 1.75rem}
+  .hero-copy{display:contents}
+  .hero h1{font-size:min(10.6vw,3.4rem);line-height:1.3}
+  html[lang="en"] .hero h1{font-size:min(9.1vw,3rem);line-height:1.15}
+  .hero h1 span{display:inline-block}
+  .hero .actions{order:1;flex-wrap:nowrap;gap:.5rem}
+  .hero .actions .button{flex:0 1 auto;min-inline-size:0;padding-inline:clamp(.7rem,3.6vw,1.35rem);font-size:clamp(.82rem,3.8vw,1rem);white-space:nowrap}
+  .hex-cluster{order:2;--fit:calc(100vh - var(--header) - 14.6rem - env(safe-area-inset-bottom));inline-size:auto;block-size:clamp(13.5rem,min(var(--fit),(100vw - 2.4rem) / .792),31rem)}
+  .hero-lede{order:3;margin-block:.4rem 0}
+  .hero-place{display:none}
+  .hex-photo:not(.hex-main) .hex-caption{font-size:.7rem;inset-block-end:13%}
+}
+@supports (block-size:100svh){
+  @media (max-width:47rem){
+    .hex-cluster{--fit:calc(100svh - var(--header) - 14.6rem - env(safe-area-inset-bottom))}
+  }
 }
 
 /* Opening screen. Plays once per visit, only when the home page is the first page opened
