@@ -34,6 +34,12 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
 .hex-light .hex-rim{stroke-width:1.6}
 .hex-lamp .hex-rim{fill:rgba(255,255,255,.07);stroke:var(--lamp);filter:drop-shadow(0 0 9px rgba(255,255,255,.75))}
 .hex-sun .hex-rim{fill:rgba(246,174,69,.08);stroke:var(--sun);filter:drop-shadow(0 0 9px rgba(246,174,69,.75))}
+/* Small gym loops inside the two bigger lights. Without motion they are simply a loaded bar and a dumbbell. */
+.hex-gym{position:absolute;inset-inline-start:16%;inset-block-start:50%;inline-size:68%;aspect-ratio:1;translate:0 -50%;overflow:visible}
+.gym-bar{fill:var(--text)}
+.gym-plate{fill:var(--sun)}
+.gym-curl{transform-origin:24px 24px}
+.hex-light[data-gym="barbell"]::before{content:"";position:absolute;inset:8% 0;border-radius:50%;background:radial-gradient(closest-side,rgba(246,174,69,.55),transparent);opacity:0}
 
 /* The galaxy is drawn once on a canvas (hero-motion.js); CSS tilts the disc and turns it. */
 .hex-galaxy{position:absolute;z-index:-1;left:50%;top:50%;inline-size:225%;aspect-ratio:1;translate:calc(-50% + var(--px) * -.5px) calc(-50% + var(--py) * -.5px);rotate:-24deg;scale:1 .5;pointer-events:none}
@@ -50,11 +56,37 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
   .hex-window,.hex-caption{animation:hex-develop .75s var(--ease) both;animation-delay:calc(var(--intro) + var(--i) * 95ms + 330ms)}
   .hex-galaxy{animation:hex-develop 1.8s ease-out both;animation-delay:calc(var(--intro) + .55s)}
   .hex-galaxy canvas{animation:galaxy-turn 170s linear infinite}
+  /* The bar: plates slide on from the inside out, two presses with the lamp glowing at the top, then again. */
+  .hex-gym{animation:hex-develop .6s ease-out both;animation-delay:calc(var(--intro) + var(--i) * 95ms + .5s)}
+  .gym-lift,.gym-p1,.gym-p2,.gym-p3,.hex-light[data-gym="barbell"]::before{animation:6s infinite both;animation-delay:calc(var(--intro) + 1.4s)}
+  .gym-lift{animation-name:gym-lift}
+  .gym-p1{animation-name:gym-load-1}
+  .gym-p2{animation-name:gym-load-2}
+  .gym-p3{animation-name:gym-load-3}
+  .gym-l{--from:-7px}
+  .gym-r{--from:7px}
+  .hex-light[data-gym="barbell"]::before{animation-name:gym-glow}
+  .gym-curl{animation:gym-curl 3s ease-in-out infinite both;animation-delay:calc(var(--intro) + 1.4s)}
+  .hex-cluster.is-away :is(.gym-lift,.gym-plate,.gym-curl),.hex-cluster.is-away .hex-light::before{animation-play-state:paused}
 }
 @keyframes hex-on{0%{opacity:0}9%{opacity:.95}15%{opacity:.12}24%{opacity:1}31%{opacity:.35}42%,100%{opacity:1}}
 @keyframes hex-develop{from{opacity:0}}
 @keyframes hero-rise{from{opacity:0;transform:translateY(.3em)}}
 @keyframes galaxy-turn{to{rotate:1turn}}
+@keyframes gym-lift{
+  0%{opacity:0;transform:translateY(4px)}
+  5%,40%{opacity:1;transform:translateY(4px);animation-timing-function:cubic-bezier(.3,0,.2,1)}
+  50%,55%{transform:translateY(-7px);animation-timing-function:ease-in-out}
+  65%{transform:translateY(4px);animation-timing-function:cubic-bezier(.3,0,.2,1)}
+  75%,80%{transform:translateY(-7px);animation-timing-function:ease-in-out}
+  90%,95%{opacity:1;transform:translateY(4px)}
+  100%{opacity:0;transform:translateY(4px)}
+}
+@keyframes gym-load-1{0%,8%{opacity:0;transform:translateX(var(--from));animation-timing-function:cubic-bezier(.2,.9,.3,1.25)}14%,100%{opacity:1;transform:none}}
+@keyframes gym-load-2{0%,18%{opacity:0;transform:translateX(var(--from));animation-timing-function:cubic-bezier(.2,.9,.3,1.25)}24%,100%{opacity:1;transform:none}}
+@keyframes gym-load-3{0%,28%{opacity:0;transform:translateX(var(--from));animation-timing-function:cubic-bezier(.2,.9,.3,1.25)}34%,100%{opacity:1;transform:none}}
+@keyframes gym-glow{0%,44%,63%,69%,88%,100%{opacity:0}52%,77%{opacity:1}}
+@keyframes gym-curl{0%,100%{transform:translateY(5px) rotate(20deg)}45%,55%{transform:translateY(-5px) rotate(-22deg)}}
 
 /* On a phone the whole banner fits the first screen: the headline on one line, the buttons, and the full
    cluster above the dock. --fit is the height left for the cluster; the paragraph moves under it. */

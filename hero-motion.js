@@ -102,6 +102,7 @@ if (galaxy) {
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(([entry]) => {
       galaxy.style.animationPlayState = entry.isIntersecting ? "running" : "paused";
+      cluster?.classList.toggle("is-away", !entry.isIntersecting);
     }).observe(galaxy);
   }
   let resizeTimer = 0;
