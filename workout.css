@@ -8,7 +8,7 @@
 .workout label{display:grid;gap:.35rem;min-inline-size:0;font-weight:600;font-size:.92rem}
 .workout :is(input:not([type="checkbox"]),select){inline-size:100%;min-inline-size:0;min-block-size:2.9rem;padding:.35rem .8rem;border:1px solid var(--rim);border-radius:.9rem;background:var(--night);color:var(--text);font-weight:400;font-size:1rem}
 .workout input[type="number"]{font:700 1.08rem/1.2 var(--display);font-variant-numeric:tabular-nums}
-.workout :is(input,select):focus-visible{border-color:var(--ion);outline:2px solid var(--ion);outline-offset:1px}
+.workout :is(input,select):focus-visible{border-color:var(--lamp);outline:2px solid var(--lamp);outline-offset:1px}
 .workout select option{background:var(--deck);color:var(--text)}
 .workout-input{position:relative;display:block}
 .workout-input input{padding-inline-end:2.6rem}
@@ -41,10 +41,10 @@
 .plate-options input{position:absolute;inset:0;inline-size:100%;block-size:100%;margin:0;opacity:0;cursor:pointer}
 .plate-options span{display:grid;place-items:center;min-inline-size:3.1rem;min-block-size:2.6rem;padding-inline:.6rem;border:1px solid var(--rim);border-radius:99rem;color:var(--muted);font:700 .95rem var(--display);transition:background .2s,color .2s,border-color .2s}
 .plate-options input:checked + span{border-color:var(--sun);background:var(--sun);color:var(--sun-ink)}
-.plate-options input:focus-visible + span{outline:2px solid var(--ion);outline-offset:2px}
+.plate-options input:focus-visible + span{outline:2px solid var(--lamp);outline-offset:2px}
 
 .workout-output{display:grid;gap:.25rem;padding:1rem 1.1rem;border:1px solid var(--rim);border-radius:1.1rem;background:var(--night)}
-.workout-output strong{color:var(--ion);font:800 1.5rem/1.3 var(--display)}
+.workout-output strong{color:var(--lamp);font:800 1.5rem/1.3 var(--display)}
 .workout-output #plate-side{color:var(--text);font-weight:600}
 .workout-output #plate-breakdown{justify-self:start;color:var(--muted);font-size:.92rem}
 [dir="rtl"] .workout-output #plate-breakdown{justify-self:end}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#090d1c">
+  <meta name="theme-color" content="#050505">
   <title>جالاكسي جيم | نادي المجرة في إربد</title>
   <meta name="description" content="نادي المجرة للياقة البدنية وبناء الأجسام في إيدون، إربد. تعرّف على النادي، احسب أرقامك، واسأل عن الاشتراك.">
   <meta name="robots" content="noindex, nofollow">
@@ -18,6 +18,7 @@
   <link rel="icon" href="/galaxy-gym/assets/brand.webp" type="image/webp">
   <link rel="preload" href="/galaxy-gym/assets/fonts/alexandria-arabic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/galaxy-gym/assets/fonts/plex-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
+  <script>try{if(!sessionStorage.getItem("gg-intro")){sessionStorage.setItem("gg-intro","1");if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("is-splash")}}catch(e){}</script>
   <link rel="stylesheet" href="/galaxy-gym/site.css">
   <link rel="stylesheet" href="/galaxy-gym/hero-motion.css"><script type="module" src="/galaxy-gym/hero-motion.js"></script>
 
@@ -25,6 +26,19 @@
   <script src="/galaxy-gym/site.js" defer></script>
 </head>
 <body data-route="home">
+  <div class="splash" data-splash aria-hidden="true">
+    <div class="splash-stage">
+      <div class="splash-ceiling"><div class="splash-plane"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i></div></div>
+      <div class="splash-ceiling splash-floor"><div class="splash-plane"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i></div></div>
+      <div class="splash-mark">
+        <svg class="splash-ring" viewBox="0 0 100 115.47" focusable="false"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg>
+        <img src="/galaxy-gym/assets/brand.webp" alt="" width="128" height="128">
+      </div>
+      <p class="splash-word" dir="ltr"><span>GALAXY <b>GYM</b></span></p>
+      <i class="splash-rule"></i>
+    </div>
+    <svg class="splash-iris" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false"><path d="M50 0 100 28.87V86.6L50 115.47 0 86.6V28.87Z"/><path d="M50 0 100 28.87V86.6L50 115.47 0 86.6V28.87Z"/></svg>
+  </div>
   <a class="skip" href="#main">انتقل إلى المحتوى</a>
   <header class="site-header">
     <div class="container header-inner">
@@ -54,14 +68,9 @@
           <a class="hero-place" href="/galaxy-gym/contact/"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>إيدون، إربد</a>
         </div>
         <div class="hex-cluster" data-hex-cluster>
-    <svg class="hex-orbit" viewBox="0 0 400 400" focusable="false" aria-hidden="true">
-      <g transform="rotate(-24 200 200)">
-        <path id="galaxy-orbit" d="M4 200a196 74 0 1 0 392 0a196 74 0 1 0-392 0"/>
-        <circle r="3.4"><animateMotion dur="26s" repeatCount="indefinite"><mpath href="#galaxy-orbit"/></animateMotion></circle>
-      </g>
-    </svg>
+    <div class="hex-galaxy" aria-hidden="true"><canvas data-galaxy></canvas></div>
     <nav class="hex-tiles" aria-label="صور من داخل النادي"><a class="hex hex-photo hex-main" href="/galaxy-gym/club/" style="--x:32.47%;--y:50%;--w:64.94%;--depth:0.35;--i:0"><span class="hex-window"><img src="/galaxy-gym/assets/equipment.webp" alt="" width="1200" height="1500" fetchpriority="high" decoding="async" srcset="/galaxy-gym/assets/equipment-720.webp 720w, /galaxy-gym/assets/equipment.webp 1200w" sizes="(max-width: 47rem) 60vw, 22rem"></span><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg><span class="hex-caption">الأوزان الحرة</span></a><a class="hex hex-photo" href="/galaxy-gym/club/" style="--x:58.1%;--y:14.83%;--w:32.47%;--depth:0.8;--i:1"><span class="hex-window"><img src="/galaxy-gym/assets/resistance.webp" alt="" width="1200" height="1500" decoding="async"></span><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg><span class="hex-caption">أجهزة المقاومة</span></a><a class="hex hex-photo" href="/galaxy-gym/club/" style="--x:83.77%;--y:50%;--w:32.47%;--depth:1;--i:2"><span class="hex-window"><img src="/galaxy-gym/assets/gym.webp" alt="" width="1512" height="945" decoding="async"></span><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg><span class="hex-caption">صالة النادي</span></a><a class="hex hex-photo" href="/galaxy-gym/club/" style="--x:58.1%;--y:85.17%;--w:32.47%;--depth:0.8;--i:3"><span class="hex-window"><img src="/galaxy-gym/assets/cardio.webp" alt="" width="970" height="1290" decoding="async"></span><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg><span class="hex-caption">الكارديو</span></a></nav>
-    <span class="hex hex-light hex-ion" style="--x:10.9%;--y:20.4%;--w:16.23%;--depth:1.5;--i:4" aria-hidden="true"><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg></span><span class="hex hex-light hex-sun" style="--x:10.9%;--y:79.6%;--w:16.23%;--depth:1.5;--i:5" aria-hidden="true"><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg></span><span class="hex hex-light hex-sun" style="--x:90.5%;--y:21.5%;--w:9.2%;--depth:2.1;--i:6" aria-hidden="true"><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg></span><span class="hex hex-light hex-ion" style="--x:91.5%;--y:80.5%;--w:6.6%;--depth:2.4;--i:7" aria-hidden="true"><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg></span>
+    <span class="hex hex-light hex-lamp" style="--x:10.9%;--y:20.4%;--w:16.23%;--depth:1.5;--i:4" aria-hidden="true"><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg></span><span class="hex hex-light hex-sun" style="--x:10.9%;--y:79.6%;--w:16.23%;--depth:1.5;--i:5" aria-hidden="true"><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg></span><span class="hex hex-light hex-sun" style="--x:90.5%;--y:21.5%;--w:9.2%;--depth:2.1;--i:6" aria-hidden="true"><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg></span><span class="hex hex-light hex-lamp" style="--x:91.5%;--y:80.5%;--w:6.6%;--depth:2.4;--i:7" aria-hidden="true"><svg class="hex-rim" viewBox="0 0 100 115.47" preserveAspectRatio="none" focusable="false" aria-hidden="true"><path d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z"/></svg></span>
   </div>
       </div>
     </section>

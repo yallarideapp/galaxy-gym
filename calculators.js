@@ -1,5 +1,6 @@
 import {
   estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, restingEnergy,
+  restingEnergyFromLeanMass, fatFreeMass, bodyFatLevel, muscleLevel, healthyFatWeightRange,
   calorieTarget, goalMacros, proteinPerKg, waterRange, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
 
@@ -31,6 +32,10 @@ const cards = new Map(Array.from(root.querySelectorAll("[data-card]"), (node) =>
 const activity = root.querySelector("[data-activity]");
 const marker = root.querySelector('[data-marker="bmi"]');
 const shares = new Map(Array.from(root.querySelectorAll("[data-share]"), (node) => [node.dataset.share, node]));
+const rows = new Map(Array.from(root.querySelectorAll("[data-row]"), (node) => [node.dataset.row, node]));
+const blocks = new Map(Array.from(root.querySelectorAll("[data-block]"), (node) => [node.dataset.block, node]));
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const levels = ["low", "ok", "over", "high"];
 
 function parseNumber(value) {
   let digits = value.trim()
@@ -74,7 +79,27 @@ function show(key, ready) {
   card.empty.hidden = ready;
 }
 
-const set = (key, text) => { outputs.get(key).textContent = text; };
+// Headline numbers flash the logo's orange for a moment when they change, so the eye finds what moved.
+function set(key, text) {
+  const node = outputs.get(key);
+  if (node.textContent === text) return;
+  const first = node.textContent === "" || node.textContent === "—";
+  node.textContent = text;
+  if (!first && node.hasAttribute("data-tick") && !reducedMotion.matches && node.animate) {
+    node.animate([{ color: "#ffc66e", transform: "translateY(-.06em)" }, {}], { duration: 420, easing: "cubic-bezier(.2,.7,.2,1)" });
+  }
+}
+function reveal(key, text) {
+  const node = outputs.get(key);
+  node.hidden = !text;
+  node.textContent = text;
+}
+function invalidate(key, message) {
+  const input = inputs.get(key);
+  input.error.textContent = message;
+  input.error.hidden = false;
+  input.control.setAttribute("aria-invalid", "true");
+}
 const fill = (template, ...values) => template.replace(/\{(\d+)\}/g, (_, index) => values[index]);
 const checked = (name) => root.querySelector(`input[name="${name}"]:checked`).value;
 
@@ -85,6 +110,18 @@ function update() {
   const height = read("height");
   const weight = read("weight");
 
+  // Optional reading from a body-composition scan. Body fat sharpens the calorie and protein numbers;
+  // either reading adds context to the BMI.
+  const fatReading = read("bodyfat", { optional: true });
+  let muscleReading = read("muscle", { optional: true });
+  if (fatReading !== null && muscleReading !== null && fatReading + muscleReading > 100) {
+    invalidate("muscle", t.scanSum);
+    muscleReading = null;
+  }
+  const lean = fatReading !== null && weight !== null ? fatFreeMass(weight, fatReading) : null;
+  const fatLevel = fatReading !== null && age !== null ? bodyFatLevel(sex, age, fatReading) : null;
+  const muscleBand = muscleReading !== null && age !== null ? muscleLevel(sex, age, muscleReading) : null;
+
   // Calories, then the macros built on them.
   const energyReady = age !== null && height !== null && weight !== null;
   show("energy", energyReady);
@@ -94,7 +131,8 @@ function update() {
     set("glance-protein", "—");
   }
   if (energyReady) {
-    const resting = restingEnergy(sex, weight, height, age);
+    const resting = lean !== null ? restingEnergyFromLeanMass(lean) : restingEnergy(sex, weight, height, age);
+    reveal("resting-basis", lean !== null ? fill(t.restingLean, loose.format(lean)) : "");
     const maintenance = resting * Number(activity.value);
     const target = calorieTarget(maintenance, goal, sex);
     set("target", whole.format(target.calories));
@@ -104,7 +142,10 @@ function update() {
     set("maintenance", whole.format(maintenance));
     set("resting", whole.format(resting));
 
-    const grams = goalMacros(target.calories, weight, goal);
+    // Above the healthy body-fat range, protein follows the weight this lean mass would have inside the range.
+    const leanBased = lean !== null && fatLevel !== null && fatLevel >= 2;
+    const proteinWeight = leanBased ? Math.min(weight, healthyFatWeightRange(sex, age, lean)[1]) : weight;
+    const grams = goalMacros(target.calories, proteinWeight, goal);
     const energy = { protein: grams.protein * 4, carbs: grams.carbs * 4, fat: grams.fat * 9 };
     const total = energy.protein + energy.carbs + energy.fat;
     set("glance-protein", whole.format(grams.protein));
@@ -113,7 +154,9 @@ function update() {
       set(name, `${whole.format(grams[name])} ${t.grams}`);
       set(`${name}-share`, `${whole.format(energy[name] / total * 100)}%`);
     }
-    set("protein-rule", `${t.protein}: ${fill(t.proteinRule, plain.format(proteinPerKg[goal]))}`);
+    set("protein-rule", `${t.protein}: ${leanBased
+      ? fill(t.proteinRuleLean, plain.format(proteinPerKg[goal]), loose.format(proteinWeight))
+      : fill(t.proteinRule, plain.format(proteinPerKg[goal]))}`);
   }
 
   show("water", weight !== null);
@@ -136,6 +179,20 @@ function update() {
     marker.style.left = `${Math.min(Math.max((index - 15) / 20, 0), 1) * 100}%`;
     const [low, top] = referenceWeightRange(height);
     set("bmi-range", `${span(low, top, loose)} ${t.kg}`);
+
+    // With a reading, say what the BMI can't: whether the weight is muscle or fat.
+    const over = index >= 25;
+    const verdict = fatLevel !== null
+      ? [t.fatVerdicts.low, over ? t.fatVerdicts.okOver : t.fatVerdicts.ok, t.fatVerdicts.high, t.fatVerdicts.veryHigh][fatLevel]
+      : muscleBand !== null ? t.muscleVerdicts[over ? "over" : "within"][muscleBand] : "";
+    reveal("bmi-verdict", verdict);
+    outputs.get("bmi-note").hidden = Boolean(verdict);
+    const fitted = lean !== null && fatLevel !== null && fatLevel >= 2;
+    rows.get("fit-range").hidden = !fitted;
+    if (fitted) {
+      const [fitLow, fitTop] = healthyFatWeightRange(sex, age, lean);
+      set("fit-range", `${span(fitLow, fitTop, loose)} ${t.kg}`);
+    }
   }
 
   // Tape-measure body fat: the waist box changes meaning with sex, and women add a hip measurement.
@@ -150,13 +207,30 @@ function update() {
   const waist = read("waist", { optional: true });
   const hips = female ? read("hip", { optional: true }) : 0;
   const measured = height !== null && neck !== null && waist !== null && hips !== null;
-  const fatPercent = measured ? estimateBodyFat(sex, height, waist, neck, hips) : null;
-  outputs.get("fat-invalid").hidden = !measured || fatPercent !== null;
-  show("fat", fatPercent !== null);
+  const tapePercent = measured ? estimateBodyFat(sex, height, waist, neck, hips) : null;
+  outputs.get("fat-invalid").hidden = !measured || tapePercent !== null;
+  // The scan reading wins; the tape estimate stands in when there is none.
+  const fatPercent = fatReading ?? tapePercent;
+  show("fat", fatPercent !== null || muscleReading !== null);
+  blocks.get("fat").hidden = fatPercent === null;
   if (fatPercent !== null) {
     set("fat-percent", decimal.format(fatPercent));
+    set("fat-source", fatReading !== null ? t.fatFromReading : t.fatFromTape);
+    const level = age !== null ? bodyFatLevel(sex, age, fatPercent) : null;
+    reveal("fat-band", level === null ? "" : t.fatBands[level]);
+    outputs.get("fat-band").dataset.level = level === null ? "" : levels[level];
     set("fat-mass", weight === null ? "—" : `${loose.format(weight * fatPercent / 100)} ${t.kg}`);
     set("lean-mass", weight === null ? "—" : `${loose.format(weight * (1 - fatPercent / 100))} ${t.kg}`);
+    const both = fatReading !== null && tapePercent !== null;
+    rows.get("tape-percent").hidden = !both;
+    if (both) set("tape-percent", `${decimal.format(tapePercent)}%`);
+  }
+  blocks.get("muscle").hidden = muscleReading === null;
+  if (muscleReading !== null) {
+    reveal("muscle-band", muscleBand === null ? "" : t.muscleBands[muscleBand]);
+    outputs.get("muscle-band").dataset.level = muscleBand === null ? "" : ["over", "ok", "ok", "ok"][muscleBand];
+    set("muscle-percent", `${loose.format(muscleReading)}%`);
+    set("muscle-mass", weight === null ? "—" : `${loose.format(weight * muscleReading / 100)} ${t.kg}`);
   }
 
   show("heart", age !== null);

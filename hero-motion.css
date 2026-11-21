@@ -1,11 +1,12 @@
-/* Home hero: a night sky, and a cluster of hexagon lights that switch on once when the page opens. */
+/* Home hero: black like the gym's posters, a slow galaxy, and a cluster of hexagon lights that switch on once when the page opens. */
+:root{--intro:0s}
 .hero{position:relative;isolation:isolate;overflow:clip}
 .hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url("/galaxy-gym/assets/stars.svg") 0 0/60rem auto;
   -webkit-mask-image:linear-gradient(#000 40%,transparent 97%);mask-image:linear-gradient(#000 40%,transparent 97%)}
 .hero::after{content:"";position:absolute;inset:0;z-index:-3;
   background:
-    radial-gradient(52% 60% at 24% 58%,rgba(246,174,69,.13),transparent 72%),
-    radial-gradient(42% 52% at 88% 6%,rgba(99,213,230,.11),transparent 70%)}
+    radial-gradient(48% 56% at 24% 56%,rgba(246,174,69,.12),transparent 72%),
+    radial-gradient(40% 50% at 88% 4%,rgba(255,255,255,.07),transparent 70%)}
 [dir="ltr"] .hero::after{transform:scaleX(-1)}
 
 .hero-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(1.5rem,4vw,4rem);min-block-size:min(47rem,calc(100svh - var(--header)));padding-block:clamp(1.75rem,4.5vw,3.5rem)}
@@ -22,8 +23,8 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
 .hex{position:absolute;inset-inline-start:calc(var(--x) - var(--w) / 2);inset-block-start:var(--y);inline-size:var(--w);aspect-ratio:100/115.47;translate:calc(var(--px) * var(--depth) * 1px) calc(-50% + var(--py) * var(--depth) * 1px)}
 .hex-window{position:absolute;inset:0;overflow:hidden;background:var(--deck);-webkit-mask:var(--hex-mask) center/100% 100% no-repeat;mask:var(--hex-mask) center/100% 100% no-repeat}
 .hex-window img{inline-size:100%;block-size:100%;object-fit:cover;transition:transform .7s var(--ease)}
-.hex-window::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(9,13,28,.86),rgba(9,13,28,0) 46%)}
-.hex-rim{position:absolute;inset:0;inline-size:100%;block-size:100%;overflow:visible;fill:none;stroke:rgba(241,239,232,.6);stroke-width:1.5;filter:drop-shadow(0 0 7px rgba(241,239,232,.35));transition:stroke .25s,filter .25s;pointer-events:none}
+.hex-window::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(5,5,5,.86),rgba(5,5,5,0) 46%)}
+.hex-rim{position:absolute;inset:0;inline-size:100%;block-size:100%;overflow:visible;fill:none;stroke:rgba(245,244,240,.6);stroke-width:1.5;filter:drop-shadow(0 0 7px rgba(245,244,240,.35));transition:stroke .25s,filter .25s;pointer-events:none}
 .hex-rim path{vector-effect:non-scaling-stroke}
 .hex-caption{position:absolute;inset-inline:12%;inset-block-end:15%;font-weight:600;font-size:clamp(.74rem,1.25vw,.92rem);line-height:1.4;text-align:center}
 .hex-main .hex-caption{inset-block-end:17%;font-size:clamp(.9rem,1.5vw,1.08rem)}
@@ -31,25 +32,29 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
 .hex-photo:hover .hex-window img{transform:scale(1.07)}
 .hex-photo:focus-visible{outline:0}
 .hex-light .hex-rim{stroke-width:1.6}
-.hex-ion .hex-rim{fill:rgba(99,213,230,.07);stroke:var(--ion);filter:drop-shadow(0 0 9px rgba(99,213,230,.75))}
+.hex-lamp .hex-rim{fill:rgba(255,255,255,.07);stroke:var(--lamp);filter:drop-shadow(0 0 9px rgba(255,255,255,.75))}
 .hex-sun .hex-rim{fill:rgba(246,174,69,.08);stroke:var(--sun);filter:drop-shadow(0 0 9px rgba(246,174,69,.75))}
 
-.hex-orbit{position:absolute;z-index:-1;inset-inline-start:-30%;inset-block-start:50%;inline-size:160%;translate:0 -50%;overflow:visible}
-[dir="rtl"] .hex-orbit{scale:-1 1}
-.hex-orbit path{fill:none;stroke:rgba(169,175,203,.26);stroke-width:1;vector-effect:non-scaling-stroke}
-.hex-orbit circle{fill:var(--sun);filter:drop-shadow(0 0 5px var(--sun))}
+/* The galaxy is drawn once on a canvas (hero-motion.js); CSS tilts the disc and turns it. */
+.hex-galaxy{position:absolute;z-index:-1;left:50%;top:50%;inline-size:225%;aspect-ratio:1;translate:calc(-50% + var(--px) * -.5px) calc(-50% + var(--py) * -.5px);rotate:-24deg;scale:1 .5;pointer-events:none}
+[dir="rtl"] .hex-galaxy{rotate:24deg}
+.hex-galaxy canvas{display:block;inline-size:100%;block-size:100%}
 
+/* One sequence when the page opens: the headline rises, the lamps flicker on, the galaxy fades up.
+   --intro pushes it all back while the opening screen is still up. */
 @media (prefers-reduced-motion:no-preference){
-  .hex-rim{animation:hex-on .85s linear both;animation-delay:calc(var(--i) * 95ms + 120ms)}
-  .hex-window,.hex-caption{animation:hex-develop .75s var(--ease) both;animation-delay:calc(var(--i) * 95ms + 330ms)}
-  .hex-orbit{animation:hex-develop 1.2s ease-out .9s both}
+  .hero h1 span{animation:hero-rise .7s var(--ease) both;animation-delay:calc(var(--intro) + 40ms)}
+  .hero h1 span + span{animation-delay:calc(var(--intro) + 130ms)}
+  .hero-lede,.hero .actions,.hero-place{animation:hex-develop .6s ease-out both;animation-delay:calc(var(--intro) + 330ms)}
+  .hex-rim{animation:hex-on .85s linear both;animation-delay:calc(var(--intro) + var(--i) * 95ms + 120ms)}
+  .hex-window,.hex-caption{animation:hex-develop .75s var(--ease) both;animation-delay:calc(var(--intro) + var(--i) * 95ms + 330ms)}
+  .hex-galaxy{animation:hex-develop 1.8s ease-out both;animation-delay:calc(var(--intro) + .55s)}
+  .hex-galaxy canvas{animation:galaxy-turn 170s linear infinite}
 }
 @keyframes hex-on{0%{opacity:0}9%{opacity:.95}15%{opacity:.12}24%{opacity:1}31%{opacity:.35}42%,100%{opacity:1}}
 @keyframes hex-develop{from{opacity:0}}
-
-@media (prefers-reduced-motion:reduce){
-  .hex-orbit circle{display:none}
-}
+@keyframes hero-rise{from{opacity:0;transform:translateY(.3em)}}
+@keyframes galaxy-turn{to{rotate:1turn}}
 
 @media (max-width:47rem){
   .hero-layout{grid-template-columns:minmax(0,1fr);gap:1.25rem;min-block-size:0;padding-block:1.6rem 2.25rem}
@@ -58,4 +63,51 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
   .hero-place{margin-block-start:.6rem}
   .hex-cluster{inline-size:min(100%,23rem)}
   .hex-photo:not(.hex-main) .hex-caption{font-size:.72rem;inset-block-end:13%}
+}
+
+/* Opening screen. Plays once per visit, only when the home page is the first page opened
+   (the script in the <head> adds .is-splash). The whole timeline is CSS, so it always ends by itself. */
+.splash{display:none}
+html.is-splash{--splash-exit:1.7s;--intro:calc(var(--splash-exit) + .12s)}
+html.is-splash .splash{display:block;position:fixed;inset:0;z-index:100;overflow:hidden;background:#000;cursor:pointer;
+  animation:splash-open .85s cubic-bezier(.62,0,.22,1) var(--splash-exit) forwards}
+.splash-stage{position:absolute;inset:0;animation:splash-clear .3s ease-in var(--splash-exit) forwards}
+
+/* The ceiling: a flat plane of lamps seen from below, running away to a horizon behind the logo. */
+.splash-ceiling{position:absolute;inset:0 0 54% 0;overflow:hidden;perspective:30rem;perspective-origin:50% 100%;
+  -webkit-mask-image:linear-gradient(#000 8%,transparent 66%);mask-image:linear-gradient(#000 8%,transparent 66%)}
+.splash-plane{--tile:clamp(7.5rem,15vw,13.5rem);position:absolute;top:0;left:50%;inline-size:0;direction:ltr;transform-origin:50% 0;transform:rotateX(-90deg)}
+/* The same lamps, dimmer, mirrored in the floor. */
+.splash-floor{inset:46% 0 0 0;perspective-origin:50% 0;opacity:.16;
+  -webkit-mask-image:linear-gradient(transparent 36%,#000 96%);mask-image:linear-gradient(transparent 36%,#000 96%)}
+.splash-floor .splash-plane{top:auto;bottom:0;transform-origin:50% 100%;transform:rotateX(90deg)}
+.splash-floor .splash-plane i{--near:calc(5 - var(--n))}
+/* Each band is only as wide as its distance needs (--near counts bands from the viewer, nearest 0). */
+.splash-plane i{--near:var(--n);--wide:calc(100vw * (1.72 + .62 * var(--near)));display:block;inline-size:var(--wide);margin-left:calc(var(--wide) / -2);block-size:calc(var(--tile) * 1.3);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 156'%3E%3Cg fill='none' stroke='%23fff' stroke-linejoin='round'%3E%3Cpath stroke-opacity='.16' stroke-width='13' d='M30 9 56 24V54L30 69 4 54V24ZM90 87 116 102V132L90 147 64 132V102ZM30 80V156M90 0V76'/%3E%3Cpath stroke-width='4.2' d='M30 9 56 24V54L30 69 4 54V24ZM90 87 116 102V132L90 147 64 132V102ZM30 80V156M90 0V76'/%3E%3C/g%3E%3C/svg%3E") 50% 0/var(--tile) 100% repeat-x;opacity:0;
+  animation:hex-on .6s linear calc(var(--near) * 85ms + 120ms) forwards}
+
+.splash-mark{position:absolute;top:46%;left:50%;inline-size:clamp(6.75rem,25vw,8.75rem);aspect-ratio:100/115.47;translate:-50% -50%}
+.splash-ring{position:absolute;inset:0;inline-size:100%;block-size:100%;overflow:visible;fill:#000;stroke:#fff;stroke-width:2;filter:drop-shadow(0 0 12px rgba(255,255,255,.75));opacity:0;animation:hex-on .65s linear .5s forwards}
+.splash-ring path{vector-effect:non-scaling-stroke}
+.splash-mark img{position:absolute;top:50%;left:50%;inline-size:56%;block-size:auto;translate:-50% -50%;border-radius:50%;opacity:0;animation:splash-pop .5s var(--ease) .82s forwards}
+.splash-word{position:absolute;inset-inline:0;top:calc(46% + clamp(4.6rem,16vw,5.9rem));margin:0;overflow:hidden;color:#fff;font:800 clamp(1.45rem,6vw,2rem)/1.35 var(--display);letter-spacing:.1em;text-align:center}
+.splash-word span{display:inline-block;transform:translateY(105%);animation:splash-rise .55s var(--ease) .92s forwards}
+.splash-word b{color:var(--sun);font-weight:inherit}
+.splash-rule{position:absolute;top:calc(46% + clamp(7rem,24.5vw,8.8rem));left:50%;inline-size:clamp(6.5rem,28vw,9rem);block-size:2px;margin-left:calc(clamp(6.5rem,28vw,9rem) / -2);background:var(--sun);transform:scaleX(0);animation:splash-rule .62s cubic-bezier(.65,0,.35,1) 1s forwards}
+
+/* The edge of the opening hexagon: one lamp growing until it is wider than the screen. */
+.splash-iris{position:absolute;top:46%;left:50%;inline-size:0;block-size:0;translate:-50% -50%;overflow:visible;fill:none;stroke:#fff;opacity:0;
+  animation:splash-iris .85s cubic-bezier(.62,0,.22,1) var(--splash-exit) forwards}
+.splash-iris path{vector-effect:non-scaling-stroke;stroke-width:3}
+.splash-iris path:first-child{stroke-width:22;stroke-opacity:.14}
+@keyframes splash-iris{from{inline-size:0;block-size:0;opacity:1}75%{opacity:1}to{inline-size:149vmax;block-size:172vmax;opacity:0}}
+
+@keyframes splash-pop{from{opacity:0;scale:.84}to{opacity:1;scale:1}}
+@keyframes splash-rise{to{transform:none}}
+@keyframes splash-rule{to{transform:none}}
+@keyframes splash-clear{to{opacity:0}}
+/* A hexagon opens from the logo: the black sheet is clipped to everything outside a growing hexagon. */
+@keyframes splash-open{
+  from{clip-path:polygon(evenodd,0 0,100% 0,100% 100%,0 100%,0 0,50% 46%,50% 46%,50% 46%,50% 46%,50% 46%,50% 46%,50% 46%)}
+  to{clip-path:polygon(evenodd,0 0,100% 0,100% 100%,0 100%,0 0,50% calc(46% - 86vmax),calc(50% + 74.5vmax) calc(46% - 43vmax),calc(50% + 74.5vmax) calc(46% + 43vmax),50% calc(46% + 86vmax),calc(50% - 74.5vmax) calc(46% + 43vmax),calc(50% - 74.5vmax) calc(46% - 43vmax),50% calc(46% - 86vmax));visibility:hidden}
 }

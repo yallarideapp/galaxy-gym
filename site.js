@@ -66,6 +66,26 @@ if (viewer) {
   });
 }
 
+// Photos below the first screen start dim and come on like the gym's lamps when they scroll into view.
+const lamps = document.querySelectorAll(".area img, .crew > img, .gallery-photo img, .page-photo img");
+if (lamps.length && "IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const switchOn = new IntersectionObserver((entries) => {
+    let order = 0;
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.style.animationDelay = `${order * 110}ms`;
+      entry.target.classList.replace("is-unlit", "is-lit");
+      switchOn.unobserve(entry.target);
+      order += 1;
+    }
+  }, { threshold: 0.2 });
+  for (const lamp of lamps) {
+    if (lamp.getBoundingClientRect().top < innerHeight * 0.9) continue;
+    lamp.classList.add("is-unlit");
+    switchOn.observe(lamp);
+  }
+}
+
 const prefetched = new Set();
 function prefetchRoute(event) {
   const link = event.target.closest("a[href]");

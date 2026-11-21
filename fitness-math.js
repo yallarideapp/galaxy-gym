@@ -33,6 +33,39 @@ export function restingEnergy(sex, weight, height, age) {
   return 10 * weight + 6.25 * height - 5 * age + (sex === "m" ? 5 : -161);
 }
 
+// Cunningham equation (1991): resting energy from fat-free mass, for when a body-fat reading is known.
+export function restingEnergyFromLeanMass(leanMass) {
+  return 370 + 21.6 * leanMass;
+}
+
+export function fatFreeMass(weight, fatPercent) {
+  return weight * (1 - fatPercent / 100);
+}
+
+// Reference bands by sex and age group (18–39, 40–59, 60 and over).
+// Each row: [low below, healthy below, high below]; anything above is very high.
+// Body fat: Gallagher et al., Am J Clin Nutr 2000. Skeletal muscle: Omron Healthcare tables.
+const fatBands = { m: [[8, 20, 25], [11, 22, 28], [13, 25, 30]], f: [[21, 33, 39], [23, 34, 40], [24, 36, 42]] };
+const muscleBands = { m: [[33.3, 39.4, 44.1], [33.1, 39.2, 43.9], [32.9, 39, 43.7]], f: [[24.3, 30.4, 35.4], [24.1, 30.2, 35.2], [23.9, 30, 35]] };
+const ageGroup = (age) => (age < 40 ? 0 : age < 60 ? 1 : 2);
+const levelOf = (value, [low, healthy, high]) => (value < low ? 0 : value < healthy ? 1 : value < high ? 2 : 3);
+
+// 0 below the healthy range, 1 inside it, 2 above it, 3 well above it.
+export function bodyFatLevel(sex, age, percent) {
+  return levelOf(percent, fatBands[sex][ageGroup(age)]);
+}
+
+// 0 low, 1 normal, 2 high, 3 very high.
+export function muscleLevel(sex, age, percent) {
+  return levelOf(percent, muscleBands[sex][ageGroup(age)]);
+}
+
+// The body weights at which this fat-free mass would sit at the bottom and the top of the healthy body-fat range.
+export function healthyFatWeightRange(sex, age, leanMass) {
+  const [low, healthy] = fatBands[sex][ageGroup(age)];
+  return [leanMass / (1 - low / 100), leanMass / (1 - healthy / 100)];
+}
+
 // A starting calorie target for the goal. Fat loss never drops below a minimum intake.
 export function calorieTarget(maintenance, goal, sex) {
   if (goal === "gain") return { calories: maintenance + 300, floored: false };
@@ -44,7 +77,8 @@ export function calorieTarget(maintenance, goal, sex) {
 
 export const proteinPerKg = { lose: 2, keep: 1.6, gain: 1.8 };
 
-// Protein from body weight, fat as a quarter of calories, carbohydrate as the remainder.
+// Protein from body weight (or the reference weight passed in its place), fat as a quarter of calories,
+// carbohydrate as the remainder.
 export function goalMacros(calories, weight, goal) {
   const protein = weight * (proteinPerKg[goal] ?? proteinPerKg.keep);
   const fat = calories * 0.25 / 9;
