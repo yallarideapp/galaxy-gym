@@ -109,3 +109,31 @@ export function heartRateZones(age) {
   const maximum = estimatedMaxHeartRate(age);
   return [0.5, 0.6, 0.7, 0.8, 0.9].map((lower) => [maximum * lower, maximum * (lower + 0.1)]);
 }
+
+// Barbell plates: the fewest plates per side that reach the target, or the heaviest load below it.
+// Works in whole steps of 1.25 kg (plates are 1.25 kg or multiples of it). Returns null if the bar is heavier than the target.
+export function loadBar(target, bar, sizes) {
+  const step = 125;
+  const targetCents = Math.round(target * 100);
+  const barCents = Math.round(bar * 100);
+  if (targetCents < barCents) return null;
+  const options = sizes.map((size) => ({ size, units: Math.round(size * 100 / step) })).filter((option) => option.units > 0);
+  const maxUnits = Math.floor((targetCents - barCents) / (2 * step));
+  const best = Array(maxUnits + 1).fill(null);
+  best[0] = { count: 0, option: null };
+  for (let units = 1; units <= maxUnits; units += 1) {
+    for (const option of options) {
+      const previous = units >= option.units ? best[units - option.units] : null;
+      if (previous && (!best[units] || previous.count + 1 < best[units].count)) best[units] = { count: previous.count + 1, option };
+    }
+  }
+  const totalUnits = best.findLastIndex(Boolean);
+  const counts = new Map();
+  for (let units = totalUnits; units > 0;) {
+    const option = best[units].option;
+    counts.set(option.size, (counts.get(option.size) ?? 0) + 1);
+    units -= option.units;
+  }
+  const perSide = totalUnits * step / 100;
+  return { total: bar + 2 * perSide, perSide, exact: barCents + 2 * totalUnits * step === targetCents, counts };
+}

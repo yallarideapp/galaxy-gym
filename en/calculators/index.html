@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="/galaxy-gym/site.css">
 
   <link rel="stylesheet" href="/galaxy-gym/calculators.css">
-  <script id="fitness-copy" type="application/json">{"required":"Enter a value.","invalid":"Enter a valid number.","integer":"Enter a whole number.","range":"{min} to {max}","kg":"kg","grams":"g","protein":"Protein","targetNotes":{"lose":"To lose fat: maintenance minus 500 kcal","keep":"To hold your current weight","gain":"To build muscle: maintenance plus 300 kcal"},"proteinRule":"{0} g per kg of body weight","proteinRuleLean":"{0} g per kg, based on {1} kg: your weight at a healthy body-fat level with the same lean mass","restingLean":"Resting calories are based on your fat-free mass ({0} kg), from your reading.","waterCups":"About {0} to {1} glasses (250 ml)","bmiBands":["Below the reference range","Within the reference range","Above the reference range","Well above the reference range"],"bmiAdult":"Reference ranges apply to adults aged 20 and over.","waistMale":"Abdomen","waistMaleHint":"At the navel","waistFemale":"Waist","waistFemaleHint":"At the narrowest point","scanSum":"The two percentages add up to more than 100%.","fatVerdicts":{"low":"Body fat is below the healthy range.","ok":"Body fat is in the healthy range and your weight suits you.","okOver":"Body fat is in the healthy range, so the extra BMI is muscle, not fat.","high":"Body fat is above the healthy range.","veryHigh":"Body fat is well above the healthy range."},"muscleVerdicts":{"within":["Muscle is low. Strength training will help.","Muscle is normal and your weight suits you.","Muscle is high.","Muscle is very high."],"over":["Muscle is below the normal range, so the extra weight is likely fat.","Muscle is normal, so part of the extra weight is likely fat. A body-fat reading will tell you more.","Muscle is high, so the extra BMI is likely muscle.","Muscle is very high, so the extra BMI is muscle."]},"fatFromReading":"From your scan reading","fatFromTape":"Tape-measure estimate","fatBands":["Below the healthy range","Within the healthy range","Above the healthy range","Well above the healthy range"],"muscleBands":["Muscle is below the normal range","Muscle is in the normal range","Muscle is high","Muscle is very high"],"weightSaved":"Your details and today’s weight are saved.","saveFailed":"This browser could not save it."}</script>
+  <script id="fitness-copy" type="application/json">{"plateExact":"Exactly the weight you asked for","plateApproximate":"Closest weight below your target","perSide":"{0} kg","emptyBar":"Lift the empty bar.","required":"Enter a value.","invalid":"Enter a valid number.","integer":"Enter a whole number.","range":"{min} to {max}","kg":"kg","grams":"g","protein":"Protein","targetNotes":{"lose":"To lose fat: maintenance minus 500 kcal","keep":"To hold your current weight","gain":"To build muscle: maintenance plus 300 kcal"},"proteinRule":"{0} g per kg of body weight","proteinRuleLean":"{0} g per kg, based on {1} kg: your weight at a healthy body-fat level with the same lean mass","restingLean":"Resting calories are based on your fat-free mass ({0} kg), from your reading.","waterCups":"About {0} to {1} glasses (250 ml)","bmiBands":["Below the reference range","Within the reference range","Above the reference range","Well above the reference range"],"bmiAdult":"Reference ranges apply to adults aged 20 and over.","waistMale":"Abdomen","waistMaleHint":"At the navel","waistFemale":"Waist","waistFemaleHint":"At the narrowest point","scanSum":"The two percentages add up to more than 100%.","fatVerdicts":{"low":"Body fat is below the healthy range.","ok":"Body fat is in the healthy range and your weight suits you.","okOver":"Body fat is in the healthy range, so the extra BMI is muscle, not fat.","high":"Body fat is above the healthy range.","veryHigh":"Body fat is well above the healthy range."},"muscleVerdicts":{"within":["Muscle is low. Strength training will help.","Muscle is normal and your weight suits you.","Muscle is high.","Muscle is very high."],"over":["Muscle is below the normal range, so the extra weight is likely fat.","Muscle is normal, so part of the extra weight is likely fat. A body-fat reading will tell you more.","Muscle is high, so the extra BMI is likely muscle.","Muscle is very high, so the extra BMI is muscle."]},"fatFromReading":"From your scan reading","fatFromTape":"Tape-measure estimate","fatBands":["Below the healthy range","Within the healthy range","Above the healthy range","Well above the healthy range"],"muscleBands":["Muscle is below the normal range","Muscle is in the normal range","Muscle is high","Muscle is very high"],"weightSaved":"Your details and today’s weight are saved.","saveFailed":"This browser could not save it."}</script>
   <script src="/galaxy-gym/calculators.js" type="module"></script>
 
   <script src="/galaxy-gym/site.js" defer></script>
@@ -48,13 +48,13 @@
       <div class="menu-contact"><a class="button" href="tel:+962791081877"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-4l-5-2-2 2a14 14 0 0 1-6-6l2-2-2-5Z"/></svg><bdi dir="ltr">079 108 1877</bdi></a><a class="button button-quiet" href="https://wa.me/962791081877?text=Hi%2C%20could%20you%20tell%20me%20about%20membership%20options%20at%20Galaxy%20Gym%3F" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 9 9 0 0 1-3.6-.8L4 21l1.8-4.9a9 9 0 0 1-.8-3.6A8.4 8.4 0 0 1 13.5 4h.5a8.4 8.4 0 0 1 7 7Z"/><path d="M10 12h.01m3 0h.01m3 0h.01"/></svg>Message on WhatsApp</a></div>
     </div>
   </dialog>
-  <main id="main" tabindex="-1"><section class="container page-hero calc-hero"><h1>Work out your fitness numbers.</h1><p>Enter your details once and every calculation updates by itself: calories, protein, BMI, body fat, heart rate and one-rep max.</p></section>
+  <main id="main" tabindex="-1"><section class="container page-hero calc-hero"><h1>Work out your fitness numbers.</h1><p>Enter your details once and every calculation updates by itself: BMI, body fat, calories, protein, heart rate, one-rep max and barbell plates.</p></section>
   <noscript><p class="container calc-noscript">Enable JavaScript to use the calculator.</p></noscript>
   <div class="container calc" data-calc>
     <form class="calc-profile" aria-labelledby="calc-profile-title" autocomplete="off" novalidate>
       <h2 id="calc-profile-title">Your details</h2>
       <p class="calc-hint calc-saved" data-saved-note hidden>Filled in from the details saved in your account.</p>
-      <div class="calc-glance" aria-hidden="true"><span><b data-out="glance-target" data-tick>—</b>kcal</span><span><b data-out="glance-protein" data-tick>—</b>g protein</span><span><b data-out="glance-bmi" data-tick>—</b>BMI</span></div>
+      <div class="calc-glance" aria-hidden="true"><span><b data-out="glance-bmi" data-tick>—</b>BMI</span><span><b data-out="glance-target" data-tick>—</b>kcal</span><span><b data-out="glance-protein" data-tick>—</b>g protein</span></div>
       <fieldset class="calc-segment">
       <legend>Sex</legend>
       <div><label><input type="radio" name="sex" value="m" checked><span>Male</span></label><label><input type="radio" name="sex" value="f"><span>Female</span></label></div>
@@ -111,41 +111,8 @@
       <p class="calc-privacy">Results are calculated on your device. Your details stay in this browser.</p>
     </form>
     <div class="calc-results">
-      <nav class="calc-jump" aria-label="Jump to"><a href="#fuel">Calories and food</a><a href="#body">Body</a><a href="#training">Training</a></nav>
-      <section class="calc-group" id="fuel" aria-labelledby="group-fuel">
-        <div class="calc-group-head"><h2 id="group-fuel">Calories and food</h2></div>
-        <div class="calc-grid"><article class="calc-card calc-card-wide" data-card="energy" aria-labelledby="card-energy">
-      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-4-4-8-5-12 0 4-5 5-5 9-1-1-1-3-1-4-2 3-3 5-3 7a7 7 0 0 0 7 7Z"/></svg></span><h3 id="card-energy">Daily calories</h3></header>
-
-      <div class="calc-values" data-values hidden>
-        <div class="calc-split">
-          <div><p class="calc-figure"><b data-out="target" data-tick></b> <span>kcal per day</span></p><p class="calc-note" data-out="target-note"></p><p class="calc-note calc-warn" data-out="floor-note" hidden>Held at a safe minimum. Speak with a professional before going lower.</p><p class="calc-note calc-lean" data-out="resting-basis" hidden></p></div>
-          <dl class="calc-list"><div><dt>Maintenance calories</dt><dd data-out="maintenance"></dd></div><div><dt>Resting calories</dt><dd data-out="resting"></dd></div></dl>
-        </div></div>
-      <p class="calc-empty" data-empty>Enter your age, height and weight to see your calories.</p>
-
-    </article><article class="calc-card" data-card="macros" aria-labelledby="card-macros">
-      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9zM15 3.5a8 8 0 0 1 5.5 5.5H15Z"/></svg></span><h3 id="card-macros">Macronutrient split</h3></header>
-
-      <div class="calc-values" data-values hidden>
-        <div class="calc-bar" aria-hidden="true"><i data-share="protein"></i><i data-share="carbs"></i><i data-share="fat"></i></div>
-        <dl class="calc-list calc-macros">
-          <div data-macro="protein"><dt>Protein</dt><dd><span data-out="protein"></span><small data-out="protein-share"></small></dd></div><div data-macro="carbs"><dt>Carbohydrates</dt><dd><span data-out="carbs"></span><small data-out="carbs-share"></small></dd></div><div data-macro="fat"><dt>Fat</dt><dd><span data-out="fat"></span><small data-out="fat-share"></small></dd></div>
-        </dl>
-        <p class="calc-note" data-out="protein-rule"></p></div>
-      <p class="calc-empty" data-empty>The split appears once your calories are calculated.</p>
-
-    </article><article class="calc-card" data-card="water" aria-labelledby="card-water">
-      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2C9 7 5 10 5 15a7 7 0 0 0 14 0c0-5-4-8-7-13Z"/></svg></span><h3 id="card-water">Daily water</h3></header>
-
-      <div class="calc-values" data-values hidden>
-        <p class="calc-figure"><b data-out="water" data-tick></b> <span>L per day</span></p>
-        <p class="calc-note" data-out="water-cups"></p>
-        <p class="calc-note">You need more when you train and in hot weather.</p></div>
-      <p class="calc-empty" data-empty>Enter your weight to see a water estimate.</p>
-
-    </article></div>
-      </section><section class="calc-group" id="body" aria-labelledby="group-body">
+      <nav class="calc-jump" aria-label="Jump to"><a href="#body">Body</a><a href="#fuel">Calories and food</a><a href="#training">Training</a></nav>
+      <section class="calc-group" id="body" aria-labelledby="group-body">
         <div class="calc-group-head"><h2 id="group-body">Body</h2><div class="calc-save">
           <button class="button button-quiet button-small" type="button" data-save-weight>Save my details to my account</button>
           <p class="calc-hint" data-save-status role="status" hidden><span></span> <a class="text-link" href="/galaxy-gym/en/account/#body">Open my account</a></p>
@@ -206,6 +173,39 @@
       </div>
       <p class="calc-note calc-warn" data-out="fat-invalid" hidden>Check your measurements: the abdomen or waist must be larger than the neck.</p>
     </article></div>
+      </section><section class="calc-group" id="fuel" aria-labelledby="group-fuel">
+        <div class="calc-group-head"><h2 id="group-fuel">Calories and food</h2></div>
+        <div class="calc-grid"><article class="calc-card calc-card-wide" data-card="energy" aria-labelledby="card-energy">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-4-4-8-5-12 0 4-5 5-5 9-1-1-1-3-1-4-2 3-3 5-3 7a7 7 0 0 0 7 7Z"/></svg></span><h3 id="card-energy">Daily calories</h3></header>
+
+      <div class="calc-values" data-values hidden>
+        <div class="calc-split">
+          <div><p class="calc-figure"><b data-out="target" data-tick></b> <span>kcal per day</span></p><p class="calc-note" data-out="target-note"></p><p class="calc-note calc-warn" data-out="floor-note" hidden>Held at a safe minimum. Speak with a professional before going lower.</p><p class="calc-note calc-lean" data-out="resting-basis" hidden></p></div>
+          <dl class="calc-list"><div><dt>Maintenance calories</dt><dd data-out="maintenance"></dd></div><div><dt>Resting calories</dt><dd data-out="resting"></dd></div></dl>
+        </div></div>
+      <p class="calc-empty" data-empty>Enter your age, height and weight to see your calories.</p>
+
+    </article><article class="calc-card" data-card="macros" aria-labelledby="card-macros">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9v9zM15 3.5a8 8 0 0 1 5.5 5.5H15Z"/></svg></span><h3 id="card-macros">Macronutrient split</h3></header>
+
+      <div class="calc-values" data-values hidden>
+        <div class="calc-bar" aria-hidden="true"><i data-share="protein"></i><i data-share="carbs"></i><i data-share="fat"></i></div>
+        <dl class="calc-list calc-macros">
+          <div data-macro="protein"><dt>Protein</dt><dd><span data-out="protein"></span><small data-out="protein-share"></small></dd></div><div data-macro="carbs"><dt>Carbohydrates</dt><dd><span data-out="carbs"></span><small data-out="carbs-share"></small></dd></div><div data-macro="fat"><dt>Fat</dt><dd><span data-out="fat"></span><small data-out="fat-share"></small></dd></div>
+        </dl>
+        <p class="calc-note" data-out="protein-rule"></p></div>
+      <p class="calc-empty" data-empty>The split appears once your calories are calculated.</p>
+
+    </article><article class="calc-card" data-card="water" aria-labelledby="card-water">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2C9 7 5 10 5 15a7 7 0 0 0 14 0c0-5-4-8-7-13Z"/></svg></span><h3 id="card-water">Daily water</h3></header>
+
+      <div class="calc-values" data-values hidden>
+        <p class="calc-figure"><b data-out="water" data-tick></b> <span>L per day</span></p>
+        <p class="calc-note" data-out="water-cups"></p>
+        <p class="calc-note">You need more when you train and in hot weather.</p></div>
+      <p class="calc-empty" data-empty>Enter your weight to see a water estimate.</p>
+
+    </article></div>
       </section><section class="calc-group" id="training" aria-labelledby="group-training">
         <div class="calc-group-head"><h2 id="group-training">Training</h2></div>
         <div class="calc-grid"><article class="calc-card" data-card="heart" aria-labelledby="card-heart">
@@ -237,14 +237,39 @@
         <p class="calc-figure"><b data-out="one-rep" data-tick></b> <span>kg</span></p>
         <p class="calc-note">Estimated one-rep max</p>
         <dl class="calc-list calc-percents"><div><dt><bdi dir="ltr">90%</bdi></dt><dd data-out="lift-90"></dd></div><div><dt><bdi dir="ltr">80%</bdi></dt><dd data-out="lift-80"></dd></div><div><dt><bdi dir="ltr">70%</bdi></dt><dd data-out="lift-70"></dd></div><div><dt><bdi dir="ltr">60%</bdi></dt><dd data-out="lift-60"></dd></div></dl>
-        <a class="text-link" href="/galaxy-gym/en/account/#plates">Work out the barbell plates</a></div>
+        <a class="text-link" href="#plates">Work out the barbell plates</a></div>
       <p class="calc-empty" data-empty>Enter a weight you lifted and the reps you completed in the same set.</p>
+
+    </article><article class="calc-card calc-card-wide" id="plates" data-card="plates" aria-labelledby="card-plates">
+      <header><span class="hex-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3v3.5M12 17.5V21"/></svg></span><h3 id="card-plates">Barbell plates</h3></header>
+      <div class="calc-plate-inputs"><div class="calc-inline">
+        <div class="calc-field" data-field="plate">
+      <label for="calc-plate" data-label>Target total</label>
+      <span class="calc-input"><input id="calc-plate" type="text" inputmode="decimal" autocomplete="off" data-input="plate" data-min="2.5" data-max="600" data-step="2.5" placeholder="—" aria-describedby="calc-plate-error"><span class="calc-unit">kg</span></span>
+
+      <small class="calc-error" id="calc-plate-error" data-error hidden></small>
+    </div>
+        <div class="calc-field" data-field="bar">
+      <label for="calc-bar" data-label>Bar weight</label>
+      <span class="calc-input"><input id="calc-bar" type="text" inputmode="decimal" autocomplete="off" data-input="bar" data-min="5" data-max="60" data-step="0.5" value="20" aria-describedby="calc-bar-error"><span class="calc-unit">kg</span></span>
+
+      <small class="calc-error" id="calc-bar-error" data-error hidden></small>
+    </div>
+      </div>
+      <fieldset class="calc-plates"><legend>Available plates (kg)</legend><div><label><input type="checkbox" value="25" data-plate checked><span>25</span></label><label><input type="checkbox" value="20" data-plate checked><span>20</span></label><label><input type="checkbox" value="15" data-plate checked><span>15</span></label><label><input type="checkbox" value="10" data-plate checked><span>10</span></label><label><input type="checkbox" value="5" data-plate checked><span>5</span></label><label><input type="checkbox" value="2.5" data-plate checked><span>2.5</span></label><label><input type="checkbox" value="1.25" data-plate checked><span>1.25</span></label></div></fieldset>
+      <p class="calc-note calc-warn" data-out="plates-low" hidden>The total must be heavier than the bar.</p></div>
+      <div class="calc-values" data-values hidden>
+        <p class="calc-figure"><b data-out="plates-total" data-tick></b> <span>kg</span></p>
+        <p class="calc-band" data-out="plates-match"></p>
+        <span class="plate-stack" data-plate-stack dir="ltr" aria-hidden="true"></span>
+        <dl class="calc-list"><div><dt>On each side</dt><dd data-out="plates-side"></dd></div></dl>
+        <p class="calc-note" data-out="plates-breakdown" dir="ltr"></p></div>
+      <p class="calc-empty" data-empty>Enter the total you want to lift and choose the plates you have.</p>
 
     </article></div>
       </section>
       <details class="calc-method"><summary>How it’s calculated, with sources</summary>
-        <dl><div><dt>Daily calories</dt><dd>The Mifflin–St Jeor equation estimates resting calories from age, height, weight and sex. An activity factor turns that into maintenance calories. The fat-loss goal subtracts 500 kcal, with a floor of 1,500 for men and 1,200 for women, and the muscle goal adds 300 kcal. These are starting points to adjust as you progress. <a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Macronutrient split</dt><dd>Protein is 1.6 g per kg to maintain, 1.8 to build muscle and 2.0 to lose fat, within the 1.4 to 2.0 g per kg range the International Society of Sports Nutrition recommends for people who train. Fat is 25% of calories and the rest is carbohydrate. Protein and carbohydrate provide 4 kcal per gram, fat 9. <a href="https://pubmed.ncbi.nlm.nih.gov/28642676/" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Daily water</dt><dd>A common rule of thumb: 30 to 35 ml per kg of body weight a day. For comparison, the U.S. National Academies’ reference for total daily water from food and drinks is 3.7 L for men and 2.7 L for women. <a href="https://www.nationalacademies.org/read/10925/chapter/6" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Body mass index</dt><dd>Weight in kilograms divided by height in metres squared. The adult reference range is 18.5 to 24.9. <a href="https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Body fat by tape measure</dt><dd>The U.S. Navy circumference method: height, neck and abdomen for men, and height, neck, waist and hips for women. This estimate only appears in the body-composition card and does not change your calories. <a href="https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA370158.xhtml" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Heart-rate zones</dt><dd>The Tanaka equation subtracts 0.7 times age from 208. Zones are percentages of that estimate, and your actual heart rate can differ. <a href="https://pubmed.ncbi.nlm.nih.gov/11153730/" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>One-rep max</dt><dd>The Epley equation: weight × (1 + reps ÷ 30) for a set of 2 to 12 reps. For one rep the result is the weight you entered. <a href="https://revistas.rcaap.pt/motricidade/article/download/2948/4846/15810" target="_blank" rel="noopener noreferrer">Source</a></dd></div>
-          <div><dt>Body-scan reading</dt><dd>Optional. With a body-fat reading, resting calories use the Cunningham equation on fat-free mass (370 + 21.6 × fat-free kg) instead of Mifflin–St Jeor. Body-fat ranges by sex and age come from Gallagher and colleagues. Skeletal-muscle ranges follow Omron’s tables and differ between devices. When body fat is above the healthy range, protein is based on your weight at the top of that range with the same fat-free mass. Scan readings are estimates and shift with hydration and time of day. Source: <a href="https://pubmed.ncbi.nlm.nih.gov/?term=Cunningham+JJ+1991+%22Body+composition+as+a+determinant+of+energy+expenditure%22" target="_blank" rel="noopener noreferrer">Cunningham 1991</a>, <a href="https://pubmed.ncbi.nlm.nih.gov/10966886/" target="_blank" rel="noopener noreferrer">Gallagher 2000</a></dd></div></dl>
+        <dl><div><dt>Body mass index</dt><dd>Weight in kilograms divided by height in metres squared. The adult reference range is 18.5 to 24.9. <a href="https://www.cdc.gov/bmi/adult-calculator/bmi-categories.html" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Body fat by tape measure</dt><dd>The U.S. Navy circumference method: height, neck and abdomen for men, and height, neck, waist and hips for women. This estimate only appears in the body-composition card and does not change your calories. <a href="https://ntrl.ntis.gov/NTRL/dashboard/searchResults/titleDetail/ADA370158.xhtml" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Body-scan reading</dt><dd>Optional. With a body-fat reading, resting calories use the Cunningham equation on fat-free mass (370 + 21.6 × fat-free kg) instead of Mifflin–St Jeor. Body-fat ranges by sex and age come from Gallagher and colleagues. Skeletal-muscle ranges follow Omron’s tables and differ between devices. When body fat is above the healthy range, protein is based on your weight at the top of that range with the same fat-free mass. Scan readings are estimates and shift with hydration and time of day. Source: <a href="https://pubmed.ncbi.nlm.nih.gov/?term=Cunningham+JJ+1991+%22Body+composition+as+a+determinant+of+energy+expenditure%22" target="_blank" rel="noopener noreferrer">Cunningham 1991</a>, <a href="https://pubmed.ncbi.nlm.nih.gov/10966886/" target="_blank" rel="noopener noreferrer">Gallagher 2000</a></dd></div><div><dt>Daily calories</dt><dd>The Mifflin–St Jeor equation estimates resting calories from age, height, weight and sex. An activity factor turns that into maintenance calories. The fat-loss goal subtracts 500 kcal, with a floor of 1,500 for men and 1,200 for women, and the muscle goal adds 300 kcal. These are starting points to adjust as you progress. <a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Macronutrient split</dt><dd>Protein is 1.6 g per kg to maintain, 1.8 to build muscle and 2.0 to lose fat, within the 1.4 to 2.0 g per kg range the International Society of Sports Nutrition recommends for people who train. Fat is 25% of calories and the rest is carbohydrate. Protein and carbohydrate provide 4 kcal per gram, fat 9. <a href="https://pubmed.ncbi.nlm.nih.gov/28642676/" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Daily water</dt><dd>A common rule of thumb: 30 to 35 ml per kg of body weight a day. For comparison, the U.S. National Academies’ reference for total daily water from food and drinks is 3.7 L for men and 2.7 L for women. <a href="https://www.nationalacademies.org/read/10925/chapter/6" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>Heart-rate zones</dt><dd>The Tanaka equation subtracts 0.7 times age from 208. Zones are percentages of that estimate, and your actual heart rate can differ. <a href="https://pubmed.ncbi.nlm.nih.gov/11153730/" target="_blank" rel="noopener noreferrer">Source</a></dd></div><div><dt>One-rep max</dt><dd>The Epley equation: weight × (1 + reps ÷ 30) for a set of 2 to 12 reps. For one rep the result is the weight you entered. <a href="https://revistas.rcaap.pt/motricidade/article/download/2948/4846/15810" target="_blank" rel="noopener noreferrer">Source</a></dd></div></dl>
       </details>
       <p class="calc-disclaimer">General estimates for adults, not medical advice. If you have a health condition or are pregnant, speak with your doctor first.</p>
     </div>

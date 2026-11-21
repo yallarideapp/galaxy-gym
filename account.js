@@ -1,5 +1,5 @@
-// The account page around the log: the member's name, the membership ring at the top, the membership
-// record, the numbers saved from the fitness calculator, and the data panel (copy, restore, delete).
+// The account page around the log: the tabs, the member's name, the membership ring at the top, the
+// membership record, the numbers saved from the fitness calculator, and the data row (copy, restore, delete).
 import {
   limits, loadLog, update, clearLog, sanitize, newId, today, addDays, fromKey, validDay, membershipEnd,
   currentMembership, membershipState, sessionsBetween, daysBetween, monthSummary,
@@ -24,6 +24,61 @@ const whatsapp = "https://wa.me/962791081877?text=";
 const ringLength = 100;
 
 let log = loadLog();
+
+// ---- Tabs: one section at a time. The address keeps the open tab (#membership, #log, #body).
+const tabList = find("[data-tabs]");
+const tabs = Array.from(tabList.querySelectorAll('[role="tab"]'));
+const panels = tabs.map((tab) => document.getElementById(tab.getAttribute("aria-controls")));
+const tabIds = panels.map((panel) => panel.id);
+
+function openTab(id, { focus = false, remember = true } = {}) {
+  if (!tabIds.includes(id)) return;
+  tabs.forEach((tab, index) => {
+    const selected = tabIds[index] === id;
+    tab.setAttribute("aria-selected", String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+    panels[index].hidden = !selected;
+  });
+  if (remember && location.hash !== `#${id}`) history.replaceState(null, "", `#${id}`);
+  if (focus) tabs[tabIds.indexOf(id)].focus();
+}
+tabs.forEach((tab, index) => tab.addEventListener("click", () => openTab(tabIds[index])));
+// Arrow keys move along the tabs in reading order (right to left in Arabic).
+tabList.addEventListener("keydown", (event) => {
+  const current = tabs.indexOf(document.activeElement);
+  if (current < 0) return;
+  const forward = arabic ? "ArrowLeft" : "ArrowRight";
+  const back = arabic ? "ArrowRight" : "ArrowLeft";
+  const next = event.key === forward ? current + 1 : event.key === back ? current - 1 : event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : null;
+  if (next === null) return;
+  event.preventDefault();
+  openTab(tabIds[(next + tabs.length) % tabs.length], { focus: true });
+});
+
+// Links into the page (the glance numbers, the ring, links from other pages) open their tab.
+function followHash() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  if (id === "plates") {
+    // The barbell plates now live in the fitness calculator.
+    location.replace(new URL("../calculators/#plates", location.href).href);
+    return;
+  }
+  if (id === "plan") {
+    openTab("log", { remember: false });
+    find("[data-plan-details]").open = true;
+    find("[data-plan-details]").scrollIntoView({ block: "start" });
+    return;
+  }
+  if (tabIds.includes(id)) openTab(id, { remember: false });
+}
+addEventListener("hashchange", followHash);
+for (const link of document.querySelectorAll("[data-tab-link]")) {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    openTab(link.dataset.tabLink);
+    tabList.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  });
+}
 
 // ---- Header: name, membership ring, the three numbers at a glance
 const title = find("[data-account-title]");
@@ -115,11 +170,14 @@ nameForm.addEventListener("submit", (event) => {
 });
 
 // ---- My membership
-const memberEmpty = find("[data-member-empty]");
+const memberLayout = find(".member-layout");
 const memberCard = find("[data-member-card]");
 const memberHistory = find("[data-member-history]");
 const memberList = find("[data-member-list]");
 const memberForm = find("[data-member-form]");
+const memberOpen = find("[data-member-open]");
+const memberFormTitle = find("[data-member-form-title]");
+let formOpen = false;
 const memberStatus = find("[data-member-status-text]");
 const memberStats = new Map(Array.from(document.querySelectorAll("[data-member-stat]"), (node) => [node.dataset.memberStat, node]));
 const removeTemplate = find("#log-row").content.querySelector("[data-log-remove]");
@@ -142,8 +200,13 @@ const describe = (entry) => `${strings.plans[entry.months]}, ${fill(strings.rang
 
 function renderMembership() {
   const current = currentMembership(log);
-  memberEmpty.hidden = Boolean(current);
+  memberLayout.classList.toggle("is-empty", !current);
   memberCard.hidden = !current;
+  // With a membership on record, the form waits behind "Add a renewal"; without one, it is the first thing shown.
+  memberForm.hidden = Boolean(current) && !formOpen;
+  memberOpen.hidden = !current || formOpen;
+  memberOpen.setAttribute("aria-expanded", String(!memberForm.hidden));
+  memberFormTitle.textContent = current ? memberFormTitle.dataset.titleRenew : memberFormTitle.dataset.titleNew;
   if (current) {
     const state = membershipState(current);
     const day = today();
@@ -207,6 +270,12 @@ const recalculateEnd = () => {
   const start = memberForm.elements.start.value;
   if (validDay(start)) memberForm.elements.end.value = membershipEnd(start, Number(memberForm.elements.months.value));
 };
+memberOpen.addEventListener("click", () => {
+  formOpen = true;
+  suggestDates();
+  renderMembership();
+  memberForm.querySelector('input[name="months"]:checked').focus();
+});
 memberForm.elements.start.addEventListener("change", recalculateEnd);
 for (const option of memberForm.elements.months) option.addEventListener("change", recalculateEnd);
 
@@ -224,14 +293,15 @@ memberForm.addEventListener("submit", (event) => {
     memberForm.elements[problem[0]].focus();
     return;
   }
-  const entry = { id: newId(), start, end, months: Number(memberForm.elements.months.value), note: memberForm.elements.note.value };
+  const entry = { id: newId(), start, end, months: Number(memberForm.elements.months.value), note: "" };
   if (paid !== null) entry.paid = paid;
+  formOpen = false;
   const result = update((data) => { data.memberships.push(entry); });
   memberStatus.textContent = result ? strings.membershipSaved : strings.logNoStorage;
   if (!result) return;
   memberForm.elements.paid.value = "";
-  memberForm.elements.note.value = "";
   suggestDates();
+  memberOpen.focus();
 });
 
 // ---- My numbers, from the calculator
@@ -335,3 +405,4 @@ addEventListener("pageshow", (event) => {
 
 render();
 suggestDates();
+followHash();

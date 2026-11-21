@@ -1,7 +1,7 @@
 import {
   estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, restingEnergy,
   restingEnergyFromLeanMass, fatFreeMass, bodyFatLevel, muscleLevel, healthyFatWeightRange,
-  calorieTarget, goalMacros, proteinPerKg, waterRange, estimatedMaxHeartRate, heartRateZones,
+  calorieTarget, goalMacros, proteinPerKg, loadBar, waterRange, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
 import { loadLog, recordBody } from "./training-log.js";
 
@@ -12,6 +12,7 @@ const locale = document.documentElement.lang === "ar" ? "ar-JO-u-nu-latn" : "en-
 const whole = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
 const decimal = new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const loose = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+const kilos = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
 const plain = new Intl.NumberFormat("en-GB", { useGrouping: false, maximumFractionDigits: 2 });
 // A numeric range always reads low to high, left to right, even inside Arabic text.
 const span = (low, high, format) => `\u2066${format.format(low)}–${format.format(high)}\u2069`;
@@ -32,6 +33,8 @@ const cards = new Map(Array.from(root.querySelectorAll("[data-card]"), (node) =>
 }]));
 const activity = root.querySelector("[data-activity]");
 const marker = root.querySelector('[data-marker="bmi"]');
+const plateBoxes = Array.from(root.querySelectorAll("[data-plate]"));
+const plateStack = root.querySelector("[data-plate-stack]");
 const shares = new Map(Array.from(root.querySelectorAll("[data-share]"), (node) => [node.dataset.share, node]));
 const rows = new Map(Array.from(root.querySelectorAll("[data-row]"), (node) => [node.dataset.row, node]));
 const blocks = new Map(Array.from(root.querySelectorAll("[data-block]"), (node) => [node.dataset.block, node]));
@@ -240,6 +243,29 @@ function update() {
     heartRateZones(age).forEach(([low, high], index) => set(`zone-${index}`, span(low, high, whole)));
   }
 
+  // Barbell plates: one side of the bar, heaviest plate nearest the collar.
+  const plateTarget = read("plate", { optional: true });
+  const bar = read("bar");
+  const sizes = plateBoxes.filter((box) => box.checked).map((box) => Number(box.value));
+  const loaded = plateTarget !== null && bar !== null ? loadBar(plateTarget, bar, sizes) : null;
+  outputs.get("plates-low").hidden = !(plateTarget !== null && bar !== null && !loaded);
+  show("plates", loaded !== null);
+  if (loaded) {
+    set("plates-total", kilos.format(loaded.total));
+    set("plates-match", loaded.exact ? t.plateExact : t.plateApproximate);
+    outputs.get("plates-match").dataset.level = loaded.exact ? "ok" : "over";
+    set("plates-side", loaded.perSide ? fill(t.perSide, kilos.format(loaded.perSide)) : t.emptyBar);
+    const used = sizes.filter((size) => loaded.counts.has(size)).sort((a, b) => b - a);
+    set("plates-breakdown", used.map((size) => `${whole.format(loaded.counts.get(size))} × ${kilos.format(size)}`).join(" + "));
+    plateStack.replaceChildren(...used.flatMap((size) => Array.from({ length: loaded.counts.get(size) }, () => {
+      const plate = document.createElement("i");
+      plate.textContent = kilos.format(size);
+      plate.style.setProperty("--size", String(size));
+      return plate;
+    })));
+    plateStack.hidden = used.length === 0;
+  }
+
   const lifted = read("lift", { optional: true });
   const reps = read("reps", { optional: true });
   const liftReady = lifted !== null && reps !== null;
@@ -283,7 +309,7 @@ for (const input of inputs.values()) {
   }
 }
 root.addEventListener("change", (event) => {
-  if (event.target.matches('input[type="radio"], select')) update();
+  if (event.target.matches('input[type="radio"], input[type="checkbox"], select')) update();
 });
 root.querySelector("form").addEventListener("submit", (event) => event.preventDefault());
 

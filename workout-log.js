@@ -40,6 +40,8 @@ const now = new Date();
 let log = loadLog();
 let view = { year: now.getFullYear(), month: now.getMonth() };
 let lit = "";
+// A logged plan keeps its exercise and set count as the workout's note.
+let pendingNote = "";
 
 function duration(minutes) {
   const hours = Math.floor(minutes / 60);
@@ -208,10 +210,10 @@ form.addEventListener("submit", (event) => {
   }
   lit = date;
   view = { year: Number(date.slice(0, 4)), month: Number(date.slice(5, 7)) - 1 };
-  const saved = apply((data) => { data.sessions.push({ id: newId(), date, name, minutes, note: form.elements.note.value }); }, strings.logSaved);
+  const saved = apply((data) => { data.sessions.push({ id: newId(), date, name, minutes, note: pendingNote }); }, strings.logSaved);
   if (!saved) return;
   form.elements.name.value = "";
-  form.elements.note.value = "";
+  pendingNote = "";
 });
 
 // "Log this plan as a workout" in the plan panel fills the form in; the member still presses the button.
@@ -219,7 +221,7 @@ document.addEventListener("galaxy:log-plan", (event) => {
   const { names, sets } = event.detail;
   const shown = names.slice(0, 2).join(arabic ? "، " : ", ");
   form.elements.name.value = (names.length > 2 ? fill(strings.planNameMore, shown) : shown).slice(0, limits.name);
-  form.elements.note.value = fill(strings.planNote, whole.format(names.length), whole.format(sets));
+  pendingNote = fill(strings.planNote, whole.format(names.length), whole.format(sets));
   form.elements.date.value = today();
   showMonth(now.getFullYear(), now.getMonth());
   status.textContent = strings.planReady;

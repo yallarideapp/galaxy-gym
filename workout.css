@@ -26,15 +26,34 @@
 .account-name input:focus-visible{border-color:var(--lamp);outline:2px solid var(--lamp);outline-offset:1px}
 .account-intro{max-inline-size:34rem;margin-block-start:.75rem;color:var(--muted);font-size:.95rem}
 .account-glance{display:grid;gap:.5rem;margin:0}
-.account-glance > div{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;padding:.65rem .9rem;border:1px solid var(--rim);border-radius:1.1rem;background:var(--deck)}
-.account-glance dd{order:2;margin:0;font:800 1.3rem/1.25 var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
-.account-glance dt{color:var(--muted);font-size:.85rem}
+.account-glance > a{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;padding:.65rem .9rem;border:1px solid var(--rim);border-radius:1.1rem;transition:border-color .18s;background:var(--deck)}
+.account-glance > a:hover{border-color:var(--sun)}
+.account-glance b{order:2;font:800 1.3rem/1.25 var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.account-glance span{color:var(--muted);font-size:.85rem}
+
+/* Tabs: one section at a time, so the page stays short. */
+.account-tabs{position:sticky;z-index:3;inset-block-start:calc(var(--header) + .5rem);grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.25rem;padding:.3rem;border:1px solid var(--rim);border-radius:99rem;background:color-mix(in srgb,var(--deck) 92%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.account-tabs button{min-block-size:2.9rem;padding-inline:.5rem;border:0;border-radius:99rem;background:none;color:var(--muted);font:600 1rem var(--body);cursor:pointer;transition:background .2s,color .2s}
+.account-tabs button:hover{color:var(--text)}
+.account-tabs button[aria-selected="true"]{background:var(--sun);color:var(--sun-ink)}
+.account-tabs button:focus-visible{outline:2px solid var(--lamp);outline-offset:2px}
+.account [role="tabpanel"]{scroll-margin-block-start:calc(var(--header) + 5rem)}
+.account [role="tabpanel"]:focus{outline:0}
+@media (prefers-reduced-motion:no-preference){
+  .account [role="tabpanel"]:not([hidden]){animation:panel-in .25s ease-out}
+}
+@keyframes panel-in{from{opacity:0;transform:translateY(.4rem)}}
 .account-wide{grid-column:1/-1}
 
 /* My membership */
 .member-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:start;gap:clamp(1.25rem,3vw,2.5rem)}
 .member-current{display:grid;gap:1.2rem;min-inline-size:0}
-.member-current .workout-empty{margin:0}
+.member-side{display:grid;align-content:start;gap:.8rem;min-inline-size:0}
+.member-side .workout-empty{margin:0}
+.member-side .workout-status:empty{display:none}
+.member-open{justify-self:start}
+.member-layout.is-empty{grid-template-columns:minmax(0,34rem);justify-content:center}
+.member-layout.is-empty .member-current{display:none}
 .member-card{display:grid;gap:.75rem;padding:clamp(1rem,2vw,1.35rem);border:1px solid var(--rim);border-radius:1.35rem;background:var(--night)}
 .member-card-top{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .75rem}
 .member-card-top h3{font-size:clamp(1.3rem,2.4vw,1.6rem)}
@@ -88,7 +107,11 @@
 .workout-panel h2{font-size:clamp(1.35rem,2.4vw,1.75rem)}
 .workout-summary{margin-block:.3rem 1.2rem;color:var(--muted)}
 
-.workout label{display:grid;gap:.35rem;min-inline-size:0;font-weight:600;font-size:.92rem}
+.workout label{display:grid;grid-template-columns:minmax(0,1fr);gap:.35rem;min-inline-size:0;font-weight:600;font-size:.92rem}
+/* iPhone date fields: keep them inside their column, and read the date left to right. */
+.workout input[type="date"]{-webkit-appearance:none;appearance:none;display:block;min-inline-size:0;max-inline-size:100%;direction:ltr;text-align:left}
+[dir="rtl"] .workout input[type="date"]{text-align:right}
+.workout input[type="date"]::-webkit-date-and-time-value{min-block-size:1.4em;text-align:inherit}
 .workout :is(input:not([type="checkbox"]),select){inline-size:100%;min-inline-size:0;min-block-size:2.9rem;padding:.35rem .8rem;border:1px solid var(--rim);border-radius:.9rem;background:var(--night);color:var(--text);font-weight:400;font-size:1rem}
 .workout input[type="number"]{font:700 1.08rem/1.2 var(--display);font-variant-numeric:tabular-nums}
 .workout :is(input,select):focus-visible{border-color:var(--lamp);outline:2px solid var(--lamp);outline-offset:1px}
@@ -117,10 +140,17 @@
 .workout-plan-actions{display:flex;flex-wrap:wrap;gap:.5rem}
 
 /* My log: the month at a glance beside the form that adds to it. */
-.workout-jump{grid-column:1/-1;display:flex;gap:.45rem;overflow-x:auto;scrollbar-width:none}
-.workout-jump::-webkit-scrollbar{display:none}
-.workout-jump a{flex:none;display:inline-flex;align-items:center;min-block-size:2.6rem;padding-inline:1.05rem;border:1px solid var(--rim);border-radius:99rem;font-weight:600;font-size:.92rem}
-.workout-jump a:hover{border-color:var(--sun);color:var(--sun)}
+.plan-details{margin-block-start:1.5rem;padding-block-start:1.1rem;border-block-start:1px solid var(--rim)}
+.plan-details summary{display:flex;align-items:center;gap:.6rem;inline-size:fit-content;min-block-size:2.75rem;font:700 1.1rem var(--display);cursor:pointer}
+.plan-details summary::-webkit-details-marker{display:none}
+.plan-details summary::before{content:"+";display:grid;place-items:center;inline-size:1.9rem;block-size:1.9rem;border:1px solid var(--rim);border-radius:50%;color:var(--sun);font:400 1.3rem/1 var(--body)}
+.plan-details[open] summary::before{content:"−"}
+.plan-details summary:hover{color:var(--sun)}
+.plan-details[open] summary{margin-block-end:.3rem}
+.account-data{display:grid;gap:.4rem;padding:.25rem clamp(.25rem,1vw,.5rem);color:var(--muted);font-size:.9rem}
+.account-data-actions .text-link{min-height:2.5rem;border:0;background:none;padding:0;font:inherit;font-weight:600;cursor:pointer}
+.account-data-actions{gap:.25rem 1.4rem!important}
+
 .workout-log h3{font-size:1.15rem}
 .log-recap{margin-block-end:1.1rem;padding:.8rem 1rem;border:1px solid color-mix(in srgb,var(--sun) 55%,var(--rim));border-radius:1rem;font-weight:600}
 .log-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:start;gap:clamp(1.25rem,3vw,2.5rem)}
@@ -157,7 +187,7 @@
 .log-quick{display:flex;flex-wrap:wrap;gap:.35rem;margin-block-start:-.25rem}
 .log-quick button{min-block-size:2.6rem;padding-inline:.8rem;border:1px solid var(--rim);border-radius:99rem;background:none;color:var(--muted);font-size:.88rem;cursor:pointer;transition:border-color .18s,color .18s}
 .log-quick button:hover{border-color:var(--sun);color:var(--sun)}
-.log-form-row{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:.7rem}
+.log-form-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:.7rem}
 .log-form .workout-input input{padding-inline-end:3.4rem}
 .log-form .button{justify-self:start}
 .log-form .workout-status:not(:empty){margin:0}
@@ -222,8 +252,8 @@
   .log-layout,.member-layout,.body-layout{grid-template-columns:minmax(0,1fr)}
   .account-head{grid-template-columns:auto minmax(0,1fr)}
   .account-glance{grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr))}
-  .account-glance > div{display:grid;align-content:space-between;gap:.15rem}
-  .account-glance dd{order:0}
+  .account-glance > a{display:grid;align-content:space-between;gap:.15rem}
+  .account-glance b{order:0}
 }
 @media (max-width:47rem){
   .account-head{gap:1rem;padding-block:1.4rem 1rem}
@@ -233,9 +263,10 @@
   .account-id h1{font-size:clamp(1.9rem,8.5vw,2.6rem)}
   .account-intro{grid-column:1/-1}
   .account-glance{gap:.4rem}
-  .account-glance > div{padding:.55rem .65rem}
-  .account-glance dd{font-size:1.05rem}
-  .account-glance dt{font-size:.74rem;line-height:1.35}
+  .account-glance > a{padding:.55rem .65rem}
+  .account-glance b{font-size:1.05rem}
+  .account-glance span{font-size:.74rem;line-height:1.35}
+  .account-tabs{inset-block-start:calc(var(--header) + .35rem)}
   [data-member-form] .log-form-row{grid-template-columns:minmax(0,1fr)}
   .workout-panel{border-radius:1.5rem}
   .log-stats{grid-template-columns:repeat(2,minmax(0,1fr))}

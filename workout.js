@@ -1,5 +1,5 @@
 const strings = JSON.parse(document.querySelector('#workout-copy').textContent);
-// Western digits in both languages, to match the numbers printed on the plates.
+// Western digits in both languages, like the rest of the site.
 const locale = document.documentElement.lang === 'ar' ? 'ar-JO-u-nu-latn' : 'en-GB';
 const number = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
 const storageKey = 'galaxy-gym-workout-v1';
@@ -152,74 +152,3 @@ window.addEventListener('storage', (event) => {
 });
 
 renderPlan();
-
-const platesForm = document.querySelector('#plates-form');
-const plateTarget = document.querySelector('#plate-target');
-const barWeight = document.querySelector('#bar-weight');
-const plateOutput = document.querySelector('#plates-result');
-const plateTotal = document.querySelector('#plates-total');
-const plateSide = document.querySelector('#plate-side');
-const plateBreakdown = document.querySelector('#plate-breakdown');
-const plateStack = document.querySelector('#plate-stack');
-const centsPerUnit = 125;
-
-// Use integer multiples of 1.25 kg. Minimize the plate count at the largest
-// attainable weight that keeps the total within the requested load.
-function findPlates(maxUnits, sizes) {
-  const options = sizes.map((size) => ({ size, units: Math.round(size * 100 / centsPerUnit) }));
-  const best = Array(maxUnits + 1).fill(null);
-  best[0] = { count: 0, option: null };
-
-  for (let units = 1; units <= maxUnits; units += 1) {
-    for (const option of options) {
-      const previous = best[units - option.units];
-      if (previous && (!best[units] || previous.count + 1 < best[units].count)) {
-        best[units] = { count: previous.count + 1, option };
-      }
-    }
-  }
-
-  const totalUnits = best.findLastIndex(Boolean);
-  const counts = new Map();
-  for (let units = totalUnits; units > 0;) {
-    const option = best[units].option;
-    counts.set(option.size, (counts.get(option.size) ?? 0) + 1);
-    units -= option.units;
-  }
-
-  return { cents: totalUnits * centsPerUnit, counts };
-}
-
-platesForm.addEventListener('input', () => {
-  plateTarget.setCustomValidity('');
-  plateOutput.hidden = true;
-});
-
-platesForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const barCents = Math.round(barWeight.valueAsNumber * 100);
-  const targetCents = Math.round(plateTarget.valueAsNumber * 100);
-  if (targetCents < barCents) {
-    plateTarget.setCustomValidity(strings.targetLowerThanBar);
-    plateTarget.reportValidity();
-    return;
-  }
-
-  const sizes = [...platesForm.querySelectorAll('input[type="checkbox"]:checked')].map((input) => Number(input.value));
-  const result = findPlates(Math.floor((targetCents - barCents) / (2 * centsPerUnit)), sizes);
-  const total = barCents + 2 * result.cents;
-  const totalLabel = total === targetCents ? strings.plateExact : strings.plateApproximate;
-  plateTotal.textContent = interpolate(totalLabel, number.format(total / 100));
-  plateSide.textContent = result.cents ? interpolate(strings.perSide, number.format(result.cents / 100)) : strings.emptyBar;
-  const used = sizes.filter((size) => result.counts.has(size)).sort((first, second) => second - first);
-  plateBreakdown.textContent = used.map((size) => `${number.format(result.counts.get(size))} × ${number.format(size)}`).join(' + ');
-  // One side of the bar, heaviest plate nearest the collar.
-  plateStack.replaceChildren(...used.flatMap((size) => Array.from({ length: result.counts.get(size) }, () => {
-    const plate = document.createElement('i');
-    plate.textContent = number.format(size);
-    plate.style.setProperty('--size', String(size));
-    return plate;
-  })));
-  plateStack.hidden = used.length === 0;
-  plateOutput.hidden = false;
-});

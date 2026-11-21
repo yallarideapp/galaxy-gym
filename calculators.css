@@ -153,3 +153,25 @@
   .calc-card{border-radius:1.5rem}
 }
 .calc-saved{color:var(--sun)}
+
+/* Barbell plates: pick the plates on hand, see one side of the loaded bar. */
+.calc-plates{min-inline-size:0;margin:0;padding:0;border:0}
+.calc-plates legend{padding:0;margin-block-end:.4rem;font-weight:600;font-size:.93rem}
+.calc-plates > div{display:flex;flex-wrap:wrap;gap:.35rem}
+.calc-plates label{position:relative;display:block}
+.calc-plates input{position:absolute;inset:0;inline-size:100%;block-size:100%;margin:0;opacity:0;cursor:pointer}
+.calc-plates span{display:grid;place-items:center;min-inline-size:2.9rem;min-block-size:2.6rem;padding-inline:.55rem;border:1px solid var(--rim);border-radius:99rem;color:var(--muted);font:700 .92rem var(--display);font-variant-numeric:tabular-nums;transition:background .2s,color .2s,border-color .2s}
+.calc-plates input:checked + span{border-color:var(--sun);background:var(--sun);color:var(--sun-ink)}
+.calc-plates input:focus-visible + span{outline:2px solid var(--lamp);outline-offset:2px}
+.plate-stack{position:relative;display:flex;align-items:center;flex-wrap:nowrap;gap:3px;height:6rem;padding-left:1.6rem;overflow:hidden}
+.plate-stack::before{content:"";position:absolute;left:0;right:0;top:calc(50% - .3rem);height:.6rem;border-radius:99rem;background:var(--rim)}
+.plate-stack i{position:relative;display:grid;place-items:center;flex:0 1 2.15rem;min-width:1.5rem;height:calc(38% + var(--size) * 2.48%);border-radius:.45rem;background:var(--sun);color:var(--sun-ink);font:700 .7rem/1 var(--display);font-style:normal}
+.plate-stack i:nth-child(even){background:var(--sun-bright)}
+.plate-stack[hidden]{display:none}
+.calc-plate-inputs{display:grid;align-content:start;gap:.9rem;min-inline-size:0}
+.calc-card[data-card="plates"]{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(1rem,3vw,2.25rem)}
+.calc-card[data-card="plates"] > header{grid-column:1/-1}
+.calc-card[data-card="plates"] > :is(.calc-values,.calc-empty){align-self:start}
+@container (max-width:36rem){
+  .calc-card[data-card="plates"]{grid-template-columns:minmax(0,1fr)}
+}
