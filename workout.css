@@ -1,4 +1,87 @@
-/* My workouts: the log across the top, then the plan on one side and the barbell loader on the other. */
+/* My account: the member's name and membership ring, then membership, log and body across the page,
+   then the plan beside the barbell loader, then the data panel. Everything is stored on the device. */
+
+/* Header. The hexagon ring is lit for the part of the membership still to come. */
+.account-head{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(12rem,15rem);align-items:center;gap:1.25rem clamp(1.5rem,4vw,3rem);padding-block:clamp(2rem,5vw,3.5rem) clamp(1.25rem,3vw,2rem)}
+.account-ring{position:relative;display:grid;place-items:center;align-content:center;inline-size:clamp(8.75rem,15vw,11.25rem);aspect-ratio:100/115.47;padding-inline:1.2rem;color:var(--text);text-align:center}
+.account-ring svg{position:absolute;inset:0;inline-size:100%;block-size:100%;overflow:visible}
+.account-ring path{fill:none;stroke-width:5}
+.account-ring-track{stroke:var(--rim)}
+.account-ring-lit{stroke:var(--sun);stroke-linecap:round;stroke-dasharray:0 100;filter:drop-shadow(0 0 7px rgba(246,174,69,.6));transition:stroke-dasharray 1s var(--ease)}
+.account-ring[data-phase="ending"] .account-ring-lit{stroke:var(--alert);filter:drop-shadow(0 0 7px rgba(255,181,154,.6))}
+.account-ring[data-phase="upcoming"] .account-ring-lit{stroke:var(--lamp);stroke-dasharray:2 4!important;filter:none;opacity:.6}
+.account-ring b{font:800 clamp(2.5rem,5vw,3.5rem)/1 var(--display);font-variant-numeric:tabular-nums}
+.account-ring span{margin-block-start:.3rem;color:var(--muted);font-size:.8rem;line-height:1.35}
+.account-ring[data-phase="none"] b,.account-ring[data-phase="ended"] b{color:var(--muted)}
+.account-ring:hover span{color:var(--sun)}
+.account-id{min-inline-size:0}
+.account-id h1{font-size:clamp(2.3rem,5.4vw,4.1rem);font-weight:800;overflow-wrap:anywhere}
+.account-plan{margin-block-start:.35rem;font-weight:600;font-size:clamp(1rem,1.6vw,1.12rem)}
+.account-since{color:var(--muted);font-size:.9rem}
+.account-actions{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem 1rem;margin-block-start:.5rem}
+.account-actions .text-link{border:0;background:none;padding:0;cursor:pointer}
+.account-name{display:flex;flex-wrap:wrap;align-items:end;gap:.5rem;margin-block-start:.6rem}
+.account-name label{display:grid;gap:.3rem;font-weight:600;font-size:.9rem}
+.account-name input{inline-size:min(16rem,70vw);min-block-size:2.6rem;padding:.3rem .8rem;border:1px solid var(--rim);border-radius:.9rem;background:var(--deck);color:var(--text);font-size:1rem}
+.account-name input:focus-visible{border-color:var(--lamp);outline:2px solid var(--lamp);outline-offset:1px}
+.account-intro{max-inline-size:34rem;margin-block-start:.75rem;color:var(--muted);font-size:.95rem}
+.account-glance{display:grid;gap:.5rem;margin:0}
+.account-glance > div{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;padding:.65rem .9rem;border:1px solid var(--rim);border-radius:1.1rem;background:var(--deck)}
+.account-glance dd{order:2;margin:0;font:800 1.3rem/1.25 var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.account-glance dt{color:var(--muted);font-size:.85rem}
+.account-wide{grid-column:1/-1}
+
+/* My membership */
+.member-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:start;gap:clamp(1.25rem,3vw,2.5rem)}
+.member-current{display:grid;gap:1.2rem;min-inline-size:0}
+.member-current .workout-empty{margin:0}
+.member-card{display:grid;gap:.75rem;padding:clamp(1rem,2vw,1.35rem);border:1px solid var(--rim);border-radius:1.35rem;background:var(--night)}
+.member-card-top{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .75rem}
+.member-card-top h3{font-size:clamp(1.3rem,2.4vw,1.6rem)}
+.member-card-top .log-remove{margin-inline-start:auto}
+.member-status{display:inline-flex;align-items:center;min-block-size:1.7rem;padding:.05rem .7rem;border:1px solid var(--rim);border-radius:99rem;color:var(--muted);font:600 .8rem/1.3 var(--body);white-space:nowrap}
+[data-phase="active"] .member-status{border-color:var(--sun);background:var(--sun);color:var(--sun-ink)}
+[data-phase="ending"] .member-status{border-color:var(--alert);color:var(--alert)}
+[data-phase="upcoming"] .member-status{border-color:var(--lamp);color:var(--text)}
+.member-range{color:var(--muted)}
+.member-progress{block-size:.5rem;overflow:hidden;border-radius:99rem;background:var(--rim)}
+.member-progress i{display:block;block-size:100%;inline-size:0;border-radius:inherit;background:var(--sun);transition:inline-size .6s var(--ease)}
+[data-phase="ending"] .member-progress i{background:var(--alert)}
+.member-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(7rem,1fr));gap:.5rem;margin:.2rem 0 0}
+.member-stats > div{display:grid;gap:.1rem;padding:.65rem .8rem;border:1px solid var(--rim);border-radius:1rem;background:var(--deck)}
+.member-stats dd{margin:0;font:800 1.25rem/1.3 var(--display);font-variant-numeric:tabular-nums;white-space:nowrap}
+.member-stats dt{color:var(--muted);font-size:.8rem;line-height:1.4}
+.member-note{color:var(--muted);font-size:.9rem}
+.member-history h3{font-size:1.1rem}
+.log-row.member-row{grid-template-columns:minmax(0,1fr) auto 2.5rem}
+.member-row strong{display:flex;align-items:center;flex-wrap:wrap;gap:.2rem .5rem}
+.member-row .member-status{min-block-size:1.5rem;font-size:.74rem}
+.member-row.is-current{border-color:color-mix(in srgb,var(--sun) 50%,var(--rim))}
+.member-plans{min-inline-size:0;margin:0;padding:0;border:0}
+.member-plans legend{padding:0;margin-block-end:.35rem;font-weight:600;font-size:.92rem}
+.member-plans > div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.2rem;padding:.25rem;border:1px solid var(--rim);border-radius:99rem;background:var(--deck)}
+.member-plans label{position:relative;display:block}
+.member-plans input{position:absolute;inset:0;inline-size:100%;block-size:100%;margin:0;opacity:0;cursor:pointer}
+.member-plans span{display:grid;place-items:center;min-block-size:2.5rem;padding-inline:.3rem;border-radius:99rem;color:var(--muted);font-weight:600;font-size:.9rem;text-align:center;white-space:nowrap;transition:background .2s,color .2s}
+.member-plans input:hover + span{color:var(--text)}
+.member-plans input:checked + span{background:var(--sun);color:var(--sun-ink)}
+.member-plans input:focus-visible + span{outline:2px solid var(--lamp);outline-offset:2px}
+
+/* My body */
+.body-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);align-items:start;gap:clamp(1.25rem,3vw,2.5rem)}
+.body-numbers{display:grid;gap:.6rem;padding:clamp(1rem,2vw,1.3rem);border:1px solid var(--rim);border-radius:1.35rem;background:var(--night)}
+.body-numbers h3{font-size:1.15rem}
+.body-numbers .workout-empty{margin:0}
+.body-list{display:grid;margin:0}
+.body-list > div{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;padding-block:.5rem;border-block-start:1px solid var(--rim)}
+.body-list dt{color:var(--muted)}
+.body-list dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums;text-align:end}
+.body-list [data-body-row="calories"] dd,.body-list [data-body-row="protein"] dd{color:var(--sun);font:800 1.3rem/1.3 var(--display)}
+.body-layout .log-weight{margin:0;padding:0;border:0}
+
+/* My data */
+.account-data-actions{display:flex;flex-wrap:wrap;gap:.5rem}
+.account-danger:hover{border-color:var(--alert);color:var(--alert)}
 .workout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);align-items:start;gap:1rem;padding-block-end:clamp(2.75rem,6vw,5rem)}
 .workout-notice{grid-column:1/-1;color:var(--alert)}
 .workout-panel{min-inline-size:0;padding:clamp(1.15rem,2.6vw,1.9rem);border:1px solid var(--rim);border-radius:1.75rem;background:var(--deck)}
@@ -34,8 +117,10 @@
 .workout-plan-actions{display:flex;flex-wrap:wrap;gap:.5rem}
 
 /* My log: the month at a glance beside the form that adds to it. */
-.workout-jump{display:none}
-.workout-log{grid-column:1/-1}
+.workout-jump{grid-column:1/-1;display:flex;gap:.45rem;overflow-x:auto;scrollbar-width:none}
+.workout-jump::-webkit-scrollbar{display:none}
+.workout-jump a{flex:none;display:inline-flex;align-items:center;min-block-size:2.6rem;padding-inline:1.05rem;border:1px solid var(--rim);border-radius:99rem;font-weight:600;font-size:.92rem}
+.workout-jump a:hover{border-color:var(--sun);color:var(--sun)}
 .workout-log h3{font-size:1.15rem}
 .log-recap{margin-block-end:1.1rem;padding:.8rem 1rem;border:1px solid color-mix(in srgb,var(--sun) 55%,var(--rim));border-radius:1rem;font-weight:600}
 .log-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:start;gap:clamp(1.25rem,3vw,2.5rem)}
@@ -77,7 +162,7 @@
 .log-form .button{justify-self:start}
 .log-form .workout-status:not(:empty){margin:0}
 
-.log-sessions,.log-weight,.log-backup{margin-block-start:1.5rem;padding-block-start:1.3rem;border-block-start:1px solid var(--rim)}
+.log-sessions{margin-block-start:1.5rem;padding-block-start:1.3rem;border-block-start:1px solid var(--rim)}
 .log-sessions .workout-empty{margin-block-start:.8rem}
 .log-list{display:grid;gap:.45rem;margin-block-start:.8rem}
 .log-list:empty{margin:0}
@@ -107,8 +192,6 @@
 .log-weight-all{margin-block-start:.9rem}
 .log-weight-all summary{inline-size:fit-content;min-block-size:2.4rem;align-content:center;color:var(--muted);font-size:.92rem;cursor:pointer}
 .log-weight-all summary:hover{color:var(--sun)}
-.log-backup{display:grid;gap:.75rem;color:var(--muted);font-size:.9rem}
-.log-backup > div{display:flex;flex-wrap:wrap;gap:.5rem}
 
 #plates-form{display:grid;gap:1rem}
 #plates-form > .button{justify-self:start}
@@ -136,13 +219,24 @@
 
 @media (max-width:58rem){
   .workout{grid-template-columns:minmax(0,1fr)}
-  .log-layout{grid-template-columns:minmax(0,1fr)}
-  .workout-jump{display:flex;gap:.45rem;overflow-x:auto;scrollbar-width:none}
-  .workout-jump::-webkit-scrollbar{display:none}
-  .workout-jump a{flex:none;display:inline-flex;align-items:center;min-block-size:2.6rem;padding-inline:1.05rem;border:1px solid var(--rim);border-radius:99rem;font-weight:600;font-size:.92rem}
-  .workout-jump a:hover{border-color:var(--sun);color:var(--sun)}
+  .log-layout,.member-layout,.body-layout{grid-template-columns:minmax(0,1fr)}
+  .account-head{grid-template-columns:auto minmax(0,1fr)}
+  .account-glance{grid-column:1/-1;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .account-glance > div{display:grid;align-content:space-between;gap:.15rem}
+  .account-glance dd{order:0}
 }
 @media (max-width:47rem){
+  .account-head{gap:1rem;padding-block:1.4rem 1rem}
+  .account-ring{inline-size:7.25rem;padding-inline:.8rem}
+  .account-ring b{font-size:2.2rem}
+  .account-ring span{font-size:.72rem}
+  .account-id h1{font-size:clamp(1.9rem,8.5vw,2.6rem)}
+  .account-intro{grid-column:1/-1}
+  .account-glance{gap:.4rem}
+  .account-glance > div{padding:.55rem .65rem}
+  .account-glance dd{font-size:1.05rem}
+  .account-glance dt{font-size:.74rem;line-height:1.35}
+  [data-member-form] .log-form-row{grid-template-columns:minmax(0,1fr)}
   .workout-panel{border-radius:1.5rem}
   .log-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .log-row{gap:.3rem .6rem}

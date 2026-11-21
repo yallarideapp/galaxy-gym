@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050505">
+  <title>My account | Galaxy Gym</title>
+  <meta name="description" content="Days left on your membership and this month’s training">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://yallarideapp.github.io/galaxy-gym/en/account/">
+  <link rel="alternate" hreflang="ar" href="https://yallarideapp.github.io/galaxy-gym/account/">
+  <link rel="alternate" hreflang="en" href="https://yallarideapp.github.io/galaxy-gym/en/account/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="My account | Galaxy Gym">
+  <meta property="og:description" content="Days left on your membership and this month’s training">
+  <meta property="og:url" content="https://yallarideapp.github.io/galaxy-gym/en/account/">
+  <meta property="og:image" content="https://yallarideapp.github.io/galaxy-gym/assets/gym.webp">
+  <link rel="icon" href="/galaxy-gym/assets/brand.webp" type="image/webp">
+  <link rel="preload" href="/galaxy-gym/assets/fonts/alexandria-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/galaxy-gym/assets/fonts/plex-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+  <script>try{sessionStorage.setItem("gg-intro","1")}catch(e){}</script>
+  <link rel="stylesheet" href="/galaxy-gym/site.css">
+
+  <link rel="stylesheet" href="/galaxy-gym/workout.css">
+  <script id="workout-copy" type="application/json">{"empty":"Choose an exercise to start your plan.","totals":"{0} exercises, {1} sets","saved":"Plan saved in this browser.","noStorage":"This browser could not save the plan. Changes may be lost when you close the page.","removed":"Exercise removed.","confirmReset":"Clear every exercise in your plan?","resetDone":"Plan cleared.","invalidCount":"Enter a whole number from {0} to {1}.","rowControl":"{0} for {1}","targetLowerThanBar":"Enter a target at least as heavy as the bar.","plateExact":"Total weight {0} kg","plateApproximate":"Closest possible weight {0} kg","perSide":"{0} kg on each side","emptyBar":"Lift the empty bar with these settings.","logEmpty":"No workouts logged this month.","logSaved":"Workout added to your log.","logRemoved":"Workout removed from your log.","logConfirmRemove":"Remove this workout from your log?","logNoStorage":"This browser could not save it.","nameRequired":"Enter what you trained.","minutesInvalid":"Enter the duration in minutes, from 1 to 600.","dateInvalid":"Choose a date no later than today.","timeHM":"{0} h {1} min","timeH":"{0} h","timeM":"{0} min","compareMore":"{0} more than last month","compareLess":"{0} fewer than last month","compareSame":"Same number of workouts as last month","recap":"{0} summary: {1} workouts on {2} days, {3}.","dayCount":"{0}, workouts: {1}","remove":"Remove","removeLabel":"Remove: {0}","showAll":"Show all this month’s workouts ({0})","showLess":"Show fewer","planNote":"{0} exercises, {1} sets","planNameMore":"{0} and more","planReady":"Adjust the name and duration, then press “Log workout”.","weightSaved":"Today’s weight saved.","weightInvalid":"Enter a weight from 20 to 400 kg.","weightRemoved":"Reading removed.","weightChange":"Change in {0}: {1} kg","weightChart":"Weight line for the last {0} readings, from {1} to {2} kg","kg":"kg","fatReading":"body fat {0}%","title":"My account","daysLeft":"days left","daysToStart":"days to start","endedRing":"Membership ended","noMembership":"No membership","planLine":"{0} membership, last day {1}","planLineUpcoming":"{0} membership, starts {1}","planLineEnded":"{0} membership ended on {1}","planLineNone":"Add your membership to see how many days are left.","memberSince":"Member since {0}","nameSaved":"Name saved.","plans":{"0":"Custom","1":"1-month","3":"3-month","6":"6-month","12":"1-year"},"status":{"active":"Active","ending":"Ending soon","upcoming":"Not started","ended":"Ended"},"range":"{0} to {1}","perWeek":"{0} a week","money":"{0} JOD","membershipSaved":"Membership saved.","membershipRemoved":"Membership removed.","membershipConfirmRemove":"Remove this membership from your history?","startInvalid":"Choose a start date.","endInvalid":"The last day must be after the start, and within 3 years.","paidInvalid":"Enter the amount in JOD, from 0 to 5000.","sessionsCount":"Workouts: {0}","renewText":"Hi, I’d like to renew my membership at Galaxy Gym.","renewName":"My name is {0}.","renewEnding":"My current membership ends on {0}.","renewEnded":"My membership ended on {0}.","updated":"Updated {0}","goals":{"lose":"Lose fat","keep":"Maintain","gain":"Build muscle"},"activityLevels":["Mostly sitting","Light: 1–3 days","Moderate: 3–5 days","High: 6–7 days"],"sexes":{"m":"Male","f":"Female"},"numberRows":{"calories":"Daily calories","protein":"Protein","bmi":"BMI","fat":"Body fat","muscle":"Muscle","height":"Height","age":"Age","goal":"Goal","activity":"Activity"},"kcal":"kcal","grams":"g","cm":"cm","years":"yrs","exported":"Copy downloaded.","imported":"Copy restored. Memberships: {0}, workouts: {1}, weight readings: {2}.","importFailed":"That file is not a copy of your account data.","confirmClear":"Delete all your data from this device? Your name, memberships, workouts, weight and numbers. Download a copy first if you want it back.","cleared":"Your data was deleted from this device."}</script>
+  <script src="/galaxy-gym/workout.js" defer></script>
+  <script src="/galaxy-gym/workout-log.js" type="module"></script>
+  <script src="/galaxy-gym/account.js" type="module"></script>
+
+  <script src="/galaxy-gym/site.js" defer></script>
+</head>
+<body data-route="account">
+
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/galaxy-gym/en/" class="brand" aria-label="Galaxy Gym"><span class="brand-mark" aria-hidden="true"><img src="/galaxy-gym/assets/brand.webp" alt="" width="40" height="40"></span><span class="brand-type"><strong dir="ltr">GALAXY <span>GYM</span></strong><small>Fitness club</small></span></a>
+      <nav class="primary-nav" aria-label="Menu"><a href="/galaxy-gym/en/training/">Training</a><a href="/galaxy-gym/en/calculators/">Fitness calculator</a><a href="/galaxy-gym/en/club/">The gym</a><a href="/galaxy-gym/en/prices/">Membership</a><a href="/galaxy-gym/en/account/" aria-current="page">My account</a><a href="/galaxy-gym/en/contact/">Contact</a></nav>
+      <div class="header-actions">
+        <a class="language" data-language href="/galaxy-gym/account/" hreflang="ar" lang="ar">عربي</a>
+        <a class="button button-small header-join" href="/galaxy-gym/en/prices/">Ask about membership</a>
+        <button class="icon-button nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu" data-open-dialog="site-menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button>
+      </div>
+    </div>
+  </header>
+  <dialog class="site-menu panel-dialog" id="site-menu" aria-label="Menu">
+    <div class="panel-dialog-body">
+      <div class="panel-dialog-head"><a class="brand" href="/galaxy-gym/en/"><span class="brand-mark" aria-hidden="true"><img src="/galaxy-gym/assets/brand.webp" alt="" width="40" height="40"></span><span class="brand-type"><strong dir="ltr">GALAXY <span>GYM</span></strong><small>Fitness club</small></span></a><button data-close-dialog class="icon-button" type="button" aria-label="Close" autofocus><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <nav aria-label="Menu"><a href="/galaxy-gym/en/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg></span><span><strong>Home</strong><small>The Galaxy Gym homepage</small></span></a><a href="/galaxy-gym/en/calculators/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M9 12h.01M15 12h.01M9 16h.01M15 16h.01"/></svg></span><span><strong>Fitness calculator</strong><small>Enter your details once for calories, protein and fitness numbers</small></span></a><a href="/galaxy-gym/en/training/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6.5 17.5 11-11M5 14l5 5m4-14 5 5M3 16l5 5m8-18 5 5"/></svg></span><span><strong>Training</strong><small>Strength, fitness and coaching</small></span></a><a href="/galaxy-gym/en/club/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 20 7v10l-8 4.5L4 17V7Z"/><path d="M12 12v9.5M4 7l8 5 8-5"/></svg></span><span><strong>The gym</strong><small>A look inside the training floor</small></span></a><a href="/galaxy-gym/en/prices/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span><strong>Membership</strong><small>Prepare a membership enquiry</small></span></a><a href="/galaxy-gym/en/account/" aria-current="page"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span><strong>My account</strong><small>Days left on your membership and this month’s training</small></span></a><a href="/galaxy-gym/en/contact/"><span class="hex-badge"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span><strong>Contact</strong><small>Location, directions and enquiries</small></span></a></nav>
+      <div class="menu-contact"><a class="button" href="tel:+962791081877"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-4l-5-2-2 2a14 14 0 0 1-6-6l2-2-2-5Z"/></svg><bdi dir="ltr">079 108 1877</bdi></a><a class="button button-quiet" href="https://wa.me/962791081877?text=Hi%2C%20could%20you%20tell%20me%20about%20membership%20options%20at%20Galaxy%20Gym%3F" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 9 9 0 0 1-3.6-.8L4 21l1.8-4.9a9 9 0 0 1-.8-3.6A8.4 8.4 0 0 1 13.5 4h.5a8.4 8.4 0 0 1 7 7Z"/><path d="M10 12h.01m3 0h.01m3 0h.01"/></svg>Message on WhatsApp</a></div>
+    </div>
+  </dialog>
+  <main id="main" tabindex="-1"><section class="container account-head" data-account-head>
+    <a class="account-ring" href="#membership" data-ring>
+      <svg viewBox="0 0 100 115.47" focusable="false" aria-hidden="true"><path class="account-ring-track" d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z" pathLength="100"/><path class="account-ring-lit" d="M44.46 4.4Q50 1.2 55.54 4.4L93.42 26.27Q98.96 29.47 98.96 35.87L98.96 79.6Q98.96 86 93.42 89.2L55.54 111.07Q50 114.27 44.46 111.07L6.58 89.2Q1.04 86 1.04 79.6L1.04 35.87Q1.04 29.47 6.58 26.27Z" pathLength="100" data-ring-lit/></svg>
+      <b data-ring-number>—</b><span data-ring-label>No membership</span>
+    </a>
+    <div class="account-id">
+      <h1 data-account-title>My account</h1>
+      <p class="account-plan" data-account-plan>Add your membership to see how many days are left.</p>
+      <p class="account-since" data-account-since hidden></p>
+      <div class="account-actions">
+        <button class="text-link" type="button" data-name-open data-edit-label="Edit name">Add your name</button>
+        <a class="button button-small" data-renew hidden target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 9 9 0 0 1-3.6-.8L4 21l1.8-4.9a9 9 0 0 1-.8-3.6A8.4 8.4 0 0 1 13.5 4h.5a8.4 8.4 0 0 1 7 7Z"/></svg>Renew on WhatsApp</a>
+      </div>
+      <form class="account-name" data-name-form hidden autocomplete="off">
+        <label>Your name<input name="person" type="text" maxlength="40" autocomplete="given-name" enterkeyhint="done"></label>
+        <button class="button button-small" type="submit">Save</button>
+        <button class="button button-quiet button-small" type="button" data-name-cancel>Cancel</button>
+      </form>
+      <p class="account-intro">How long is left on your membership, how often you trained, and where your weight is heading. Saved on this device, no sign-in.</p>
+    </div>
+    <dl class="account-glance"><div><dd data-glance="month">—</dd><dt>Workouts this month</dt></div><div><dd data-glance="weight">—</dd><dt>Weight</dt></div><div><dd data-glance="calories">—</dd><dt>Daily calories</dt></div></dl>
+  </section>
+  <div class="container workout account">
+    <noscript><p class="workout-notice">Enable JavaScript in your browser to use these tools.</p></noscript>
+    <nav class="workout-jump" aria-label="Account sections"><a href="#membership">Membership</a><a href="#log">My log</a><a href="#body">My body</a><a href="#plan">Plan</a><a href="#plates">Barbell plates</a><a href="#data">My data</a></nav>
+
+    <section class="workout-panel account-wide" id="membership" aria-labelledby="membership-title" data-membership>
+      <h2 id="membership-title">My membership</h2>
+      <p class="workout-summary">Record your membership and every renewal, and keep a history of all of them.</p>
+      <div class="member-layout">
+        <div class="member-current">
+          <p class="workout-empty" data-member-empty>No membership recorded yet. Add your current one to see how many days are left.</p>
+          <article class="member-card" data-member-card hidden>
+            <div class="member-card-top"><h3 data-member-plan></h3><span class="member-status" data-member-status></span></div>
+            <p class="member-range" data-member-range></p>
+            <div class="member-progress" aria-hidden="true"><i data-member-progress></i></div>
+            <dl class="member-stats"><div data-member-stat-row="sessions"><dd data-member-stat="sessions">—</dd><dt>Workouts this membership</dt></div><div data-member-stat-row="days"><dd data-member-stat="days">—</dd><dt>Training days</dt></div><div data-member-stat-row="week"><dd data-member-stat="week">—</dd><dt>Per week</dt></div><div data-member-stat-row="paid"><dd data-member-stat="paid">—</dd><dt>Paid</dt></div></dl>
+            <p class="member-note" data-member-note hidden></p>
+          </article>
+          <div class="member-history" data-member-history hidden>
+            <h3>All my memberships</h3>
+            <ul class="log-list" data-member-list></ul>
+          </div>
+        </div>
+        <form class="log-form" data-member-form autocomplete="off" novalidate>
+          <h3>Record a membership or renewal</h3>
+          <fieldset class="member-plans">
+            <legend>Length</legend>
+            <div><label><input type="radio" name="months" value="1" checked><span>1 month</span></label><label><input type="radio" name="months" value="3"><span>3 months</span></label><label><input type="radio" name="months" value="6"><span>6 months</span></label><label><input type="radio" name="months" value="12"><span>1 year</span></label></div>
+          </fieldset>
+          <div class="log-form-row">
+            <label>Starts<input name="start" type="date" required></label>
+            <label>Last day<input name="end" type="date" required></label>
+          </div>
+          <div class="log-form-row">
+            <label>Amount paid (optional)<span class="workout-input"><input name="paid" type="number" inputmode="decimal" min="0" max="5000" step="0.5"><span class="workout-unit">JOD</span></span></label>
+            <label>Note (optional)<input name="note" type="text" maxlength="120" placeholder="e.g. Eid offer" enterkeyhint="done"></label>
+          </div>
+          <button class="button" type="submit">Save membership</button>
+          <p class="workout-status" data-member-status-text role="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="workout-panel account-wide workout-log" id="log" aria-labelledby="log-title" data-log>
+      <h2 id="log-title">My log</h2>
+      <p class="workout-summary">Log each workout when you finish. At the end of the month you can see how often and how long you trained.</p>
+      <p class="log-recap" data-log-recap hidden></p>
+      <div class="log-layout">
+        <div class="log-month">
+          <div class="log-month-nav">
+            <button class="icon-button" type="button" data-log-previous aria-label="Previous month"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+            <h3 data-log-title aria-live="polite"></h3>
+            <button class="icon-button" type="button" data-log-next aria-label="Next month"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div>
+          <dl class="log-stats"><div class="log-stat-main"><dd data-log-stat="sessions">—</dd><dt>Workouts</dt></div><div><dd data-log-stat="time">—</dd><dt>Time</dt></div><div><dd data-log-stat="days">—</dd><dt>Training days</dt></div><div><dd data-log-stat="average">—</dd><dt>Average workout</dt></div></dl>
+          <p class="log-compare" data-log-compare hidden></p>
+          <div class="log-calendar" data-log-calendar role="group" aria-label="Days of the month. Choose a day to log its workout."></div>
+        </div>
+        <form class="log-form" data-log-form autocomplete="off" novalidate>
+          <h3>Log a workout</h3>
+          <label>What did you train?<input name="name" type="text" maxlength="60" placeholder="e.g. Chest and triceps" enterkeyhint="done"></label>
+          <div class="log-quick" role="group" aria-label="Quick picks"><button type="button" data-log-quick>Chest</button><button type="button" data-log-quick>Back</button><button type="button" data-log-quick>Legs</button><button type="button" data-log-quick>Shoulders</button><button type="button" data-log-quick>Arms</button><button type="button" data-log-quick>Cardio</button><button type="button" data-log-quick>Full body</button></div>
+          <div class="log-form-row">
+            <label>Date<input name="date" type="date" required></label>
+            <label>Duration<span class="workout-input"><input name="minutes" type="number" inputmode="numeric" min="1" max="600" step="1" value="60" required><span class="workout-unit">min</span></span></label>
+          </div>
+          <label>Note (optional)<input name="note" type="text" maxlength="120" placeholder="e.g. Added weight on squats" enterkeyhint="done"></label>
+          <button class="button" type="submit">Log workout</button>
+          <p class="workout-status" data-log-status role="status"></p>
+        </form>
+      </div>
+      <div class="log-sessions">
+        <h3>This month’s workouts</h3>
+        <p class="workout-empty" data-log-empty>No workouts logged this month.</p>
+        <ul class="log-list is-short" data-log-list></ul>
+        <button class="text-link log-more" type="button" data-log-more hidden></button>
+      </div>
+      <template id="log-row">
+        <li class="log-row">
+          <span class="log-row-day"><b data-log-day></b><small data-log-weekday></small></span>
+          <div><strong data-log-name></strong><span data-log-note></span></div>
+          <b data-log-minutes></b>
+          <button type="button" class="log-remove" data-log-remove><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        </li>
+      </template>
+    </section>
+
+    <section class="workout-panel account-wide" id="body" aria-labelledby="body-title">
+      <h2 id="body-title">My body</h2>
+      <p class="workout-summary">Your numbers from the fitness calculator, and your weight over time.</p>
+      <div class="body-layout">
+        <div class="body-numbers" data-body>
+          <h3>My numbers</h3>
+          <div data-body-empty><p class="workout-empty">Nothing saved yet. Work out your numbers in the fitness calculator and press “Save my details to my account”.</p><a class="text-link" href="/galaxy-gym/en/calculators/">Open the fitness calculator</a></div>
+          <div data-body-values hidden>
+            <dl class="calc-list body-list" data-body-list></dl>
+            <p class="log-compare" data-body-updated></p>
+            <a class="text-link" href="/galaxy-gym/en/calculators/">Update in the calculator</a>
+          </div>
+        </div>
+        <div class="log-weight">
+          <div class="log-weight-head">
+            <div><h3>My weight</h3><p class="workout-summary">Log your weight now and then to see how it changes.</p></div>
+            <p class="log-weight-latest" data-weight-latest hidden><b></b> <span>kg</span></p>
+          </div>
+          <svg class="log-weight-chart" data-weight-chart viewBox="0 0 600 120" preserveAspectRatio="none" role="img" hidden><polyline fill="none"/><g></g></svg>
+          <p class="log-compare" data-weight-change hidden></p>
+          <form class="log-weight-form" data-weight-form autocomplete="off" novalidate>
+            <label>Today’s weight<span class="workout-input"><input name="kg" type="number" inputmode="decimal" min="20" max="400" step="0.1" required><span class="workout-unit">kg</span></span></label>
+            <button class="button button-quiet" type="submit">Add weight</button>
+          </form>
+          <p class="workout-status" data-weight-status role="status"></p>
+          <details class="log-weight-all" data-weight-all hidden><summary>All readings</summary><ul class="log-list" data-weight-list></ul></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="workout-panel" id="plan" aria-labelledby="plan-title">
+      <h2 id="plan-title">Workout plan</h2>
+      <p class="workout-summary">Add exercises and set your sets and reps. Your plan saves in this browser.</p>
+      <form id="add-exercise" autocomplete="off">
+        <label>Exercise
+          <select id="exercise" required>
+            <option value="" disabled selected>Choose an exercise</option>
+            <option value="squat">Squat</option>
+              <option value="bench-press">Barbell bench press</option>
+              <option value="dumbbell-press">Dumbbell bench press</option>
+              <option value="deadlift">Deadlift</option>
+              <option value="overhead-press">Overhead press</option>
+              <option value="row">Dumbbell row</option>
+              <option value="lat-pulldown">Lat pulldown</option>
+              <option value="pull-up">Pull-up</option>
+              <option value="leg-press">Leg press</option>
+              <option value="leg-curl">Leg curl</option>
+              <option value="lunge">Lunge</option>
+              <option value="lat-raise">Lateral raise</option>
+              <option value="biceps-curl">Biceps curl</option>
+              <option value="triceps-pushdown">Triceps pushdown</option>
+          </select>
+        </label>
+        <label>Sets<input id="sets" type="number" inputmode="numeric" min="1" max="20" step="1" value="3" required></label>
+        <label>Reps<input id="reps" type="number" inputmode="numeric" min="1" max="100" step="1" value="10" required></label>
+        <button class="button" type="submit">Add exercise</button>
+      </form>
+      <p class="workout-empty" id="empty-workout">Choose an exercise to start your plan.</p>
+      <ul class="workout-list" id="workout-list"></ul>
+      <template id="exercise-row">
+        <li class="workout-row">
+          <strong data-exercise-name></strong>
+          <div class="workout-row-fields">
+            <label>Sets<input data-count="sets" type="number" inputmode="numeric" min="1" max="20" step="1" required></label>
+            <label>Reps<input data-count="reps" type="number" inputmode="numeric" min="1" max="100" step="1" required></label>
+            <button type="button" class="workout-remove">Remove</button>
+          </div>
+        </li>
+      </template>
+      <div class="workout-plan-footer">
+        <output id="plan-totals" aria-live="polite"></output>
+        <div class="workout-plan-actions"><button id="log-plan" class="button button-small" type="button" disabled>Log this plan as a workout</button><button id="reset-workout" class="button button-quiet button-small" type="button" disabled>Clear plan</button></div>
+      </div>
+      <p class="workout-status" id="plan-status" role="status"></p>
+    </section>
+    <section class="workout-panel" id="plates" aria-labelledby="plates-title">
+      <h2 id="plates-title">Barbell plates</h2>
+      <p class="workout-summary">Enter the weight you want to lift and select the plates you have.</p>
+      <form id="plates-form" autocomplete="off">
+        <div class="workout-fields">
+          <label>Target total<span class="workout-input"><input id="plate-target" type="number" inputmode="decimal" min="0.01" max="1000" step="0.01" required><span class="workout-unit">kg</span></span></label>
+          <label>Bar weight<span class="workout-input"><input id="bar-weight" type="number" inputmode="decimal" min="0.01" max="100" step="0.01" value="20" required><span class="workout-unit">kg</span></span></label>
+        </div>
+        <fieldset class="workout-plates">
+          <legend>Available plates (kg)</legend>
+          <div class="plate-options">
+              <label><input type="checkbox" value="25" checked><span dir="ltr">25</span></label>
+              <label><input type="checkbox" value="20" checked><span dir="ltr">20</span></label>
+              <label><input type="checkbox" value="15" checked><span dir="ltr">15</span></label>
+              <label><input type="checkbox" value="10" checked><span dir="ltr">10</span></label>
+              <label><input type="checkbox" value="5" checked><span dir="ltr">5</span></label>
+              <label><input type="checkbox" value="2.5" checked><span dir="ltr">2.5</span></label>
+              <label><input type="checkbox" value="1.25" checked><span dir="ltr">1.25</span></label>
+          </div>
+        </fieldset>
+        <button class="button" type="submit">Work out the plates</button>
+        <output class="workout-output" id="plates-result" aria-live="polite" hidden>
+          <strong id="plates-total"></strong>
+          <span id="plate-side"></span>
+          <span class="plate-stack" id="plate-stack" dir="ltr" aria-hidden="true"></span>
+          <span id="plate-breakdown" dir="ltr"></span>
+        </output>
+      </form>
+      <p class="workout-more">Want your one-rep max or daily calories? <a class="text-link" href="/galaxy-gym/en/calculators/">Open the calculator</a></p>
+    </section>
+
+    <section class="workout-panel account-wide account-data" id="data" aria-labelledby="data-title">
+      <h2 id="data-title">My data</h2>
+      <p class="workout-summary">Everything on this page is saved on this device only. Nothing is sent to the gym or anywhere else. Download a copy before you change phones or clear your browser data.</p>
+      <div class="account-data-actions">
+        <button class="button button-quiet button-small" type="button" data-log-export>Download a copy of my data</button>
+        <button class="button button-quiet button-small" type="button" data-log-import-open>Restore a copy</button>
+        <input type="file" accept="application/json,.json" data-log-import hidden>
+        <button class="button button-quiet button-small account-danger" type="button" data-clear-all>Delete all my data</button>
+      </div>
+      <p class="workout-status" data-backup-status role="status"></p>
+    </section>
+  </div>
+</main>
+  <footer class="site-footer"><div class="container">
+    <div class="footer-main">
+      <div class="footer-brand"><a href="/galaxy-gym/en/" class="brand" aria-label="Galaxy Gym"><span class="brand-mark" aria-hidden="true"><img src="/galaxy-gym/assets/brand.webp" alt="" width="40" height="40"></span><span class="brand-type"><strong dir="ltr">GALAXY <span>GYM</span></strong><small>Fitness club</small></span></a><p>Fitness and bodybuilding in Aydoun, Irbid.</p></div>
+      <nav class="footer-nav" aria-label="Menu"><a href="/galaxy-gym/en/">Home</a><a href="/galaxy-gym/en/calculators/">Fitness calculator</a><a href="/galaxy-gym/en/training/">Training</a><a href="/galaxy-gym/en/club/">The gym</a><a href="/galaxy-gym/en/prices/">Membership</a><a href="/galaxy-gym/en/account/" aria-current="page">My account</a><a href="/galaxy-gym/en/contact/">Contact</a></nav>
+      <div class="footer-contact">
+        <a href="https://www.google.com/maps?cid=13503154910704371947" target="_blank" rel="noopener noreferrer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>Aydoun, Irbid, 100 m east of the former Clinics Roundabout.</a>
+        <a href="tel:+962791081877"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-4l-5-2-2 2a14 14 0 0 1-6-6l2-2-2-5Z"/></svg><bdi dir="ltr">079 108 1877</bdi></a>
+        <div class="footer-social"><a href="https://www.instagram.com/galaxy_gym_jo/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg></a><a href="https://www.facebook.com/GalaxyGymJo/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1 .5-2 2-2h2V2h-3c-3 0-5 2-5 5v2H7v4h3v8"/></svg></a></div>
+      </div>
+    </div>
+    <div class="footer-bottom"><p><bdi>© 2026 Galaxy Gym.</bdi> Names and trademarks belong to their owners.</p><div><a href="/galaxy-gym/en/privacy/">Privacy Policy</a><a href="/galaxy-gym/en/terms/">Terms & Conditions</a></div></div>
+  </div></footer>
+  <nav class="dock" aria-label="Menu">
+    <a href="/galaxy-gym/en/"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg></span><span>Home</span></a><a href="/galaxy-gym/en/calculators/"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M9 12h.01M15 12h.01M9 16h.01M15 16h.01"/></svg></span><span>Calculator</span></a><a href="/galaxy-gym/en/prices/"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span>Membership</span></a><a href="/galaxy-gym/en/account/" aria-current="page"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span>Account</span></a>
+    <button type="button" data-open-dialog="contact-sheet" aria-controls="contact-sheet" aria-expanded="false"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 9 9 0 0 1-3.6-.8L4 21l1.8-4.9a9 9 0 0 1-.8-3.6A8.4 8.4 0 0 1 13.5 4h.5a8.4 8.4 0 0 1 7 7Z"/><path d="M10 12h.01m3 0h.01m3 0h.01"/></svg></span><span>Contact</span></button>
+  </nav>
+  <dialog class="contact-sheet panel-dialog" id="contact-sheet" aria-label="Contact">
+    <div class="panel-dialog-body">
+      <div class="panel-dialog-head"><h2>Contact Galaxy Gym</h2><button data-close-dialog class="icon-button" type="button" aria-label="Close" autofocus><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <div class="sheet-links"><a class="button" href="tel:+962791081877"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H4a1 1 0 0 0-1 1c0 9.4 7.6 17 17 17a1 1 0 0 0 1-1v-4l-5-2-2 2a14 14 0 0 1-6-6l2-2-2-5Z"/></svg>Call the gym</a><a class="button button-quiet" href="https://wa.me/962791081877?text=Hi%2C%20could%20you%20tell%20me%20about%20membership%20options%20at%20Galaxy%20Gym%3F" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.5 9 9 0 0 1-3.6-.8L4 21l1.8-4.9a9 9 0 0 1-.8-3.6A8.4 8.4 0 0 1 13.5 4h.5a8.4 8.4 0 0 1 7 7Z"/><path d="M10 12h.01m3 0h.01m3 0h.01"/></svg>Message on WhatsApp</a><a class="button button-quiet" href="https://www.google.com/maps?cid=13503154910704371947" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>Get directions</a><a class="text-link" href="/galaxy-gym/en/contact/">Location and contact</a></div>
+    </div>
+  </dialog>
+</body>
+</html>

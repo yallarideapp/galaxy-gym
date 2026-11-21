@@ -3,7 +3,7 @@ import {
   restingEnergyFromLeanMass, fatFreeMass, bodyFatLevel, muscleLevel, healthyFatWeightRange,
   calorieTarget, goalMacros, proteinPerKg, waterRange, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
-import { recordWeight, today } from "./training-log.js";
+import { loadLog, recordBody } from "./training-log.js";
 
 const t = JSON.parse(document.getElementById("fitness-copy").textContent);
 const root = document.querySelector("[data-calc]");
@@ -287,18 +287,44 @@ root.addEventListener("change", (event) => {
 });
 root.querySelector("form").addEventListener("submit", (event) => event.preventDefault());
 
-// "Save today's weight to my log": only on this button does anything from the calculator get stored.
+// "Save my details to my account": only this button stores anything from the calculator.
 const saveStatus = root.querySelector("[data-save-status]");
 root.querySelector("[data-save-weight]").addEventListener("click", () => {
-  const weight = read("weight");
-  if (weight === null) {
-    inputs.get("weight").control.focus();
+  const details = { sex: checked("sex"), age: read("age"), height: read("height"), weight: read("weight"), activity: Number(activity.value), goal: checked("goal") };
+  const missing = ["age", "height", "weight"].find((key) => details[key] === null);
+  if (missing) {
+    inputs.get(missing).control.focus();
     return;
   }
   const fat = read("bodyfat", { optional: true });
-  const saved = recordWeight(today(), weight, fat ?? undefined);
+  const muscle = read("muscle", { optional: true });
+  if (fat !== null) details.fat = fat;
+  if (muscle !== null) details.muscle = muscle;
+  const saved = recordBody(details);
   saveStatus.hidden = false;
   saveStatus.querySelector("span").textContent = saved ? t.weightSaved : t.saveFailed;
   saveStatus.querySelector("a").hidden = !saved;
 });
+
+// Details saved in the account fill the form in, with the latest weight the member has logged since.
+function fillSaved() {
+  const { body, weights } = loadLog();
+  if (!body) return;
+  const latest = weights.at(-1);
+  const values = { age: body.age, height: body.height, weight: latest && latest.date >= body.date ? latest.kg : body.weight, bodyfat: body.fat, muscle: body.muscle };
+  for (const [key, value] of Object.entries(values)) {
+    if (typeof value !== "number") continue;
+    const { control, slider } = inputs.get(key);
+    control.value = plain.format(value);
+    if (slider) {
+      slider.value = String(value);
+      paintSlider(slider);
+    }
+  }
+  root.querySelector(`input[name="sex"][value="${body.sex}"]`).checked = true;
+  root.querySelector(`input[name="goal"][value="${body.goal}"]`).checked = true;
+  activity.value = String(body.activity);
+  root.querySelector("[data-saved-note]").hidden = false;
+}
+fillSaved();
 update();

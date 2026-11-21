@@ -1,6 +1,6 @@
-// My log: completed workouts, the month's summary and calendar, and a body-weight line.
-// The data lives in training-log.js; this file is the page around it.
-import { limits, loadLog, saveLog, sanitize, newId, today, dateKey, monthKey, validDate, recordWeight, monthSummary } from "./training-log.js";
+// My log (completed workouts, the month's summary and calendar) and My weight, on the account page.
+// The data lives in training-log.js; every change goes through update(), which tells the page to redraw.
+import { limits, loadLog, update, newId, today, fromKey, monthKey, validDate, recordWeight, monthSummary } from "./training-log.js";
 
 const root = document.querySelector("[data-log]");
 const strings = JSON.parse(document.querySelector("#workout-copy").textContent);
@@ -10,7 +10,7 @@ const locale = arabic ? "ar-JO-u-nu-latn" : "en-GB";
 const whole = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
 const oneDecimal = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
 // A signed change, kept left to right so the sign stays in front of the number inside Arabic text.
-const signed = (value) => `\u2066${value > 0 ? "+" : value < 0 ? "−" : ""}${oneDecimal.format(Math.abs(value))}\u2069`;
+const signed = (value) => `⁦${value > 0 ? "+" : value < 0 ? "−" : ""}${oneDecimal.format(Math.abs(value))}⁩`;
 const monthTitle = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" });
 const monthName = new Intl.DateTimeFormat(locale, { month: "long" });
 const dayTitle = new Intl.DateTimeFormat(locale, { weekday: "long", day: "numeric", month: "long" });
@@ -18,10 +18,9 @@ const dayShort = new Intl.DateTimeFormat(locale, { day: "numeric", month: "numer
 const weekdayShort = new Intl.DateTimeFormat(locale, { weekday: "short" });
 const weekdayNarrow = new Intl.DateTimeFormat(locale, { weekday: "narrow" });
 const fill = (template, ...values) => template.replace(/\{(\d+)\}/g, (_, index) => values[index]);
-const fromKey = (key) => { const [year, month, day] = key.split("-").map(Number); return new Date(year, month - 1, day); };
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
-const find = (selector) => root.querySelector(selector);
+const find = (selector) => document.querySelector(selector);
 const title = find("[data-log-title]");
 const previous = find("[data-log-previous]");
 const next = find("[data-log-next]");
@@ -30,12 +29,12 @@ const compare = find("[data-log-compare]");
 const recap = find("[data-log-recap]");
 const list = find("[data-log-list]");
 const more = find("[data-log-more]");
-const shortList = 5;
 const empty = find("[data-log-empty]");
-const rowTemplate = document.querySelector("#log-row");
+const rowTemplate = find("#log-row");
 const form = find("[data-log-form]");
 const status = find("[data-log-status]");
 const stats = new Map(Array.from(root.querySelectorAll("[data-log-stat]"), (node) => [node.dataset.logStat, node]));
+const shortList = 5;
 
 const now = new Date();
 let log = loadLog();
@@ -49,10 +48,11 @@ function duration(minutes) {
   return rest ? fill(strings.timeHM, whole.format(hours), whole.format(rest)) : fill(strings.timeH, whole.format(hours));
 }
 
-function store(message, target = status) {
-  const saved = saveLog(log);
-  target.textContent = saved ? message : strings.logNoStorage;
-  return saved;
+// Saves a change and reports it; the page redraws from the "galaxy:log-changed" event.
+function apply(change, message, target = status) {
+  const result = update(change);
+  target.textContent = result ? message : strings.logNoStorage;
+  return result;
 }
 
 // The week starts on Saturday, as calendars in Jordan do.
@@ -92,6 +92,13 @@ function renderCalendar(summary) {
   calendar.replaceChildren(...cells);
 }
 
+function removeButton(label, onRemove) {
+  const remove = rowTemplate.content.querySelector("[data-log-remove]").cloneNode(true);
+  remove.setAttribute("aria-label", fill(strings.removeLabel, label));
+  remove.addEventListener("click", onRemove);
+  return remove;
+}
+
 function renderList(summary) {
   empty.hidden = summary.sessions.length > 0;
   more.hidden = summary.sessions.length <= shortList;
@@ -105,14 +112,10 @@ function renderList(summary) {
     note.textContent = entry.note;
     note.hidden = !entry.note;
     row.querySelector("[data-log-minutes]").textContent = duration(entry.minutes);
-    const remove = row.querySelector("[data-log-remove]");
-    remove.setAttribute("aria-label", fill(strings.removeLabel, `${entry.name}, ${dayTitle.format(fromKey(entry.date))}`));
-    remove.addEventListener("click", () => {
+    row.querySelector("[data-log-remove]").replaceWith(removeButton(`${entry.name}, ${dayTitle.format(fromKey(entry.date))}`, () => {
       if (!window.confirm(strings.logConfirmRemove)) return;
-      log.sessions = log.sessions.filter((item) => item.id !== entry.id);
-      store(strings.logRemoved);
-      render();
-    });
+      apply((data) => { data.sessions = data.sessions.filter((item) => item.id !== entry.id); }, strings.logRemoved);
+    }));
     return row;
   }));
 }
@@ -203,13 +206,12 @@ form.addEventListener("submit", (event) => {
     form.elements[problem[0]].focus();
     return;
   }
-  log = sanitize({ sessions: [...log.sessions, { id: newId(), date, name, minutes, note: form.elements.note.value }], weights: log.weights });
-  if (!store(strings.logSaved)) return;
-  form.elements.name.value = "";
-  form.elements.note.value = "";
   lit = date;
   view = { year: Number(date.slice(0, 4)), month: Number(date.slice(5, 7)) - 1 };
-  render();
+  const saved = apply((data) => { data.sessions.push({ id: newId(), date, name, minutes, note: form.elements.note.value }); }, strings.logSaved);
+  if (!saved) return;
+  form.elements.name.value = "";
+  form.elements.note.value = "";
 });
 
 // "Log this plan as a workout" in the plan panel fills the form in; the member still presses the button.
@@ -225,7 +227,7 @@ document.addEventListener("galaxy:log-plan", (event) => {
   form.elements.minutes.focus({ preventScroll: true });
 });
 
-// ---- Weight
+// ---- My weight
 const weightForm = find("[data-weight-form]");
 const weightStatus = find("[data-weight-status]");
 const weightLatest = find("[data-weight-latest]");
@@ -262,7 +264,6 @@ function renderWeight() {
     const row = document.createElement("li");
     const day = document.createElement("bdi");
     const value = document.createElement("strong");
-    const remove = document.createElement("button");
     row.className = "log-row log-row-weight";
     day.className = "log-row-day";
     day.textContent = dayShort.format(fromKey(entry.date));
@@ -272,14 +273,8 @@ function renderWeight() {
       fat.textContent = ` ${fill(strings.fatReading, oneDecimal.format(entry.fat))}`;
       value.append(fat);
     }
-    remove.type = "button";
-    remove.className = "log-remove";
-    remove.innerHTML = rowTemplate.content.querySelector("[data-log-remove]").innerHTML;
-    remove.setAttribute("aria-label", fill(strings.removeLabel, `${value.textContent}, ${day.textContent}`));
-    remove.addEventListener("click", () => {
-      log.weights = log.weights.filter((item) => item.date !== entry.date);
-      store(strings.weightRemoved, weightStatus);
-      renderWeight();
+    const remove = removeButton(`${value.textContent}, ${day.textContent}`, () => {
+      apply((data) => { data.weights = data.weights.filter((item) => item.date !== entry.date); }, strings.weightRemoved, weightStatus);
     });
     row.append(day, value, remove);
     return row;
@@ -298,53 +293,19 @@ weightForm.addEventListener("submit", (event) => {
     weightStatus.textContent = strings.logNoStorage;
     return;
   }
-  log = loadLog();
   weightForm.reset();
   weightStatus.textContent = strings.weightSaved;
-  renderWeight();
 });
 
-// ---- Backup: the log lives only in this browser, so the member can take a copy with them.
-const backupStatus = find("[data-backup-status]");
-find("[data-log-export]").addEventListener("click", () => {
-  const file = new Blob([JSON.stringify({ app: "galaxy-gym-log", version: 1, sessions: log.sessions, weights: log.weights }, null, 2)], { type: "application/json" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(file);
-  link.download = `galaxy-gym-log-${today()}.json`;
-  link.click();
-  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-  backupStatus.textContent = strings.exported;
-});
-find("[data-log-import-open]").addEventListener("click", () => find("[data-log-import]").click());
-find("[data-log-import]").addEventListener("change", async (event) => {
-  const [file] = event.target.files;
-  event.target.value = "";
-  if (!file) return;
-  let incoming = null;
-  try {
-    const data = JSON.parse(await file.text());
-    if (data && data.app === "galaxy-gym-log") incoming = sanitize(data);
-  } catch {
-    incoming = null;
-  }
-  if (!incoming || (!incoming.sessions.length && !incoming.weights.length)) {
-    backupStatus.textContent = strings.importFailed;
-    return;
-  }
-  // Merge: what is already here stays, and the copy fills in the rest.
-  log = sanitize({ sessions: [...incoming.sessions, ...log.sessions], weights: [...incoming.weights, ...log.weights] });
-  if (store(fill(strings.imported, whole.format(incoming.sessions.length), whole.format(incoming.weights.length)), backupStatus)) render();
-});
-
-// Another tab (or the calculator's "save my weight") changed the log: show it.
-addEventListener("storage", () => {
+// Redraw whenever the records change: here, in account.js, or in another tab.
+const reload = () => {
   log = loadLog();
   render();
-});
+};
+document.addEventListener("galaxy:log-changed", reload);
+addEventListener("storage", reload);
 addEventListener("pageshow", (event) => {
-  if (!event.persisted) return;
-  log = loadLog();
-  render();
+  if (event.persisted) reload();
 });
 
 render();

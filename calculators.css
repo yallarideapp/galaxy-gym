@@ -152,3 +152,4 @@
   .calc-jump a:hover{border-color:var(--sun);color:var(--sun)}
   .calc-card{border-radius:1.5rem}
 }
+.calc-saved{color:var(--sun)}
