@@ -106,8 +106,8 @@ addEventListener("storage", (event) => {
 const visiblePlans = () => state.plans.items.filter((plan) => plan.name[lang].trim() || plan.name.ar.trim() || plan.name.en.trim()).filter((plan) => plan.price);
 const textCount = () => Object.keys(state.texts.ar).length + Object.keys(state.texts.en).length;
 const lookChanged = () => state.look.accent !== G.defaults.accent || !state.look.splash || !state.look.motion;
-// "{n} plans shown", with its own wording for one.
-const counted = (forms, n) => (n === 1 && forms[2] ? forms[2] : fill(forms[0], { n }));
+// "{n} plans shown", with its own wording for one (and, in Arabic, for two).
+const counted = (forms, n) => (n === 1 && forms[2] ? forms[2] : n === 2 && forms[3] ? forms[3] : fill(forms[0], { n }));
 function summary(id) {
   const o = t.overview;
   const text = (state.announcement.text[lang] || state.announcement.text.ar || state.announcement.text.en || "").trim();
