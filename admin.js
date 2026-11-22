@@ -106,16 +106,18 @@ addEventListener("storage", (event) => {
 const visiblePlans = () => state.plans.items.filter((plan) => plan.name[lang].trim() || plan.name.ar.trim() || plan.name.en.trim()).filter((plan) => plan.price);
 const textCount = () => Object.keys(state.texts.ar).length + Object.keys(state.texts.en).length;
 const lookChanged = () => state.look.accent !== G.defaults.accent || !state.look.splash || !state.look.motion;
+// "{n} plans shown", with its own wording for one.
+const counted = (forms, n) => (n === 1 && forms[2] ? forms[2] : fill(forms[0], { n }));
 function summary(id) {
   const o = t.overview;
   const text = (state.announcement.text[lang] || state.announcement.text.ar || state.announcement.text.en || "").trim();
   switch (id) {
     case "announcement": return state.announcement.on && text ? [fill(o.announcement[0], { t: shorten(text, 34) }), true] : [o.announcement[1], false];
-    case "plans": return state.plans.on && visiblePlans().length ? [fill(o.plans[0], { n: visiblePlans().length }), true] : [o.plans[1], false];
-    case "hours": return state.hours.on && state.hours.rows.length ? [fill(o.hours[0], { n: state.hours.rows.length }), true] : [o.hours[1], false];
-    case "contact": return Object.keys(state.contact).length ? [fill(o.contact[0], { n: Object.keys(state.contact).length }), true] : [o.contact[1], false];
-    case "texts": return textCount() ? [fill(o.texts[0], { n: textCount() }), true] : [o.texts[1], false];
-    case "photos": return Object.keys(state.photos).length ? [fill(o.photos[0], { n: Object.keys(state.photos).length }), true] : [o.photos[1], false];
+    case "plans": return state.plans.on && visiblePlans().length ? [counted(o.plans, visiblePlans().length), true] : [o.plans[1], false];
+    case "hours": return state.hours.on && state.hours.rows.length ? [counted(o.hours, state.hours.rows.length), true] : [o.hours[1], false];
+    case "contact": return Object.keys(state.contact).length ? [counted(o.contact, Object.keys(state.contact).length), true] : [o.contact[1], false];
+    case "texts": return textCount() ? [counted(o.texts, textCount()), true] : [o.texts[1], false];
+    case "photos": return Object.keys(state.photos).length ? [counted(o.photos, Object.keys(state.photos).length), true] : [o.photos[1], false];
     case "look": return lookChanged() ? [o.look[0], true] : [o.look[1], false];
     case "backup": return state.savedAt && G.hasEdits(state)
       ? [fill(o.backup[0], { d: new Intl.DateTimeFormat(lang === "ar" ? "ar-JO-u-nu-latn" : "en-GB", { dateStyle: "medium", timeStyle: "short" }).format(new Date(state.savedAt)) }), true]
@@ -587,7 +589,7 @@ function show(id, { keepScroll = false } = {}) {
   }
   if (!rendered[id] || id === "overview") {
     const mount = document.querySelector(`[data-mount="${id}"]`);
-    mount.replaceChildren(...sections[id]());
+    mount.replaceChildren(...sections[id]().filter(Boolean));
     rendered[id] = true;
   }
   previewPage(previewFor[id]);
