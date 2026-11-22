@@ -32,6 +32,8 @@
   <meta name="apple-mobile-web-app-title" content="Galaxy Gym">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <script src="/galaxy-gym/app.js" defer></script>
+  <script>(function(){try{var s=JSON.parse(localStorage.getItem("galaxy-gym-admin-v1")||"null");if(!s||typeof s!=="object")return;var d=document.documentElement,l=s.look||{},a=String(l.accent||"").toLowerCase();if(/^#[0-9a-f]{6}$/.test(a)&&a!=="#f6ae45"){var r=parseInt(a.slice(1,3),16),g=parseInt(a.slice(3,5),16),b=parseInt(a.slice(5,7),16),m=function(c){return Math.round(c+(255-c)*.3)},L=function(c){c/=255;return c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4)};d.style.setProperty("--sun",a);d.style.setProperty("--sun-bright","rgb("+m(r)+" "+m(g)+" "+m(b)+")");d.style.setProperty("--sun-ink",.2126*L(r)+.7152*L(g)+.0722*L(b)>.36?"#14110b":"#ffffff");d.style.setProperty("--sun-rgb",r+" "+g+" "+b)}if(l.splash===false)sessionStorage.setItem("gg-intro","1");if(l.motion===false)d.classList.add("gg-calm");var t=s.texts||{},c=s.contact||{},p=s.photos||{};if(Object.keys(t.ar||{}).length||Object.keys(t.en||{}).length||Object.keys(c).length||Object.keys(p).length||(s.announcement&&s.announcement.on)||(s.plans&&s.plans.on)||(s.hours&&s.hours.on)){d.classList.add("gg-pending");setTimeout(function(){d.classList.remove("gg-pending")},1500)}}catch(e){}})();</script>
+  <script src="/galaxy-gym/content.js" defer></script>
   <link rel="preload" href="/galaxy-gym/assets/fonts/alexandria-arabic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/galaxy-gym/assets/fonts/plex-arabic-400.woff2" as="font" type="font/woff2" crossorigin>
   <script>try{sessionStorage.setItem("gg-intro","1")}catch(e){}</script>
@@ -77,6 +79,7 @@
       <figcaption>صالة التدريب في جالاكسي جيم</figcaption>
     </figure>
   </section>
+  <section class="container block block-tight plans-slot" data-plans hidden aria-labelledby="plans-title"></section>
   <section class="container block block-tight" id="advisor" aria-labelledby="advisor-title">
     <div class="vp-advisor vp-split" data-whatsapp-draft>
       <div class="vp-controls">
@@ -119,7 +122,7 @@
         <div class="footer-social"><a href="https://www.instagram.com/galaxy_gym_jo/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></svg></a><a href="https://www.facebook.com/GalaxyGymJo/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1 .5-2 2-2h2V2h-3c-3 0-5 2-5 5v2H7v4h3v8"/></svg></a></div>
       </div>
     </div>
-    <div class="footer-bottom"><p><bdi>© 2026 Galaxy Gym.</bdi> الأسماء والعلامات التجارية مملوكة لأصحابها.</p><div><a href="/galaxy-gym/privacy/">سياسة الخصوصية</a><a href="/galaxy-gym/terms/">الشروط والأحكام</a></div></div>
+    <div class="footer-bottom"><p><bdi>© 2026 Galaxy Gym.</bdi> الأسماء والعلامات التجارية مملوكة لأصحابها.</p><div><a href="/galaxy-gym/privacy/">سياسة الخصوصية</a><a href="/galaxy-gym/terms/">الشروط والأحكام</a><a href="/galaxy-gym/admin/">لوحة التحكم</a></div></div>
   </div></footer>
   <nav class="dock" aria-label="القائمة">
     <a href="/galaxy-gym/"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg></span><span>الرئيسية</span></a><a href="/galaxy-gym/calculators/"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M9 12h.01M15 12h.01M9 16h.01M15 16h.01"/></svg></span><span>الحاسبة</span></a><a href="/galaxy-gym/prices/" aria-current="page"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span><span>الاشتراكات</span></a><a href="/galaxy-gym/account/"><span class="dock-icon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span><span>حسابي</span></a>

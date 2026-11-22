@@ -5,7 +5,7 @@
   -webkit-mask-image:linear-gradient(#000 40%,transparent 97%);mask-image:linear-gradient(#000 40%,transparent 97%)}
 .hero::after{content:"";position:absolute;inset:0;z-index:-3;
   background:
-    radial-gradient(48% 56% at 24% 56%,rgba(246,174,69,.12),transparent 72%),
+    radial-gradient(48% 56% at 24% 56%,rgb(var(--sun-rgb) / .12),transparent 72%),
     radial-gradient(40% 50% at 88% 4%,rgba(255,255,255,.07),transparent 70%)}
 [dir="ltr"] .hero::after{transform:scaleX(-1)}
 
@@ -28,18 +28,18 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
 .hex-rim path{vector-effect:non-scaling-stroke}
 .hex-caption{position:absolute;inset-inline:12%;inset-block-end:15%;font-weight:600;font-size:clamp(.74rem,1.25vw,.92rem);line-height:1.4;text-align:center}
 .hex-main .hex-caption{inset-block-end:17%;font-size:clamp(.9rem,1.5vw,1.08rem)}
-.hex-photo:hover .hex-rim,.hex-photo:focus-visible .hex-rim{stroke:var(--sun);filter:drop-shadow(0 0 10px rgba(246,174,69,.85))}
+.hex-photo:hover .hex-rim,.hex-photo:focus-visible .hex-rim{stroke:var(--sun);filter:drop-shadow(0 0 10px rgb(var(--sun-rgb) / .85))}
 .hex-photo:hover .hex-window img{transform:scale(1.07)}
 .hex-photo:focus-visible{outline:0}
 .hex-light .hex-rim{stroke-width:1.6}
 .hex-lamp .hex-rim{fill:rgba(255,255,255,.07);stroke:var(--lamp);filter:drop-shadow(0 0 9px rgba(255,255,255,.75))}
-.hex-sun .hex-rim{fill:rgba(246,174,69,.08);stroke:var(--sun);filter:drop-shadow(0 0 9px rgba(246,174,69,.75))}
+.hex-sun .hex-rim{fill:rgb(var(--sun-rgb) / .08);stroke:var(--sun);filter:drop-shadow(0 0 9px rgb(var(--sun-rgb) / .75))}
 /* Small gym loops inside the two bigger lights. Without motion they are simply a loaded bar and a dumbbell. */
 .hex-gym{position:absolute;inset-inline-start:16%;inset-block-start:50%;inline-size:68%;aspect-ratio:1;translate:0 -50%;overflow:visible}
 .gym-bar{fill:var(--text)}
 .gym-plate{fill:var(--sun)}
 .gym-curl{transform-origin:24px 24px}
-.hex-light[data-gym="barbell"]::before{content:"";position:absolute;inset:8% 0;border-radius:50%;background:radial-gradient(closest-side,rgba(246,174,69,.55),transparent);opacity:0}
+.hex-light[data-gym="barbell"]::before{content:"";position:absolute;inset:8% 0;border-radius:50%;background:radial-gradient(closest-side,rgb(var(--sun-rgb) / .55),transparent);opacity:0}
 
 /* The galaxy is drawn once on a canvas (hero-motion.js); CSS tilts the disc and turns it. */
 .hex-galaxy{position:absolute;z-index:-1;left:50%;top:50%;inline-size:225%;aspect-ratio:1;translate:calc(-50% + var(--px) * -.5px) calc(-50% + var(--py) * -.5px);rotate:-24deg;scale:1 .5;pointer-events:none}
@@ -155,3 +155,6 @@ html.is-splash .splash{display:block;position:fixed;inset:0;z-index:100;overflow
   from{clip-path:polygon(evenodd,0 0,100% 0,100% 100%,0 100%,0 0,50% 46%,50% 46%,50% 46%,50% 46%,50% 46%,50% 46%,50% 46%)}
   to{clip-path:polygon(evenodd,0 0,100% 0,100% 100%,0 100%,0 0,50% calc(46% - 86vmax),calc(50% + 74.5vmax) calc(46% - 43vmax),calc(50% + 74.5vmax) calc(46% + 43vmax),50% calc(46% + 86vmax),calc(50% - 74.5vmax) calc(46% + 43vmax),calc(50% - 74.5vmax) calc(46% - 43vmax),50% calc(46% - 86vmax));visibility:hidden}
 }
+
+/* Admin panel: banner motion switched off */
+.gg-calm .hex-galaxy canvas,.gg-calm .hex-gym,.gg-calm .hex-gym *,.gg-calm .hex-light[data-gym]::before{animation:none!important}

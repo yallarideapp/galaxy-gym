@@ -20,7 +20,8 @@ const monthYear = new Intl.DateTimeFormat(locale, { month: "long", year: "numeri
 const fill = (template, ...values) => template.replace(/\{(\d+)\}/g, (_, index) => values[index]);
 const formatDay = (key, format = longDate) => format.format(fromKey(key));
 const find = (selector) => document.querySelector(selector);
-const whatsapp = "https://wa.me/962791081877?text=";
+// The gym's WhatsApp: the admin panel can change the number (content.js).
+const whatsapp = `${window.galaxyContent?.whatsappLink("") || "https://wa.me/962791081877"}?text=`;
 const ringLength = 100;
 
 let log = loadLog();
@@ -273,11 +274,20 @@ const recalculateEnd = () => {
 memberOpen.addEventListener("click", () => {
   formOpen = true;
   suggestDates();
+  suggestPaid();
   renderMembership();
   memberForm.querySelector('input[name="months"]:checked').focus();
 });
+// When the gym's prices are set in the admin panel, the amount fills in for the chosen length (still editable).
+const suggestPaid = () => {
+  const paid = memberForm.elements.paid;
+  const price = window.galaxyContent?.priceFor(memberForm.elements.months.value);
+  if (paid.value !== "" && paid.dataset.suggested !== paid.value) return;
+  paid.value = price ? String(price) : "";
+  paid.dataset.suggested = paid.value;
+};
 memberForm.elements.start.addEventListener("change", recalculateEnd);
-for (const option of memberForm.elements.months) option.addEventListener("change", recalculateEnd);
+for (const option of memberForm.elements.months) option.addEventListener("change", () => { recalculateEnd(); suggestPaid(); });
 
 memberForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -301,6 +311,7 @@ memberForm.addEventListener("submit", (event) => {
   if (!result) return;
   memberForm.elements.paid.value = "";
   suggestDates();
+  suggestPaid();
   memberOpen.focus();
 });
 
@@ -405,4 +416,5 @@ addEventListener("pageshow", (event) => {
 
 render();
 suggestDates();
+suggestPaid();
 followHash();

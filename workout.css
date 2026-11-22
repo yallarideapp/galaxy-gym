@@ -7,7 +7,7 @@
 .account-ring svg{position:absolute;inset:0;inline-size:100%;block-size:100%;overflow:visible}
 .account-ring path{fill:none;stroke-width:5}
 .account-ring-track{stroke:var(--rim)}
-.account-ring-lit{stroke:var(--sun);stroke-linecap:round;stroke-dasharray:0 100;filter:drop-shadow(0 0 7px rgba(246,174,69,.6));transition:stroke-dasharray 1s var(--ease)}
+.account-ring-lit{stroke:var(--sun);stroke-linecap:round;stroke-dasharray:0 100;filter:drop-shadow(0 0 7px rgb(var(--sun-rgb) / .6));transition:stroke-dasharray 1s var(--ease)}
 .account-ring[data-phase="ending"] .account-ring-lit{stroke:var(--alert);filter:drop-shadow(0 0 7px rgba(255,181,154,.6))}
 .account-ring[data-phase="upcoming"] .account-ring-lit{stroke:var(--lamp);stroke-dasharray:2 4!important;filter:none;opacity:.6}
 .account-ring b{font:800 clamp(2.5rem,5vw,3.5rem)/1 var(--display);font-variant-numeric:tabular-nums}
