@@ -1,6 +1,6 @@
 import {
   estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, scanComposition, bodyFatLevel, muscleLevel,
-  healthyFatWeightRange, dailyFuel, proteinPerKg, proteinPerLeanKg, dailyWater, loadBar, estimatedMaxHeartRate, heartRateZones,
+  goodWeightRange, dailyFuel, proteinPerKg, proteinPerLeanKg, dailyWater, loadBar, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
 import { loadLog, recordBody } from "./training-log.js";
 
@@ -199,7 +199,7 @@ function update() {
     const fitted = lean !== null && age !== null;
     rows.get("fit-range").hidden = !fitted;
     if (fitted) {
-      const [fitLow, fitTop] = healthyFatWeightRange(sex, age, lean);
+      const [fitLow, fitTop] = goodWeightRange(age, lean);
       set("fit-range", `${span(fitLow, fitTop, loose)} ${t.kg}`);
     }
   }

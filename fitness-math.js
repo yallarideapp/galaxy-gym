@@ -77,10 +77,13 @@ export function scanComposition(sex, weight, { fat = null, muscle = null } = {})
   return { fatPercent, lean: fatFreeMass(weight, fatPercent), source };
 }
 
-// The body weights at which this fat-free mass would sit at the bottom and the top of the healthy body-fat range.
-export function healthyFatWeightRange(sex, age, leanMass) {
-  const [low, healthy] = fatBands[sex][ageGroup(age)];
-  return [leanMass / (1 - low / 100), leanMass / (1 - healthy / 100)];
+// "A good weight for you, keeping your muscle": the weights at which this fat-free mass would carry a fit amount of
+// body fat, the lower part of the healthy range (men 18–39: 10–15%; 40–59: 13–18%; 60 and over: 15–20%). The full
+// healthy range runs up to 20–25% and gave too high a top weight for a muscular man.
+const fitFat = [[10, 15], [13, 18], [15, 20]];
+export function goodWeightRange(age, leanMass) {
+  const [low, high] = fitFat[ageGroup(age)];
+  return [leanMass / (1 - low / 100), leanMass / (1 - high / 100)];
 }
 
 // A starting calorie target for the goal. Fat loss never drops below a minimum intake.
