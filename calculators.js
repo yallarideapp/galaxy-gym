@@ -1,5 +1,5 @@
 import {
-  estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, scanComposition, bodyFatLevel, muscleLevel, muscleReadingKind,
+  estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, scanComposition, bodyFatLevel, muscleLevel,
   healthyFatWeightRange, dailyFuel, proteinPerKg, proteinPerLeanKg, dailyWater, loadBar, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
 import { loadLog, recordBody } from "./training-log.js";
@@ -125,13 +125,11 @@ function update() {
   }
   const scan = weight !== null ? scanComposition(sex, weight, { fat: fatReading, muscle: muscleReading }) : null;
   const lean = scan ? scan.lean : null;
-  // A body fat reading, or a muscle-mass reading (close to it), is judged on body fat; skeletal muscle on its own bands,
-  // and only a body-fat-based reading gives "a good weight for you" (a skeletal-muscle estimate is too rough for that).
-  const rough = scan !== null && scan.source.startsWith("skeletal");
-  const byFat = scan !== null && !rough;
-  const fatLevel = byFat && age !== null ? bodyFatLevel(sex, age, scan.fatPercent) : null;
-  const muscleKind = muscleReading !== null ? muscleReadingKind(muscleReading) : null;
-  const muscleBand = muscleReading !== null && age !== null ? muscleLevel(sex, age, muscleReading) : null;
+  // A body fat reading is judged on body fat, a muscle reading on muscle. Either one gives the fat-free mass, and with it
+  // "a good weight for you, keeping your muscle"; from muscle it is an estimate, and the notes say so.
+  const rough = scan !== null && scan.source === "muscle";
+  const fatLevel = scan !== null && !rough && age !== null ? bodyFatLevel(sex, age, scan.fatPercent) : null;
+  const muscleBand = muscleReading !== null ? muscleLevel(muscleReading) : null;
 
   // Calories, then the macros built on them.
   const energyReady = age !== null && height !== null && weight !== null;
@@ -198,7 +196,7 @@ function update() {
       : muscleBand !== null ? t.muscleVerdicts[over ? "over" : "within"][muscleBand] : "";
     reveal("bmi-verdict", verdict);
     outputs.get("bmi-note").hidden = Boolean(verdict);
-    const fitted = fatLevel !== null && fatLevel >= 2;
+    const fitted = lean !== null && age !== null;
     rows.get("fit-range").hidden = !fitted;
     if (fitted) {
       const [fitLow, fitTop] = healthyFatWeightRange(sex, age, lean);
@@ -212,8 +210,8 @@ function update() {
   const measured = height !== null && neck !== null && waist !== null;
   const tapePercent = measured ? estimateBodyFat(sex, height, waist, neck, 0) : null;
   outputs.get("fat-invalid").hidden = !measured || tapePercent !== null;
-  // A body fat or muscle-mass reading wins; then the tape estimate; a skeletal-muscle reading gives a rough figure last.
-  const fatSource = byFat ? scan.source : tapePercent !== null ? "tape" : scan ? "skeletal" : null;
+  // A body fat reading wins; then the tape estimate; a muscle reading gives an estimate last.
+  const fatSource = scan && !rough ? "fat" : tapePercent !== null ? "tape" : scan ? "muscle" : null;
   const fatPercent = fatSource === "tape" ? tapePercent : fatSource ? scan.fatPercent : null;
   show("fat", fatPercent !== null || muscleReading !== null);
   blocks.get("fat").hidden = fatPercent === null;
@@ -233,7 +231,6 @@ function update() {
   if (muscleReading !== null) {
     reveal("muscle-band", muscleBand === null ? "" : t.muscleBands[muscleBand]);
     outputs.get("muscle-band").dataset.level = muscleBand === null ? "" : ["over", "ok", "ok", "ok"][muscleBand];
-    reveal("muscle-kind", t.muscleKinds[muscleKind]);
     set("muscle-percent", `${loose.format(muscleReading)}%`);
     set("muscle-mass", weight === null ? "—" : `${loose.format(weight * muscleReading / 100)} ${t.kg}`);
   }

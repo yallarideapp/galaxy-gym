@@ -45,9 +45,8 @@ export function fatFreeMass(weight, fatPercent) {
 
 // Reference bands by sex and age group (18–39, 40–59, 60 and over).
 // Each row: [low below, healthy below, high below]; anything above is very high.
-// Body fat: Gallagher et al., Am J Clin Nutr 2000. Skeletal muscle: Omron Healthcare tables.
+// Body fat: Gallagher et al., Am J Clin Nutr 2000.
 const fatBands = { m: [[8, 20, 25], [11, 22, 28], [13, 25, 30]], f: [[21, 33, 39], [23, 34, 40], [24, 36, 42]] };
-const muscleBands = { m: [[33.3, 39.4, 44.1], [33.1, 39.2, 43.9], [32.9, 39, 43.7]], f: [[24.3, 30.4, 35.4], [24.1, 30.2, 35.2], [23.9, 30, 35]] };
 const ageGroup = (age) => (age < 40 ? 0 : age < 60 ? 1 : 2);
 const levelOf = (value, [low, healthy, high]) => (value < low ? 0 : value < healthy ? 1 : value < high ? 2 : 3);
 
@@ -56,40 +55,24 @@ export function bodyFatLevel(sex, age, percent) {
   return levelOf(percent, fatBands[sex][ageGroup(age)]);
 }
 
-// Muscle % means different things on different scales, so a reading is read by where it falls:
-// - up to 45%: skeletal muscle as Omron-type scales give it (normal for men about 33–39%);
-// - above 45% and up to 65%: the skeletal muscle rate of Renpho, Fitdays and similar apps (normal for men about 49–59%);
-// - above 65%: muscle mass, all the muscle (Tanita, Xiaomi and similar; about 70–85% for men).
-export function muscleReadingKind(percent) {
-  return percent > 65 ? "muscleMass" : percent > 45 ? "skeletalRate" : "skeletal";
-}
-const skeletalRateBands = [49, 59, 63];
-
-// 0 low, 1 normal, 2 high, 3 very high; null for a muscle-mass reading, which is judged through body fat.
-export function muscleLevel(sex, age, percent) {
-  const kind = muscleReadingKind(percent);
-  if (kind === "muscleMass") return null;
-  return levelOf(percent, kind === "skeletalRate" ? skeletalRateBands : muscleBands[sex][ageGroup(age)]);
+// Muscle % is read one way only: the share of body weight that is muscle. For a man about 40% is low, 50% normal and
+// 60% high. 0 low, 1 normal, 2 high, 3 very high.
+const muscleBands = [45, 55, 62];
+export function muscleLevel(percent) {
+  return levelOf(percent, muscleBands);
 }
 
-// A body-scan reading turned into body fat % and fat-free mass (the Hydrogen calculator's rules, with the skeletal
-// muscle rate of Renpho-type apps added). Body fat % is the direct reading and wins when both are given.
-// - Muscle mass (above 65%) plus bone (about 5% of lean mass) is the fat-free mass.
-// - Skeletal muscle is looser: a straight line that puts each kind of scale's "normal" range at an average build
-//   (Omron: (muscle + 19) ÷ 0.72; Renpho-type: 77% fat-free at 49%, one point more for each point of muscle),
-//   so the result is rough.
-// Returns null without a usable reading; source is "fat", "muscleMass", "skeletalRate" or "skeletal".
+// A body-scan reading turned into body fat % and fat-free mass. Body fat % is the direct reading and wins when both
+// are given. From muscle %, the fat-free mass is taken as muscle % plus 30 points of body weight (50% muscle is an
+// average build at 20% body fat; 60% muscle, 10% body fat), kept between 50% and 95%. So more muscle always means more
+// fat-free mass, and with it more calories, protein and water and a higher good weight. It is an estimate.
+// Returns null without a usable reading; source is "fat" or "muscle".
 export function scanComposition(sex, weight, { fat = null, muscle = null } = {}) {
   let fatPercent;
   let source;
-  const kind = muscle !== null ? muscleReadingKind(muscle) : null;
   if (fat !== null) [fatPercent, source] = [fat, "fat"];
-  else if (kind === "muscleMass") [fatPercent, source] = [100 - muscle / 0.95, "muscleMass"];
-  else if (kind === "skeletalRate") [fatPercent, source] = [100 - Math.min(Math.max(77 + (muscle - 49), 60), 95), "skeletalRate"];
-  else if (kind === "skeletal") {
-    const leanShare = sex === "m" ? (muscle + 19) / 0.72 : (muscle + 5.5) / 0.47;
-    [fatPercent, source] = [100 - Math.min(Math.max(leanShare, 45), 96), "skeletal"];
-  } else return null;
+  else if (muscle !== null) [fatPercent, source] = [100 - Math.min(Math.max(muscle + 30, 50), 95), "muscle"];
+  else return null;
   if (!(fatPercent > 0 && fatPercent < 100)) return null;
   return { fatPercent, lean: fatFreeMass(weight, fatPercent), source };
 }
