@@ -26,8 +26,11 @@
       everyDay: "كل يوم", closed: "مسكّر", hoursTitle: "أوقات الدوام", openNow: "مفتوح هلأ", closedNow: "مسكّر هلأ",
       until: "لغاية {t}", opensAt: "بيفتح {d} {t}", today: "اليوم", tomorrow: "بكرا", am: "ص", pm: "م",
       plansTitle: "الاشتراكات والأسعار", currency: "د.أ", popular: "الأكثر طلباً", offer: "عرض", instead: "بدل {p}",
-      perMonth: "يعني {p} بالشهر", ask: "اسأل عن هذا الاشتراك", askText: "مرحبا، بدي أسأل عن اشتراك {n} في جالاكسي جيم.",
+      perMonth: "يعني {p} بالشهر", ask: "اسأل عن هذا الاشتراك", askText: "مرحبا، بدي أسأل عن «{n}» في جالاكسي جيم.",
+      fresh: "اشتراك جديد", renew: "تجديد الاشتراك: {p}", freeze: "التجميد: {f}",
       month: (n) => (n === 1 ? "شهر" : n === 2 ? "شهرين" : n === 12 ? "سنة" : n === 24 ? "سنتين" : n <= 10 ? `${n} أشهر` : `${n} شهر`),
+      day: (n) => (n === 1 ? "يوم" : n === 2 ? "يومين" : n <= 10 ? `${n} أيام` : `${n} يوم`),
+      times: (n) => (n === 0 ? "لا يوجد" : n === 1 ? "مرة وحدة" : n === 2 ? "مرتين" : n <= 10 ? `${n} مرات` : `${n} مرة`),
       close: "إخفاء الإعلان", preview: "معاينة: تعديلات لوحة التحكم ظاهرة على هذا الجهاز فقط.", openAdmin: "لوحة التحكم",
     },
     en: {
@@ -35,8 +38,11 @@
       everyDay: "Every day", closed: "Closed", hoursTitle: "Opening hours", openNow: "Open now", closedNow: "Closed now",
       until: "until {t}", opensAt: "opens {d} {t}", today: "today", tomorrow: "tomorrow", am: "AM", pm: "PM",
       plansTitle: "Prices and memberships", currency: "JOD", popular: "Most popular", offer: "Offer", instead: "was {p}",
-      perMonth: "{p} a month", ask: "Ask about this plan", askText: "Hi, I'd like to ask about the {n} membership at Galaxy Gym.",
+      perMonth: "{p} a month", ask: "Ask about this plan", askText: "Hi, I'd like to ask about “{n}” at Galaxy Gym.",
+      fresh: "New member", renew: "Renewal: {p}", freeze: "Freezes: {f}",
       month: (n) => (n === 12 ? "1 year" : n === 24 ? "2 years" : n === 1 ? "1 month" : `${n} months`),
+      day: (n) => (n === 1 ? "1 day" : `${n} days`),
+      times: (n) => (n === 0 ? "none" : n === 1 ? "once" : n === 2 ? "twice" : `${n} times`),
       close: "Hide announcement", preview: "Preview: admin panel edits show on this device only.", openAdmin: "Admin panel",
     },
   };
@@ -57,6 +63,26 @@
     if (/^(page:(prices|contact|training|club|calculators|account)|whatsapp)$/.test(value)) return value;
     return /^https:\/\/[^\s"'<>]{3,500}$/.test(value) ? value : "";
   }
+
+  // Plans count as edited once the admin panel has touched them; until then the published ones show.
+  function cleanPlans(raw) {
+    return {
+      on: raw?.on === true,
+      edited: raw?.edited === true,
+      title: pair(raw?.title, 120),
+      note: pair(raw?.note, 400),
+      items: (Array.isArray(raw?.items) ? raw.items : []).slice(0, 12).map((plan) => ({
+        id: /^[a-z0-9]{1,20}$/.test(plan?.id) ? plan.id : newId(),
+        name: pair(plan?.name, 80), months: whole(plan?.months, 60), days: plan?.months ? null : whole(plan?.days, 366),
+        price: money(plan?.price), renewal: money(plan?.renewal), offer: money(plan?.offer),
+        freezes: Number.isInteger(plan?.freezes) && plan.freezes >= 0 && plan.freezes <= 12 ? plan.freezes : null,
+        perks: pair(plan?.perks, 600), popular: plan?.popular === true,
+      })),
+    };
+  }
+  const published = (() => {
+    try { return { ...cleanPlans(JSON.parse(document.getElementById("site-plans")?.textContent || "null")), edited: false }; } catch { return cleanPlans(null); }
+  })();
 
   function clean(raw) {
     const s = raw && typeof raw === "object" ? raw : {};
@@ -80,16 +106,7 @@
         from: time(row?.from), to: time(row?.to), closed: row?.closed === true, label: pair(row?.label, 80),
       })),
     };
-    const plans = {
-      on: s.plans?.on === true,
-      title: pair(s.plans?.title, 120),
-      note: pair(s.plans?.note, 400),
-      items: (Array.isArray(s.plans?.items) ? s.plans.items : []).slice(0, 12).map((plan) => ({
-        id: /^[a-z0-9]{1,20}$/.test(plan?.id) ? plan.id : newId(),
-        name: pair(plan?.name, 80), months: whole(plan?.months, 60), price: money(plan?.price), offer: money(plan?.offer),
-        perks: pair(plan?.perks, 600), popular: plan?.popular === true,
-      })),
-    };
+    const plans = cleanPlans(s.plans);
     const announcement = { on: s.announcement?.on === true, text: pair(s.announcement?.text, 220), link: link(s.announcement?.link), until: day(s.announcement?.until) };
     const photos = {};
     if (s.photos && typeof s.photos === "object") {
@@ -112,7 +129,7 @@
     return next;
   }
   const hasEdits = (s) => Object.keys(s.texts.ar).length + Object.keys(s.texts.en).length + Object.keys(s.contact).length + Object.keys(s.photos).length > 0
-    || s.hours.on || s.plans.on || s.announcement.on || s.look.accent !== defaults.accent || !s.look.splash || !s.look.motion;
+    || s.hours.on || s.plans.edited || s.announcement.on || s.look.accent !== defaults.accent || !s.look.splash || !s.look.motion;
 
   // ---------- photos in IndexedDB ----------
   function openDb() {
@@ -248,7 +265,16 @@
 
   // ---------- prices ----------
   const price = (value) => `${number.format(value)} ${w.currency}`;
+  // The prices page is built with the published plans in it: keep those unless the admin panel changed them.
+  const builtPlans = new WeakMap();
   function renderPlans(slot, plans) {
+    if (!builtPlans.has(slot)) builtPlans.set(slot, { html: slot.innerHTML, hidden: slot.hidden });
+    if (!plans.edited) {
+      const built = builtPlans.get(slot);
+      if (slot.innerHTML !== built.html) slot.innerHTML = built.html;
+      slot.hidden = built.hidden;
+      return;
+    }
     const items = plans.items.filter((plan) => pick(plan.name) && plan.price);
     if (!plans.on || !items.length) { slot.hidden = true; slot.replaceChildren(); return; }
     slot.replaceChildren(
@@ -256,21 +282,30 @@
       el("ul", { class: "plans-grid", role: "list" }, items.map((plan) => {
         const offer = plan.offer && plan.offer < plan.price ? plan.offer : null;
         const paid = offer || plan.price;
+        const length = plan.months ? w.month(plan.months) : plan.days ? w.day(plan.days) : "";
         const perks = pick(plan.perks).split("\n").map((line) => line.trim()).filter(Boolean);
         return el("li", { class: `plan${plan.popular ? " is-popular" : ""}${offer ? " has-offer" : ""}` },
           plan.popular || offer ? el("span", { class: "plan-badge" }, plan.popular ? w.popular : w.offer) : null,
           el("h3", {}, pick(plan.name)),
-          plan.months && w.month(plan.months) !== pick(plan.name) ? el("p", { class: "plan-length" }, w.month(plan.months)) : null,
+          length && length !== pick(plan.name) ? el("p", { class: "plan-length" }, length) : null,
+          plan.renewal ? el("p", { class: "plan-kind" }, w.fresh) : null,
           el("p", { class: "plan-price" }, el("strong", {}, number.format(paid)), el("span", {}, ` ${w.currency}`), offer ? el("s", {}, fill(w.instead, { p: price(plan.price) })) : null),
+          plan.renewal ? el("p", { class: "plan-renew" }, fill(w.renew, { p: price(plan.renewal) })) : null,
           plan.months > 1 ? el("p", { class: "plan-month" }, fill(w.perMonth, { p: price(Math.round((paid / plan.months) * 10) / 10) })) : null,
+          plan.freezes != null ? el("p", { class: "plan-freeze" }, fill(w.freeze, { f: w.times(plan.freezes) })) : null,
           perks.length ? el("ul", { class: "plan-perks" }, perks.map((perk) => el("li", {}, perk))) : null,
           el("div", { class: "plan-action" }, el("a", { class: `button${plan.popular ? "" : " button-quiet"}`, href: whatsappLink(fill(w.askText, { n: pick(plan.name) })), target: "_blank", rel: "noopener noreferrer" }, w.ask)));
       })));
     slot.hidden = false;
   }
-  function priceFor(months) {
-    const plan = current.plans.on && current.plans.items.find((item) => item.months === Number(months) && item.price);
-    return plan ? (plan.offer && plan.offer < plan.price ? plan.offer : plan.price) : null;
+  // The amount for a membership of this length (a renewal uses the renewal price when there is one).
+  const plansNow = () => (current.plans.edited ? current.plans : published);
+  function priceFor(months, renewal = false) {
+    const plans = plansNow();
+    const plan = plans.on && plans.items.find((item) => item.months === Number(months) && item.price);
+    if (!plan) return null;
+    if (renewal && plan.renewal) return plan.renewal;
+    return plan.offer && plan.offer < plan.price ? plan.offer : plan.price;
   }
 
   // ---------- applying everything ----------
@@ -412,6 +447,6 @@
 
   window.galaxyContent = {
     key: KEY, defaults, read, write, clean, hasEdits, photos, phoneParts, handle, openState, clock, dayList,
-    whatsappLink, priceFor, apply, newId, lang,
+    whatsappLink, priceFor, apply, newId, lang, published, cleanPlans,
   };
 })();

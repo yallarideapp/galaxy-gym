@@ -103,7 +103,9 @@ addEventListener("storage", (event) => {
 });
 
 // ---------- summaries (overview cards and the side menu) ----------
-const visiblePlans = () => state.plans.items.filter((plan) => plan.name[lang].trim() || plan.name.ar.trim() || plan.name.en.trim()).filter((plan) => plan.price);
+// Plans the site shows: the published ones until the panel changes them.
+const plansNow = () => (state.plans.edited ? state.plans : G.published);
+const visiblePlans = () => plansNow().items.filter((plan) => (plan.name.ar || plan.name.en).trim() && plan.price);
 const textCount = () => Object.keys(state.texts.ar).length + Object.keys(state.texts.en).length;
 const lookChanged = () => state.look.accent !== G.defaults.accent || !state.look.splash || !state.look.motion;
 // "{n} plans shown", with its own wording for one (and, in Arabic, for two).
@@ -113,7 +115,7 @@ function summary(id) {
   const text = (state.announcement.text[lang] || state.announcement.text.ar || state.announcement.text.en || "").trim();
   switch (id) {
     case "announcement": return state.announcement.on && text ? [fill(o.announcement[0], { t: shorten(text, 34) }), true] : [o.announcement[1], false];
-    case "plans": return state.plans.on && visiblePlans().length ? [counted(o.plans, visiblePlans().length), true] : [o.plans[1], false];
+    case "plans": return plansNow().on && visiblePlans().length ? [counted(o.plans, visiblePlans().length), state.plans.edited] : [o.plans[1], state.plans.edited];
     case "hours": return state.hours.on && state.hours.rows.length ? [counted(o.hours, state.hours.rows.length), true] : [o.hours[1], false];
     case "contact": return Object.keys(state.contact).length ? [counted(o.contact, Object.keys(state.contact).length), true] : [o.contact[1], false];
     case "texts": return textCount() ? [counted(o.texts, textCount()), true] : [o.texts[1], false];
@@ -189,65 +191,91 @@ const sections = {
 
   plans() {
     const p = t.plans;
+    // Until the panel changes them, the plans are the published ones (scripts/site-content.mjs).
+    const source = () => (state.plans.edited ? state.plans : G.published);
+    const own = (s) => { if (!s.plans.edited) s.plans = { ...JSON.parse(JSON.stringify(G.published)), edited: true }; return s.plans; };
     const list = h("div", { class: "admin-plans" });
     const draw = () => list.replaceChildren(...planCards());
-    const move = (index, step) => commit((s) => { const items = s.plans.items; const [item] = items.splice(index, 1); items.splice(index + step, 0, item); }, { now: true });
+    const move = (index, step) => commit((s) => { const items = own(s).items; const [item] = items.splice(index, 1); items.splice(index + step, 0, item); }, { now: true });
+    const money = (v) => { const n = toNumber(v); return n > 0 ? Math.round(n * 100) / 100 : null; };
     function planCards() {
-      if (!state.plans.items.length) {
+      const items = source().items;
+      if (!items.length) {
         return [card(h("p", {}, p.empty), h("button", { type: "button", class: "button", onclick: () => {
-          commit((s) => { s.plans.items = p.starterNames.map(([months, arName, enName], i) => ({ id: G.newId(), name: { ar: arName, en: enName }, months, price: null, offer: null, perks: { ar: "", en: "" }, popular: i === 1 })); s.plans.on = true; }, { now: true });
+          commit((s) => { const plans = own(s); plans.items = p.starterNames.map(([months, arName, enName]) => ({ id: G.newId(), name: { ar: arName, en: enName }, months, days: null, price: null, renewal: null, offer: null, freezes: null, perks: { ar: "", en: "" }, popular: false })); plans.on = true; }, { now: true });
           draw();
-          document.querySelector("[data-plans-switch] input").checked = true;
         } }, icon(paths.plus), p.starter))];
       }
-      return state.plans.items.map((plan, index) => {
+      return items.map((plan, index) => {
         const id = plan.id;
-        const edit = (change) => commit((s) => { const item = s.plans.items.find((entry) => entry.id === id); if (item) change(item); });
+        const edit = (change) => commit((s) => { const item = own(s).items.find((entry) => entry.id === id); if (item) change(item); });
         const priceNote = note("", "is-warning");
         const hiddenNote = note(p.hidden, "is-muted");
         const check = () => {
-          const item = state.plans.items.find((entry) => entry.id === id) || plan;
-          const priceText = box.querySelector("[data-price]").value.trim();
-          const offerText = box.querySelector("[data-offer]").value.trim();
-          const price = toNumber(priceText);
-          const offer = toNumber(offerText);
-          priceNote.textContent = priceText && !(price > 0) ? p.badPrice : offerText && price > 0 && !(offer > 0 && offer < price) ? p.badOffer : "";
+          const item = source().items.find((entry) => entry.id === id) || plan;
+          const read = (key) => box.querySelector(`[data-${key}]`).value.trim();
+          const price = toNumber(read("price"));
+          const offer = toNumber(read("offer"));
+          const renewal = toNumber(read("renewal"));
+          priceNote.textContent = read("price") && !(price > 0) ? p.badPrice
+            : read("renewal") && !(renewal > 0) ? p.badPrice
+            : read("offer") && price > 0 && !(offer > 0 && offer < price) ? p.badOffer : "";
           priceNote.hidden = !priceNote.textContent;
           hiddenNote.hidden = Boolean((item.name.ar || item.name.en).trim() && price > 0);
         };
-        const months = h("select", { class: "admin-input", id: `f${++uid}`, onchange: (event) => edit((item) => { item.months = event.target.value ? Number(event.target.value) : null; }) },
-          h("option", { value: "" }, p.noMonths), p.monthsList.map(([n, label]) => h("option", { value: n }, label)));
-        months.value = plan.months ?? "";
-        const priceField = field({ label: p.price, value: plan.price ?? "", inputmode: "decimal", inputLang: "en", onInput: (v) => { edit((item) => { const n = toNumber(v); item.price = n > 0 ? n : null; }); check(); } });
-        priceField.querySelector("input").dataset.price = "";
-        const offerField = field({ label: p.offer, value: plan.offer ?? "", inputmode: "decimal", inputLang: "en", hint: t.optional, onInput: (v) => { edit((item) => { const n = toNumber(v); item.offer = n > 0 ? n : null; }); check(); } });
-        offerField.querySelector("input").dataset.offer = "";
+        // Length: a number of months, or of days (like the 15-day pass).
+        const days = field({ label: p.days, value: plan.days ?? "", inputmode: "numeric", inputLang: "en", onInput: (v) => edit((item) => { const n = Math.round(toNumber(v)); item.days = n > 0 && n <= 366 ? n : null; item.months = null; }) });
+        const length = h("select", { class: "admin-input", id: `f${++uid}`, onchange: (event) => {
+          const value = event.target.value;
+          days.hidden = value !== "days";
+          edit((item) => {
+            if (value === "days") { item.months = null; item.days = Math.round(toNumber(days.querySelector("input").value)) || null; }
+            else { item.months = value ? Number(value) : null; item.days = null; }
+          });
+        } }, h("option", { value: "" }, p.noMonths), p.monthsList.map(([n, label]) => h("option", { value: n }, label)), h("option", { value: "days" }, p.byDays));
+        length.value = plan.months ? String(plan.months) : plan.days ? "days" : "";
+        days.hidden = length.value !== "days";
+        const freezes = h("select", { class: "admin-input", id: `f${++uid}`, onchange: (event) => edit((item) => { item.freezes = event.target.value === "" ? null : Number(event.target.value); }) },
+          p.freezeList.map(([n, label]) => h("option", { value: n }, label)));
+        freezes.value = plan.freezes ?? "";
+        const money3 = [["price", p.price, plan.price, ""], ["renewal", p.renewal, plan.renewal, t.optional], ["offer", p.offer, plan.offer, t.optional]].map(([key, label, value, hint]) => {
+          const box = field({ label, value: value ?? "", inputmode: "decimal", inputLang: "en", hint, onInput: (v) => { edit((item) => { item[key] = money(v); }); check(); } });
+          box.querySelector("input").dataset[key] = "";
+          return box;
+        });
         const box = h("article", { class: "admin-card admin-plan" },
           h("header", { class: "admin-plan-head" }, h("h3", {}, `${p.plan} ${index + 1}`),
             h("div", { class: "admin-tools" },
               iconButton("up", t.up, () => { move(index, -1); draw(); }, { disabled: index === 0 }),
-              iconButton("down", t.down, () => { move(index, 1); draw(); }, { disabled: index === state.plans.items.length - 1 }),
-              iconButton("remove", t.remove, () => { commit((s) => { s.plans.items = s.plans.items.filter((item) => item.id !== id); }, { now: true }); draw(); }))),
+              iconButton("down", t.down, () => { move(index, 1); draw(); }, { disabled: index === items.length - 1 }),
+              iconButton("remove", t.remove, () => { commit((s) => { const plans = own(s); plans.items = plans.items.filter((item) => item.id !== id); }, { now: true }); draw(); }))),
           pairField({ label: p.name, value: plan.name, placeholder: { [lang]: p.nameHint }, max: 80, onInput: (l, v) => { edit((item) => { item.name[l] = v; }); check(); } }),
-          h("div", { class: "admin-row admin-row-3" }, h("div", { class: "admin-field" }, h("label", { for: months.id }, p.months), months), priceField, offerField),
+          h("div", { class: "admin-row" }, h("div", { class: "admin-field" }, h("label", { for: length.id }, p.months), length), days, h("div", { class: "admin-field" }, h("label", { for: freezes.id }, p.freezes), freezes)),
+          h("div", { class: "admin-row admin-row-3" }, money3),
           priceNote,
           pairField({ label: p.perks, value: plan.perks, placeholder: { [lang]: p.perksHint }, multiline: true, max: 600, onInput: (l, v) => edit((item) => { item.perks[l] = v; }) }),
-          toggle({ label: p.popular, checked: plan.popular, onChange: (on) => { commit((s) => { for (const item of s.plans.items) item.popular = on && item.id === id; }, { now: true }); draw(); } }),
+          toggle({ label: p.popular, checked: plan.popular, onChange: (on) => { commit((s) => { for (const item of own(s).items) item.popular = on && item.id === id; }, { now: true }); draw(); } }),
           hiddenNote);
         check();
         return box;
       });
     }
     draw();
-    const show = toggle({ label: p.show, shows: true, checked: state.plans.on, onChange: (on) => commit((s) => { s.plans.on = on; }, { now: true }) });
-    show.dataset.plansSwitch = "";
+    const restore = h("button", { type: "button", class: "button button-quiet button-small", hidden: !state.plans.edited, onclick: () => {
+      commit((s) => { s.plans = G.cleanPlans(null); }, { now: true });
+      rendered.plans = false;
+      show("plans", { keepScroll: true });
+    } }, icon(paths.reset), p.restore);
     return [
-      card(show,
-        pairField({ label: p.title, value: state.plans.title, placeholder: { ar: "الاشتراكات والأسعار", en: "Prices and memberships" }, max: 120, onInput: (l, v) => commit((s) => { s.plans.title[l] = v; }) }),
-        pairField({ label: p.note, value: state.plans.note, placeholder: { [lang]: p.noteHint }, multiline: true, max: 400, onInput: (l, v) => commit((s) => { s.plans.note[l] = v; }) })),
+      card(
+        h("p", { class: "admin-note is-muted" }, state.plans.edited ? p.editedNote : p.publishedNote),
+        toggle({ label: p.show, shows: true, checked: source().on, onChange: (on) => { commit((s) => { own(s).on = on; }, { now: true }); restore.hidden = false; } }),
+        pairField({ label: p.title, value: source().title, placeholder: { ar: "الاشتراكات والأسعار", en: "Prices and memberships" }, max: 120, onInput: (l, v) => commit((s) => { own(s).title[l] = v; }) }),
+        pairField({ label: p.note, value: source().note, placeholder: { [lang]: p.noteHint }, multiline: true, max: 400, onInput: (l, v) => commit((s) => { own(s).note[l] = v; }) }),
+        restore),
       list,
       h("button", { type: "button", class: "button button-quiet admin-add", onclick: () => {
-        commit((s) => { s.plans.items.push({ id: G.newId(), name: { ar: "", en: "" }, months: null, price: null, offer: null, perks: { ar: "", en: "" }, popular: false }); }, { now: true });
+        commit((s) => { own(s).items.push({ id: G.newId(), name: { ar: "", en: "" }, months: null, days: null, price: null, renewal: null, offer: null, freezes: null, perks: { ar: "", en: "" }, popular: false }); }, { now: true });
         draw();
         list.lastElementChild?.querySelector("input")?.focus();
       } }, icon(paths.plus), p.add),

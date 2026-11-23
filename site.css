@@ -332,7 +332,7 @@ html.gg-pending body{opacity:0}
 .announce-close:hover{background:rgb(0 0 0 / .2)}
 .plans-head{display:grid;gap:.4rem;margin-block-end:1.4rem}
 .plans-head p{color:var(--muted);max-inline-size:40rem}
-.plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:1rem;margin:0;padding:0;list-style:none}
+.plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13.25rem),1fr));gap:1rem;margin:0;padding:0;list-style:none}
 .plan{position:relative;display:flex;flex-direction:column;gap:.35rem;padding:1.5rem 1.3rem 1.3rem;border:1px solid var(--rim);border-radius:1.6rem;background:var(--deck)}
 .plan.is-popular{border-color:var(--sun);box-shadow:0 0 0 1px var(--sun),0 18px 50px -30px rgb(var(--sun-rgb) / .8)}
 .plan-badge{position:absolute;inset-block-start:-.75rem;inset-inline-start:1.2rem;padding:.2rem .75rem;border-radius:99rem;background:var(--sun);color:var(--sun-ink);font:700 .78rem/1.6 var(--display)}
@@ -344,6 +344,10 @@ html.gg-pending body{opacity:0}
 .plan-price s{color:var(--ash);font-size:.9rem;text-decoration-thickness:1.5px}
 .plan.has-offer .plan-price strong{color:var(--sun)}
 .plan-month{color:var(--muted);font-size:.85rem}
+.plan-kind{margin-block-start:.5rem;color:var(--muted);font-size:.82rem;font-weight:600}
+.plan-kind + .plan-price{margin-block-start:0}
+.plan-renew{color:var(--text);font-size:.95rem;font-weight:600}
+.plan-freeze{display:flex;align-items:center;gap:.45rem;margin-block-start:.35rem;padding-block-start:.7rem;border-block-start:1px solid var(--rim);color:var(--muted);font-size:.9rem}
 .plan-perks{display:grid;gap:.35rem;margin:.6rem 0 0;padding:0;list-style:none;color:var(--text);font-size:.93rem}
 .plan-perks li{position:relative;padding-inline-start:1.2rem}
 .plan-perks li::before{content:"";position:absolute;inset-inline-start:0;inset-block-start:.62em;inline-size:.45rem;block-size:.45rem;border-radius:2px;background:var(--sun);rotate:45deg}

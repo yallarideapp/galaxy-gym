@@ -278,10 +278,11 @@ memberOpen.addEventListener("click", () => {
   renderMembership();
   memberForm.querySelector('input[name="months"]:checked').focus();
 });
-// When the gym's prices are set in the admin panel, the amount fills in for the chosen length (still editable).
+// The amount fills in from the gym's prices for the chosen length: the renewal price once there is a
+// membership on record, the new-member price before that. Still editable.
 const suggestPaid = () => {
   const paid = memberForm.elements.paid;
-  const price = window.galaxyContent?.priceFor(memberForm.elements.months.value);
+  const price = window.galaxyContent?.priceFor(memberForm.elements.months.value, log.memberships.length > 0);
   if (paid.value !== "" && paid.dataset.suggested !== paid.value) return;
   paid.value = price ? String(price) : "";
   paid.dataset.suggested = paid.value;
