@@ -43,47 +43,47 @@ export function fatFreeMass(weight, fatPercent) {
   return weight * (1 - fatPercent / 100);
 }
 
-// Reference bands by sex and age group (18–39, 40–59, 60 and over).
-// Each row: [low below, healthy below, high below]; anything above is very high.
-// Body fat: Gallagher et al., Am J Clin Nutr 2000.
-const fatBands = { m: [[8, 20, 25], [11, 22, 28], [13, 25, 30]], f: [[21, 33, 39], [23, 34, 40], [24, 36, 42]] };
-const ageGroup = (age) => (age < 40 ? 0 : age < 60 ? 1 : 2);
+// The calculator reads a body-composition test the way InBody reports it.
+// Body fat (PBF): InBody's normal range is 10–20% for men (18–28% for women), with 15% (23%) the ideal.
+// Each row: [low below, normal below, high below]; anything above is very high.
+const fatBands = { m: [10, 20, 25], f: [18, 28, 33] };
+const idealFat = { m: 15, f: 23 };
 const levelOf = (value, [low, healthy, high]) => (value < low ? 0 : value < healthy ? 1 : value < high ? 2 : 3);
 
-// 0 below the healthy range, 1 inside it, 2 above it, 3 well above it.
+// 0 below the normal range, 1 inside it, 2 above it, 3 well above it.
 export function bodyFatLevel(sex, age, percent) {
-  return levelOf(percent, fatBands[sex][ageGroup(age)]);
+  return levelOf(percent, fatBands[sex] ?? fatBands.m);
 }
 
-// Muscle % is read one way only: the share of body weight that is muscle. For a man about 40% is low, 50% normal and
-// 60% high. 0 low, 1 normal, 2 high, 3 very high.
-const muscleBands = [45, 55, 62];
+// Skeletal muscle mass (SMM) as a share of body weight. InBody measures SMM at about 55.5% of the fat-free mass, so for
+// a man 44–50% SMM sits with 10–20% body fat. 0 low (under 42%), 1 normal (42–47%), 2 high (47–50%), 3 very high.
+export const smmShareOfLean = 0.555;
+const muscleBands = [42, 47, 50];
 export function muscleLevel(percent) {
   return levelOf(percent, muscleBands);
 }
 
-// A body-scan reading turned into body fat % and fat-free mass. Body fat % is the direct reading and wins when both
-// are given. From muscle %, the fat-free mass is taken as muscle % plus 30 points of body weight (50% muscle is an
-// average build at 20% body fat; 60% muscle, 10% body fat), kept between 50% and 95%. So more muscle always means more
-// fat-free mass, and with it more calories, protein and water and a higher good weight. It is an estimate.
+// A body-composition reading turned into body fat % and fat-free mass. PBF is the direct reading and wins when both are
+// given. From SMM (% of body weight) the fat-free mass is SMM ÷ 0.555, kept between 50% and 95% of body weight: an
+// estimate, since how much of the fat-free mass is skeletal muscle differs from one person to another.
 // Returns null without a usable reading; source is "fat" or "muscle".
 export function scanComposition(sex, weight, { fat = null, muscle = null } = {}) {
   let fatPercent;
   let source;
   if (fat !== null) [fatPercent, source] = [fat, "fat"];
-  else if (muscle !== null) [fatPercent, source] = [100 - Math.min(Math.max(muscle + 30, 50), 95), "muscle"];
+  else if (muscle !== null) [fatPercent, source] = [100 - Math.min(Math.max(muscle / smmShareOfLean, 50), 95), "muscle"];
   else return null;
   if (!(fatPercent > 0 && fatPercent < 100)) return null;
   return { fatPercent, lean: fatFreeMass(weight, fatPercent), source };
 }
 
-// "A good weight for you, keeping your muscle": the weights at which this fat-free mass would carry a fit amount of
-// body fat, the lower part of the healthy range (men 18–39: 10–15%; 40–59: 13–18%; 60 and over: 15–20%). The full
-// healthy range runs up to 20–25% and gave too high a top weight for a muscular man.
-const fitFat = [[10, 15], [13, 18], [15, 20]];
-export function goodWeightRange(age, leanMass) {
-  const [low, high] = fitFat[ageGroup(age)];
-  return [leanMass / (1 - low / 100), leanMass / (1 - high / 100)];
+// Weight control, InBody style: inside the normal body-fat range the weight stays as it is; above it, the target is
+// the weight at the ideal body fat (15% for men) with the same fat-free mass, and the difference is fat to lose.
+export function targetWeight(sex, weight, lean, fatPercent) {
+  const [, normalTop] = fatBands[sex] ?? fatBands.m;
+  if (fatPercent <= normalTop) return { weight, fat: 0 };
+  const target = lean / (1 - (idealFat[sex] ?? idealFat.m) / 100);
+  return { weight: target, fat: target - weight };
 }
 
 // A starting calorie target for the goal. Fat loss never drops below a minimum intake.

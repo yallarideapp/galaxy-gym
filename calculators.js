@@ -1,6 +1,6 @@
 import {
   estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, scanComposition, bodyFatLevel, muscleLevel,
-  goodWeightRange, dailyFuel, proteinPerKg, proteinPerLeanKg, dailyWater, loadBar, estimatedMaxHeartRate, heartRateZones,
+  targetWeight, dailyFuel, proteinPerKg, proteinPerLeanKg, dailyWater, loadBar, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
 import { loadLog, recordBody } from "./training-log.js";
 
@@ -106,6 +106,16 @@ function invalidate(key, message) {
 const fill = (template, ...values) => template.replace(/\{(\d+)\}/g, (_, index) => values[index]);
 const checked = (name) => root.querySelector(`input[name="${name}"]:checked`).value;
 
+// The SMM box takes kilos (as printed on the InBody sheet) or a % of body weight; the limits follow the unit.
+const muscleUnit = () => checked("muscle-unit");
+const muscleLimits = { kg: { min: 10, max: 70, step: 0.1 }, percent: { min: 20, max: 60, step: 0.5 } };
+function applyMuscleUnit() {
+  const input = inputs.get("muscle");
+  Object.assign(input, muscleLimits[muscleUnit()]);
+  for (const key of ["min", "max", "step"]) input.control.dataset[key] = input[key];
+  input.field.querySelector("[data-unit]").textContent = t.muscleUnits[muscleUnit()];
+}
+
 // Galaxy is a men's gym: every formula uses the men's version.
 const sex = "m";
 
@@ -115,18 +125,24 @@ function update() {
   const height = read("height");
   const weight = read("weight");
 
-  // Optional reading from a body-composition scan, body fat % or muscle % (same rules as the Hydrogen calculator).
-  // Either one gives the fat-free mass, and the calories, protein and water then follow it.
+  // Optional InBody reading: PBF (body fat %) and SMM (skeletal muscle), in kg or as % of body weight. Either one gives
+  // the fat-free mass, and the calories, protein and water then follow it.
   const fatReading = read("bodyfat", { optional: true });
-  let muscleReading = read("muscle", { optional: true });
-  if (fatReading !== null && muscleReading !== null && fatReading + muscleReading > 100) {
+  const muscleEntry = read("muscle", { optional: true });
+  const muscleInKg = muscleUnit() === "kg";
+  // muscleReading is always SMM as % of body weight; a reading in kg needs the weight first.
+  let muscleReading = muscleEntry === null ? null : muscleInKg ? (weight !== null ? muscleEntry / weight * 100 : null) : muscleEntry;
+  if (muscleReading !== null && muscleReading > 60) {
+    invalidate("muscle", t.muscleTooHigh);
+    muscleReading = null;
+  } else if (fatReading !== null && muscleReading !== null && fatReading + muscleReading > 100) {
     invalidate("muscle", t.scanSum);
     muscleReading = null;
   }
   const scan = weight !== null ? scanComposition(sex, weight, { fat: fatReading, muscle: muscleReading }) : null;
   const lean = scan ? scan.lean : null;
-  // A body fat reading is judged on body fat, a muscle reading on muscle. Either one gives the fat-free mass, and with it
-  // "a good weight for you, keeping your muscle"; from muscle it is an estimate, and the notes say so.
+  // PBF is judged on InBody's body-fat ranges, SMM on its own. Either one gives the fat-free mass, and with it the target
+  // weight; from SMM alone it is an estimate, and the notes say so.
   const rough = scan !== null && scan.source === "muscle";
   const fatLevel = scan !== null && !rough && age !== null ? bodyFatLevel(sex, age, scan.fatPercent) : null;
   const muscleBand = muscleReading !== null ? muscleLevel(muscleReading) : null;
@@ -196,11 +212,13 @@ function update() {
       : muscleBand !== null ? t.muscleVerdicts[over ? "over" : "within"][muscleBand] : "";
     reveal("bmi-verdict", verdict);
     outputs.get("bmi-note").hidden = Boolean(verdict);
-    const fitted = lean !== null && age !== null;
-    rows.get("fit-range").hidden = !fitted;
-    if (fitted) {
-      const [fitLow, fitTop] = goodWeightRange(age, lean);
-      set("fit-range", `${span(fitLow, fitTop, loose)} ${t.kg}`);
+    // InBody-style weight control: the target weight, and the fat to lose to reach it.
+    const control = scan ? targetWeight(sex, weight, lean, scan.fatPercent) : null;
+    rows.get("fit-range").hidden = !control;
+    rows.get("fat-control").hidden = !control || control.fat > -0.05;
+    if (control) {
+      set("fit-range", `${loose.format(control.weight)} ${t.kg}`);
+      set("fat-control", `${loose.format(-control.fat)} ${t.kg}`);
     }
   }
 
@@ -232,7 +250,7 @@ function update() {
     reveal("muscle-band", muscleBand === null ? "" : t.muscleBands[muscleBand]);
     outputs.get("muscle-band").dataset.level = muscleBand === null ? "" : ["over", "ok", "ok", "ok"][muscleBand];
     set("muscle-percent", `${loose.format(muscleReading)}%`);
-    set("muscle-mass", weight === null ? "—" : `${loose.format(weight * muscleReading / 100)} ${t.kg}`);
+    set("muscle-mass", `${loose.format(muscleInKg ? muscleEntry : weight * muscleReading / 100)} ${t.kg}`);
   }
 
   show("heart", age !== null);
@@ -307,6 +325,7 @@ for (const input of inputs.values()) {
   }
 }
 root.addEventListener("change", (event) => {
+  if (event.target.name === "muscle-unit") applyMuscleUnit();
   if (event.target.matches('input[type="radio"], input[type="checkbox"], select')) update();
 });
 root.querySelector("form").addEventListener("submit", (event) => event.preventDefault());
@@ -321,9 +340,10 @@ root.querySelector("[data-save-weight]").addEventListener("click", () => {
     return;
   }
   const fat = read("bodyfat", { optional: true });
-  const muscle = read("muscle", { optional: true });
+  const muscleEntry = read("muscle", { optional: true });
+  const muscle = muscleEntry === null ? null : muscleUnit() === "kg" ? muscleEntry / details.weight * 100 : muscleEntry;
   if (fat !== null) details.fat = fat;
-  if (muscle !== null) details.muscle = muscle;
+  if (muscle !== null) details.muscle = Math.round(muscle * 100) / 100;
   const saved = recordBody(details);
   saveStatus.hidden = false;
   saveStatus.querySelector("span").textContent = saved ? t.weightSaved : t.saveFailed;
@@ -336,6 +356,11 @@ function fillSaved() {
   if (!body) return;
   const latest = weights.at(-1);
   const values = { age: body.age, height: body.height, weight: latest && latest.date >= body.date ? latest.kg : body.weight, bodyfat: body.fat, muscle: body.muscle };
+  // The account keeps SMM as a % of body weight.
+  if (typeof body.muscle === "number") {
+    root.querySelector('input[name="muscle-unit"][value="percent"]').checked = true;
+    applyMuscleUnit();
+  }
   for (const [key, value] of Object.entries(values)) {
     if (typeof value !== "number") continue;
     const { control, slider } = inputs.get(key);

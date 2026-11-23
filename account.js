@@ -323,7 +323,7 @@ function renderBody() {
     ["protein", `${whole.format(numbers.protein)} ${strings.grams}`],
     ["bmi", oneDecimal.format(numbers.bmi)],
     ...(typeof body.fat === "number" ? [["fat", `${oneDecimal.format(body.fat)}%`]] : []),
-    ...(typeof body.muscle === "number" ? [["muscle", `${oneDecimal.format(body.muscle)}%`]] : []),
+    ...(typeof body.muscle === "number" ? [["muscle", `${oneDecimal.format(body.weight * body.muscle / 100)} ${strings.kg} (${oneDecimal.format(body.muscle)}%)`]] : []),
     ["height", `${oneDecimal.format(body.height)} ${strings.cm}`],
     ["age", `${whole.format(body.age)} ${strings.years}`],
     ["goal", strings.goals[body.goal]],

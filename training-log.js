@@ -5,7 +5,7 @@ const storageKey = "galaxy-gym-log-v1";
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
 export const limits = {
-  name: 60, note: 120, person: 40, minutes: [1, 600], weight: [20, 400], fat: [3, 60], muscle: [20, 70], paid: [0, 5000],
+  name: 60, note: 120, person: 40, minutes: [1, 600], weight: [20, 400], fat: [3, 60], muscle: [15, 60], paid: [0, 5000],
 };
 export const planMonths = [1, 3, 6, 12];
 export const activityLevels = [1.2, 1.375, 1.55, 1.725];
@@ -54,7 +54,8 @@ function cleanBody(raw) {
   body.height = tenth(body.height);
   body.weight = tenth(body.weight);
   if (within(raw.fat, limits.fat)) body.fat = tenth(raw.fat);
-  if (within(raw.muscle, limits.muscle)) body.muscle = tenth(raw.muscle);
+  // SMM as % of body weight; two decimals, so a reading entered in kg gives the same numbers here as in the calculator.
+  if (within(raw.muscle, limits.muscle)) body.muscle = Math.round(raw.muscle * 100) / 100;
   return body;
 }
 
