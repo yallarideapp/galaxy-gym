@@ -250,7 +250,9 @@ const sections = {
               iconButton("down", t.down, () => { move(index, 1); draw(); }, { disabled: index === items.length - 1 }),
               iconButton("remove", t.remove, () => { commit((s) => { const plans = own(s); plans.items = plans.items.filter((item) => item.id !== id); }, { now: true }); draw(); }))),
           pairField({ label: p.name, value: plan.name, placeholder: { [lang]: p.nameHint }, max: 80, onInput: (l, v) => { edit((item) => { item.name[l] = v; }); check(); } }),
-          h("div", { class: "admin-row" }, h("div", { class: "admin-field" }, h("label", { for: length.id }, p.months), length), days, h("div", { class: "admin-field" }, h("label", { for: freezes.id }, p.freezes), freezes)),
+          h("div", { class: "admin-row admin-row-3" },
+            field({ label: p.code, value: plan.code || "", placeholder: "01", inputLang: "en", max: 6, hint: t.optional, onInput: (v) => edit((item) => { item.code = v.trim(); }) }),
+            h("div", { class: "admin-field" }, h("label", { for: length.id }, p.months), length), days, h("div", { class: "admin-field" }, h("label", { for: freezes.id }, p.freezes), freezes)),
           h("div", { class: "admin-row admin-row-3" }, money3),
           priceNote,
           pairField({ label: p.perks, value: plan.perks, placeholder: { [lang]: p.perksHint }, multiline: true, max: 600, onInput: (l, v) => edit((item) => { item.perks[l] = v; }) }),
@@ -275,7 +277,7 @@ const sections = {
         restore),
       list,
       h("button", { type: "button", class: "button button-quiet admin-add", onclick: () => {
-        commit((s) => { own(s).items.push({ id: G.newId(), name: { ar: "", en: "" }, months: null, days: null, price: null, renewal: null, offer: null, freezes: null, perks: { ar: "", en: "" }, popular: false }); }, { now: true });
+        commit((s) => { own(s).items.push({ id: G.newId(), code: "", name: { ar: "", en: "" }, months: null, days: null, price: null, renewal: null, offer: null, freezes: null, perks: { ar: "", en: "" }, popular: false }); }, { now: true });
         draw();
         list.lastElementChild?.querySelector("input")?.focus();
       } }, icon(paths.plus), p.add),

@@ -21,7 +21,6 @@ const fill = (template, ...values) => template.replace(/\{(\d+)\}/g, (_, index) 
 const formatDay = (key, format = longDate) => format.format(fromKey(key));
 const find = (selector) => document.querySelector(selector);
 // The gym's WhatsApp: the admin panel can change the number (content.js).
-const whatsapp = `${window.galaxyContent?.whatsappLink("") || "https://wa.me/962791081877"}?text=`;
 const ringLength = 100;
 
 let log = loadLog();
@@ -126,15 +125,9 @@ function renderHeader() {
   since.hidden = !first;
   if (first) since.textContent = fill(strings.memberSince, monthYear.format(fromKey(first.start)));
 
-  // Near the end, or after it, offer the renewal message to the gym on WhatsApp.
+  // Near the end, or after it, offer the renewal: the prices page opens its renew form (plans.js).
   const due = state && (state.phase === "ending" || state.phase === "ended");
   renew.hidden = !due;
-  if (due) {
-    const lines = [strings.renewText];
-    if (name) lines.push(fill(strings.renewName, name));
-    lines.push(fill(state.phase === "ended" ? strings.renewEnded : strings.renewEnding, formatDay(membership.end)));
-    renew.href = whatsapp + encodeURIComponent(lines.join(" "));
-  }
 
   const now = new Date();
   glance.get("month").textContent = whole.format(monthSummary(log, now.getFullYear(), now.getMonth()).sessions.length);

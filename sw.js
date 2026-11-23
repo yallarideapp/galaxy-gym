@@ -1,10 +1,10 @@
 // Galaxy Gym offline copy. Every request goes to the network first, so visitors always get the latest
 // version; the saved copy is used only when there is no connection (or a page takes over 4 seconds).
 // Paths are relative to this file, so it works at the site root and under /galaxy-gym/ alike.
-const CACHE = "galaxy-gym-v2";
+const CACHE = "galaxy-gym-v3";
 const scope = self.registration.scope;
 const shell = [
-  "site.css", "site.js", "app.js", "content.js", "hero-motion.css", "hero-motion.js", "visit-pages.css", "visit-pages.js",
+  "site.css", "site.js", "app.js", "content.js", "hero-motion.css", "hero-motion.js", "visit-pages.css", "visit-pages.js", "plans.js",
   "calculators.css", "calculators.js", "fitness-math.js", "training-log.js",
   "workout.css", "workout.js", "workout-log.js", "account.js", "legal.css",
   "assets/brand.webp", "assets/icons/icon-192.png", "assets/icons/favicon-32.png",

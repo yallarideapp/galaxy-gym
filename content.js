@@ -26,8 +26,8 @@
       everyDay: "كل يوم", closed: "مسكّر", hoursTitle: "أوقات الدوام", openNow: "مفتوح هلأ", closedNow: "مسكّر هلأ",
       until: "لغاية {t}", opensAt: "بيفتح {d} {t}", today: "اليوم", tomorrow: "بكرا", am: "ص", pm: "م",
       plansTitle: "الاشتراكات والأسعار", currency: "د.أ", popular: "الأكثر طلباً", offer: "عرض", instead: "بدل {p}",
-      perMonth: "يعني {p} بالشهر", ask: "اسأل عن هذا الاشتراك", askText: "مرحبا، بدي أسأل عن «{n}» في جالاكسي جيم.",
-      fresh: "اشتراك جديد", renew: "تجديد الاشتراك: {p}", freeze: "التجميد: {f}",
+      perMonth: "يعني {p} بالشهر", code: "فئة {c}", fresh: "اشتراك جديد", renew: "تجديد الاشتراك: {p}", freeze: "التجميد: {f}", best: "أوفر بالشهر",
+      join: "اشترك", renewAction: "جدّد", joinText: "مرحبا جالاكسي جيم، بدي أشترك بـ «{n}».", renewText: "مرحبا جالاكسي جيم، بدي أجدد اشتراكي: «{n}».",
       month: (n) => (n === 1 ? "شهر" : n === 2 ? "شهرين" : n === 12 ? "سنة" : n === 24 ? "سنتين" : n <= 10 ? `${n} أشهر` : `${n} شهر`),
       day: (n) => (n === 1 ? "يوم" : n === 2 ? "يومين" : n <= 10 ? `${n} أيام` : `${n} يوم`),
       times: (n) => (n === 0 ? "لا يوجد" : n === 1 ? "مرة وحدة" : n === 2 ? "مرتين" : n <= 10 ? `${n} مرات` : `${n} مرة`),
@@ -38,8 +38,8 @@
       everyDay: "Every day", closed: "Closed", hoursTitle: "Opening hours", openNow: "Open now", closedNow: "Closed now",
       until: "until {t}", opensAt: "opens {d} {t}", today: "today", tomorrow: "tomorrow", am: "AM", pm: "PM",
       plansTitle: "Prices and memberships", currency: "JOD", popular: "Most popular", offer: "Offer", instead: "was {p}",
-      perMonth: "{p} a month", ask: "Ask about this plan", askText: "Hi, I'd like to ask about “{n}” at Galaxy Gym.",
-      fresh: "New member", renew: "Renewal: {p}", freeze: "Freezes: {f}",
+      perMonth: "{p} a month", code: "Plan {c}", fresh: "New member", renew: "Renewal: {p}", freeze: "Freezes: {f}", best: "Best monthly value",
+      join: "Join", renewAction: "Renew", joinText: "Hi Galaxy Gym, I'd like to join: “{n}”.", renewText: "Hi Galaxy Gym, I'd like to renew: “{n}”.",
       month: (n) => (n === 12 ? "1 year" : n === 24 ? "2 years" : n === 1 ? "1 month" : `${n} months`),
       day: (n) => (n === 1 ? "1 day" : `${n} days`),
       times: (n) => (n === 0 ? "none" : n === 1 ? "once" : n === 2 ? "twice" : `${n} times`),
@@ -73,6 +73,7 @@
       note: pair(raw?.note, 400),
       items: (Array.isArray(raw?.items) ? raw.items : []).slice(0, 12).map((plan) => ({
         id: /^[a-z0-9]{1,20}$/.test(plan?.id) ? plan.id : newId(),
+        code: str(plan?.code, 6).trim(),
         name: pair(plan?.name, 80), months: whole(plan?.months, 60), days: plan?.months ? null : whole(plan?.days, 366),
         price: money(plan?.price), renewal: money(plan?.renewal), offer: money(plan?.offer),
         freezes: Number.isInteger(plan?.freezes) && plan.freezes >= 0 && plan.freezes <= 12 ? plan.freezes : null,
@@ -266,7 +267,12 @@
   // ---------- prices ----------
   const price = (value) => `${number.format(value)} ${w.currency}`;
   // The prices page is built with the published plans in it: keep those unless the admin panel changed them.
+  // Same markup as renderPlansHtml() in scripts/site-content.mjs: keep the two in step.
   const builtPlans = new WeakMap();
+  function bestValue(items) {
+    const monthly = items.filter((plan) => plan.months && plan.price).map((plan) => ({ id: plan.id, rate: (plan.offer && plan.offer < plan.price ? plan.offer : plan.price) / plan.months }));
+    return monthly.length < 2 ? null : monthly.sort((a, b) => a.rate - b.rate)[0].id;
+  }
   function renderPlans(slot, plans) {
     if (!builtPlans.has(slot)) builtPlans.set(slot, { html: slot.innerHTML, hidden: slot.hidden });
     if (!plans.edited) {
@@ -277,24 +283,31 @@
     }
     const items = plans.items.filter((plan) => pick(plan.name) && plan.price);
     if (!plans.on || !items.length) { slot.hidden = true; slot.replaceChildren(); return; }
+    const best = bestValue(items);
+    const heading = slot.dataset.plans === "h1" ? "h1" : "h2";
     slot.replaceChildren(
-      el("div", { class: "plans-head" }, el("h2", { id: "plans-title" }, pick(plans.title) || w.plansTitle), pick(plans.note) ? el("p", {}, pick(plans.note)) : null),
+      el("div", { class: "plans-head" }, el(heading, { id: "plans-title" }, pick(plans.title) || w.plansTitle), pick(plans.note) ? el("p", {}, pick(plans.note)) : null),
       el("ul", { class: "plans-grid", role: "list" }, items.map((plan) => {
         const offer = plan.offer && plan.offer < plan.price ? plan.offer : null;
         const paid = offer || plan.price;
+        const name = pick(plan.name);
         const length = plan.months ? w.month(plan.months) : plan.days ? w.day(plan.days) : "";
         const perks = pick(plan.perks).split("\n").map((line) => line.trim()).filter(Boolean);
-        return el("li", { class: `plan${plan.popular ? " is-popular" : ""}${offer ? " has-offer" : ""}` },
-          plan.popular || offer ? el("span", { class: "plan-badge" }, plan.popular ? w.popular : w.offer) : null,
-          el("h3", {}, pick(plan.name)),
-          length && length !== pick(plan.name) ? el("p", { class: "plan-length" }, length) : null,
-          plan.renewal ? el("p", { class: "plan-kind" }, w.fresh) : null,
-          el("p", { class: "plan-price" }, el("strong", {}, number.format(paid)), el("span", {}, ` ${w.currency}`), offer ? el("s", {}, fill(w.instead, { p: price(plan.price) })) : null),
+        const badge = plan.popular ? w.popular : offer ? w.offer : plan.id === best ? w.best : "";
+        const action = (kind, label, text) => el("a", { class: `button${kind === "renew" ? " button-quiet" : ""}`, href: whatsappLink(fill(text, { n: name })), target: "_blank", rel: "noopener noreferrer", "data-plan-action": kind, "data-plan": plan.id }, label);
+        return el("li", { class: `plan${plan.popular ? " is-popular" : ""}${offer ? " has-offer" : ""}${plan.months ? "" : " is-pass"}`, "data-plan-id": plan.id },
+          el("div", { class: "plan-ribbon" }, plan.code ? el("span", { class: "plan-code" }, fill(w.code, { c: plan.code })) : null, el("h3", {}, name)),
+          badge ? el("span", { class: "plan-badge" }, badge) : null,
+          length && length !== name ? el("p", { class: "plan-length" }, length) : null,
+          el("div", { class: "plan-cost" },
+            plan.renewal ? el("p", { class: "plan-kind" }, w.fresh) : null,
+            el("p", { class: "plan-price" }, el("strong", {}, number.format(paid)), el("span", {}, ` ${w.currency}`), offer ? el("s", {}, fill(w.instead, { p: price(plan.price) })) : null),
+            plan.months > 1 ? el("p", { class: "plan-month" }, fill(w.perMonth, { p: price(Math.round((paid / plan.months) * 10) / 10) })) : null),
           plan.renewal ? el("p", { class: "plan-renew" }, fill(w.renew, { p: price(plan.renewal) })) : null,
-          plan.months > 1 ? el("p", { class: "plan-month" }, fill(w.perMonth, { p: price(Math.round((paid / plan.months) * 10) / 10) })) : null,
-          plan.freezes != null ? el("p", { class: "plan-freeze" }, fill(w.freeze, { f: w.times(plan.freezes) })) : null,
+          plan.freezes != null ? el("p", { class: "plan-freeze" }, el("span", {}, fill(w.freeze, { f: w.times(plan.freezes) })),
+            plan.freezes ? el("span", { class: "plan-pips", "aria-hidden": "true" }, Array.from({ length: Math.min(plan.freezes, 6) }, () => el("i"))) : null) : null,
           perks.length ? el("ul", { class: "plan-perks" }, perks.map((perk) => el("li", {}, perk))) : null,
-          el("div", { class: "plan-action" }, el("a", { class: `button${plan.popular ? "" : " button-quiet"}`, href: whatsappLink(fill(w.askText, { n: pick(plan.name) })), target: "_blank", rel: "noopener noreferrer" }, w.ask)));
+          el("div", { class: "plan-action" }, action("join", w.join, w.joinText), plan.renewal ? action("renew", w.renewAction, w.renewText) : null));
       })));
     slot.hidden = false;
   }
@@ -447,6 +460,6 @@
 
   window.galaxyContent = {
     key: KEY, defaults, read, write, clean, hasEdits, photos, phoneParts, handle, openState, clock, dayList,
-    whatsappLink, priceFor, apply, newId, lang, published, cleanPlans,
+    whatsappLink, priceFor, plansNow, apply, newId, lang, published, cleanPlans,
   };
 })();
