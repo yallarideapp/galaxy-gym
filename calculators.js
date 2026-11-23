@@ -1,6 +1,6 @@
 import {
   estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, scanComposition, bodyFatLevel, muscleLevel,
-  targetWeight, dailyFuel, proteinPerKg, proteinPerLeanKg, dailyWater, loadBar, estimatedMaxHeartRate, heartRateZones,
+  bodyWeights, dailyFuel, proteinPerKg, proteinPerLeanKg, dailyWater, loadBar, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
 import { loadLog, recordBody } from "./training-log.js";
 
@@ -212,13 +212,14 @@ function update() {
       : muscleBand !== null ? t.muscleVerdicts[over ? "over" : "within"][muscleBand] : "";
     reveal("bmi-verdict", verdict);
     outputs.get("bmi-note").hidden = Boolean(verdict);
-    // InBody-style weight control: the target weight, and the fat to lose to reach it.
-    const control = scan ? targetWeight(sex, weight, lean, scan.fatPercent) : null;
-    rows.get("fit-range").hidden = !control;
-    rows.get("fat-control").hidden = !control || control.fat > -0.05;
-    if (control) {
-      set("fit-range", `${loose.format(control.weight)} ${t.kg}`);
-      set("fat-control", `${loose.format(-control.fat)} ${t.kg}`);
+    // Beside the weight for the height: the right weight for this body (its muscle), and the fat to lose to get there.
+    const right = scan ? bodyWeights(sex, weight, lean, scan.fatPercent) : null;
+    for (const key of ["fit-range", "normal-range"]) rows.get(key).hidden = !right;
+    rows.get("fat-control").hidden = !right || right.fatToLose < 0.05;
+    if (right) {
+      set("fit-range", `${loose.format(right.ideal)} ${t.kg}`);
+      set("normal-range", `${span(right.normal[0], right.normal[1], loose)} ${t.kg}`);
+      set("fat-control", `${loose.format(right.fatToLose)} ${t.kg}`);
     }
   }
 

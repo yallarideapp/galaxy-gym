@@ -13,8 +13,8 @@
 .hero h1{font-size:clamp(3.1rem,7.4vw,6.4rem);font-weight:800;line-height:1.24;letter-spacing:-.015em}
 html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
 .hero h1 span{display:block}
-.hero-lede{max-inline-size:30rem;margin-block:1.1rem 1.7rem;color:var(--muted);font-size:clamp(1rem,1.5vw,1.14rem)}
-.hero-place{display:inline-flex;align-items:center;gap:.45rem;min-block-size:2.75rem;margin-block-start:1rem;color:var(--muted);font-size:.94rem}
+.hero h1 + .actions{margin-block-start:clamp(1.4rem,2.6vw,2.1rem)}
+.hero-place{display:flex;inline-size:fit-content;align-items:center;gap:.45rem;min-block-size:2.75rem;margin-block-start:1rem;color:var(--muted);font-size:.94rem}
 .hero-place svg{color:var(--sun)}
 .hero-place:hover{color:var(--text)}
 
@@ -51,7 +51,7 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
 @media (prefers-reduced-motion:no-preference){
   .hero h1 span{animation:hero-rise .7s var(--ease) both;animation-delay:calc(var(--intro) + 40ms)}
   .hero h1 span + span{animation-delay:calc(var(--intro) + 130ms)}
-  .hero-lede,.hero .actions,.hero-place{animation:hex-develop .6s ease-out both;animation-delay:calc(var(--intro) + 330ms)}
+  .hero .actions,.hero-place{animation:hex-develop .6s ease-out both;animation-delay:calc(var(--intro) + 330ms)}
   .hex-rim{animation:hex-on .85s linear both;animation-delay:calc(var(--intro) + var(--i) * 95ms + 120ms)}
   .hex-window,.hex-caption{animation:hex-develop .75s var(--ease) both;animation-delay:calc(var(--intro) + var(--i) * 95ms + 330ms)}
   .hex-galaxy{animation:hex-develop 1.8s ease-out both;animation-delay:calc(var(--intro) + .55s)}
@@ -89,7 +89,7 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
 @keyframes gym-curl{0%,100%{transform:translateY(5px) rotate(20deg)}45%,55%{transform:translateY(-5px) rotate(-22deg)}}
 
 /* On a phone the whole banner fits the first screen: the headline on one line, the buttons, and the full
-   cluster above the dock. --fit is the height left for the cluster; the paragraph moves under it. */
+   cluster above the dock, with the location link (to the directions) under the buttons. --fit is the height left for the cluster. */
 @media (max-width:47rem){
   .hero-layout{grid-template-columns:minmax(0,1fr);gap:.85rem;min-block-size:0;padding-block:.9rem 1.75rem}
   .hero-copy{display:contents}
@@ -98,14 +98,14 @@ html[lang="en"] .hero h1{line-height:1;letter-spacing:-.025em}
   .hero h1 span{display:inline-block}
   .hero .actions{order:1;flex-wrap:nowrap;gap:.5rem}
   .hero .actions .button{flex:0 1 auto;min-inline-size:0;padding-inline:clamp(.7rem,3.6vw,1.35rem);font-size:clamp(.82rem,3.8vw,1rem);white-space:nowrap}
-  .hex-cluster{order:2;--fit:calc(100vh - var(--header) - 14.6rem - env(safe-area-inset-bottom));inline-size:auto;block-size:clamp(13.5rem,min(var(--fit),(100vw - 2.4rem) / .792),31rem)}
-  .hero-lede{order:3;margin-block:.4rem 0}
-  .hero-place{display:none}
+  .hex-cluster{order:2;--fit:calc(100vh - var(--header) - 17.1rem - env(safe-area-inset-bottom));inline-size:auto;block-size:clamp(13.5rem,min(var(--fit),(100vw - 2.4rem) / .792),31rem)}
+  .hero h1 + .actions{margin:0}
+  .hero-place{order:1;min-block-size:2.4rem;margin:-.6rem 0 -.2rem;font-size:.9rem}
   .hex-photo:not(.hex-main) .hex-caption{font-size:.7rem;inset-block-end:13%}
 }
 @supports (block-size:100svh){
   @media (max-width:47rem){
-    .hex-cluster{--fit:calc(100svh - var(--header) - 14.6rem - env(safe-area-inset-bottom))}
+    .hex-cluster{--fit:calc(100svh - var(--header) - 17.1rem - env(safe-area-inset-bottom))}
   }
 }
 

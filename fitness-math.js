@@ -77,13 +77,13 @@ export function scanComposition(sex, weight, { fat = null, muscle = null } = {})
   return { fatPercent, lean: fatFreeMass(weight, fatPercent), source };
 }
 
-// Weight control, InBody style: inside the normal body-fat range the weight stays as it is; above it, the target is
-// the weight at the ideal body fat (15% for men) with the same fat-free mass, and the difference is fat to lose.
-export function targetWeight(sex, weight, lean, fatPercent) {
-  const [, normalTop] = fatBands[sex] ?? fatBands.m;
-  if (fatPercent <= normalTop) return { weight, fat: 0 };
-  const target = lean / (1 - (idealFat[sex] ?? idealFat.m) / 100);
-  return { weight: target, fat: target - weight };
+// The right weight for this body, InBody style, keeping the same fat-free mass: the ideal weight at the ideal body fat
+// (15% for men), the normal range at 10–20%, and the fat to lose when body fat is above that range.
+export function bodyWeights(sex, weight, lean, fatPercent) {
+  const [low, high] = fatBands[sex] ?? fatBands.m;
+  const at = (percent) => lean / (1 - percent / 100);
+  const ideal = at(idealFat[sex] ?? idealFat.m);
+  return { ideal, normal: [at(low), at(high)], fatToLose: fatPercent > high ? weight - ideal : 0 };
 }
 
 // A starting calorie target for the goal. Fat loss never drops below a minimum intake.
