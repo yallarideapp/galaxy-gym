@@ -1,7 +1,6 @@
 import {
-  estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, restingEnergy,
-  restingEnergyFromLeanMass, fatFreeMass, bodyFatLevel, muscleLevel, healthyFatWeightRange,
-  calorieTarget, goalMacros, proteinPerKg, loadBar, waterRange, estimatedMaxHeartRate, heartRateZones,
+  estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, scanComposition, bodyFatLevel, muscleLevel,
+  healthyFatWeightRange, dailyFuel, proteinPerKg, proteinPerLeanKg, dailyWater, loadBar, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
 import { loadLog, recordBody } from "./training-log.js";
 
@@ -107,24 +106,30 @@ function invalidate(key, message) {
 const fill = (template, ...values) => template.replace(/\{(\d+)\}/g, (_, index) => values[index]);
 const checked = (name) => root.querySelector(`input[name="${name}"]:checked`).value;
 
+// Galaxy is a men's gym: every formula uses the men's version.
+const sex = "m";
+
 function update() {
-  const sex = checked("sex");
   const goal = checked("goal");
   const age = read("age");
   const height = read("height");
   const weight = read("weight");
 
-  // Optional reading from a body-composition scan. Body fat sharpens the calorie and protein numbers;
-  // either reading adds context to the BMI.
+  // Optional reading from a body-composition scan, body fat % or muscle % (same rules as the Hydrogen calculator).
+  // Either one gives the fat-free mass, and the calories, protein and water then follow it.
   const fatReading = read("bodyfat", { optional: true });
   let muscleReading = read("muscle", { optional: true });
   if (fatReading !== null && muscleReading !== null && fatReading + muscleReading > 100) {
     invalidate("muscle", t.scanSum);
     muscleReading = null;
   }
-  const lean = fatReading !== null && weight !== null ? fatFreeMass(weight, fatReading) : null;
-  const fatLevel = fatReading !== null && age !== null ? bodyFatLevel(sex, age, fatReading) : null;
-  const muscleBand = muscleReading !== null && age !== null ? muscleLevel(sex, age, muscleReading) : null;
+  const scan = weight !== null ? scanComposition(sex, weight, { fat: fatReading, muscle: muscleReading }) : null;
+  const lean = scan ? scan.lean : null;
+  // A body fat reading, or a total-muscle-mass reading (close to it), is judged on body fat; skeletal muscle on its own bands.
+  const byFat = scan !== null && scan.source !== "skeletal";
+  const fatLevel = byFat && age !== null ? bodyFatLevel(sex, age, scan.fatPercent) : null;
+  const totalMuscle = muscleReading !== null && muscleReading > 50;
+  const muscleBand = muscleReading !== null && !totalMuscle && age !== null ? muscleLevel(sex, age, muscleReading) : null;
 
   // Calories, then the macros built on them.
   const energyReady = age !== null && height !== null && weight !== null;
@@ -135,10 +140,9 @@ function update() {
     set("glance-protein", "—");
   }
   if (energyReady) {
-    const resting = lean !== null ? restingEnergyFromLeanMass(lean) : restingEnergy(sex, weight, height, age);
-    reveal("resting-basis", lean !== null ? fill(t.restingLean, loose.format(lean)) : "");
-    const maintenance = resting * Number(activity.value);
-    const target = calorieTarget(maintenance, goal, sex);
+    const fuel = dailyFuel({ sex, age, height, weight, activity: Number(activity.value), goal, lean });
+    const { resting, maintenance, target } = fuel;
+    reveal("resting-basis", lean !== null ? `${fill(t.restingLean, loose.format(lean))}${scan.source === "skeletal" ? ` ${t.restingRough}` : ""}` : "");
     set("target", whole.format(target.calories));
     set("glance-target", whole.format(target.calories));
     set("target-note", t.targetNotes[goal]);
@@ -146,10 +150,7 @@ function update() {
     set("maintenance", whole.format(maintenance));
     set("resting", whole.format(resting));
 
-    // Above the healthy body-fat range, protein follows the weight this lean mass would have inside the range.
-    const leanBased = lean !== null && fatLevel !== null && fatLevel >= 2;
-    const proteinWeight = leanBased ? Math.min(weight, healthyFatWeightRange(sex, age, lean)[1]) : weight;
-    const grams = goalMacros(target.calories, proteinWeight, goal);
+    const grams = { protein: fuel.protein, carbs: fuel.carbs, fat: fuel.fat };
     const energy = { protein: grams.protein * 4, carbs: grams.carbs * 4, fat: grams.fat * 9 };
     const total = energy.protein + energy.carbs + energy.fat;
     set("glance-protein", whole.format(grams.protein));
@@ -158,16 +159,20 @@ function update() {
       set(name, `${whole.format(grams[name])} ${t.grams}`);
       set(`${name}-share`, `${whole.format(energy[name] / total * 100)}%`);
     }
-    set("protein-rule", `${t.protein}: ${leanBased
-      ? fill(t.proteinRuleLean, plain.format(proteinPerKg[goal]), loose.format(proteinWeight))
+    set("protein-rule", `${t.protein}: ${lean !== null
+      ? fill(t.proteinRuleLean, plain.format(proteinPerLeanKg[goal]), loose.format(lean))
       : fill(t.proteinRule, plain.format(proteinPerKg[goal]))}`);
   }
 
+  // Water: body weight (or fat-free mass, with a reading) plus the training time.
+  const training = read("training", { optional: true }) ?? 0;
   show("water", weight !== null);
   if (weight !== null) {
-    const [low, high] = waterRange(weight);
-    set("water", span(low, high, decimal));
-    set("water-cups", fill(t.waterCups, whole.format(low * 4), whole.format(high * 4)));
+    const litres = dailyWater(weight, training, lean);
+    const cups = Math.round(litres * 4);
+    set("water", decimal.format(litres));
+    set("water-cups", fill(t.waterCups[cups > 10 ? 1 : 0], whole.format(cups)));
+    reveal("water-basis", lean !== null ? fill(t.waterLean, loose.format(lean)) : "");
   }
 
   const bmiReady = height !== null && weight !== null;
@@ -191,7 +196,7 @@ function update() {
       : muscleBand !== null ? t.muscleVerdicts[over ? "over" : "within"][muscleBand] : "";
     reveal("bmi-verdict", verdict);
     outputs.get("bmi-note").hidden = Boolean(verdict);
-    const fitted = lean !== null && fatLevel !== null && fatLevel >= 2;
+    const fitted = fatLevel !== null && fatLevel >= 2;
     rows.get("fit-range").hidden = !fitted;
     if (fitted) {
       const [fitLow, fitTop] = healthyFatWeightRange(sex, age, lean);
@@ -199,33 +204,26 @@ function update() {
     }
   }
 
-  // Tape-measure body fat: the waist box changes meaning with sex, and women add a hip measurement.
-  const female = sex === "f";
-  const waistField = inputs.get("waist").field;
-  waistField.querySelector("[data-label]").textContent = female ? t.waistFemale : t.waistMale;
-  waistField.querySelector("[data-hint]").textContent = female ? t.waistFemaleHint : t.waistMaleHint;
-  const hip = inputs.get("hip");
-  hip.field.hidden = !female;
-  hip.control.disabled = !female;
+  // Tape-measure body fat (the men's method: neck and abdomen).
   const neck = read("neck", { optional: true });
   const waist = read("waist", { optional: true });
-  const hips = female ? read("hip", { optional: true }) : 0;
-  const measured = height !== null && neck !== null && waist !== null && hips !== null;
-  const tapePercent = measured ? estimateBodyFat(sex, height, waist, neck, hips) : null;
+  const measured = height !== null && neck !== null && waist !== null;
+  const tapePercent = measured ? estimateBodyFat(sex, height, waist, neck, 0) : null;
   outputs.get("fat-invalid").hidden = !measured || tapePercent !== null;
-  // The scan reading wins; the tape estimate stands in when there is none.
-  const fatPercent = fatReading ?? tapePercent;
+  // A body fat or muscle-mass reading wins; then the tape estimate; a skeletal-muscle reading gives a rough figure last.
+  const fatSource = byFat ? scan.source : tapePercent !== null ? "tape" : scan ? "skeletal" : null;
+  const fatPercent = fatSource === "tape" ? tapePercent : fatSource ? scan.fatPercent : null;
   show("fat", fatPercent !== null || muscleReading !== null);
   blocks.get("fat").hidden = fatPercent === null;
   if (fatPercent !== null) {
     set("fat-percent", decimal.format(fatPercent));
-    set("fat-source", fatReading !== null ? t.fatFromReading : t.fatFromTape);
+    set("fat-source", t.fatSources[fatSource]);
     const level = age !== null ? bodyFatLevel(sex, age, fatPercent) : null;
     reveal("fat-band", level === null ? "" : t.fatBands[level]);
     outputs.get("fat-band").dataset.level = level === null ? "" : levels[level];
     set("fat-mass", weight === null ? "—" : `${loose.format(weight * fatPercent / 100)} ${t.kg}`);
     set("lean-mass", weight === null ? "—" : `${loose.format(weight * (1 - fatPercent / 100))} ${t.kg}`);
-    const both = fatReading !== null && tapePercent !== null;
+    const both = fatSource !== "tape" && tapePercent !== null;
     rows.get("tape-percent").hidden = !both;
     if (both) set("tape-percent", `${decimal.format(tapePercent)}%`);
   }
@@ -233,6 +231,7 @@ function update() {
   if (muscleReading !== null) {
     reveal("muscle-band", muscleBand === null ? "" : t.muscleBands[muscleBand]);
     outputs.get("muscle-band").dataset.level = muscleBand === null ? "" : ["over", "ok", "ok", "ok"][muscleBand];
+    reveal("muscle-kind", totalMuscle ? t.muscleTotal : "");
     set("muscle-percent", `${loose.format(muscleReading)}%`);
     set("muscle-mass", weight === null ? "—" : `${loose.format(weight * muscleReading / 100)} ${t.kg}`);
   }
@@ -316,7 +315,7 @@ root.querySelector("form").addEventListener("submit", (event) => event.preventDe
 // "Save my details to my account": only this button stores anything from the calculator.
 const saveStatus = root.querySelector("[data-save-status]");
 root.querySelector("[data-save-weight]").addEventListener("click", () => {
-  const details = { sex: checked("sex"), age: read("age"), height: read("height"), weight: read("weight"), activity: Number(activity.value), goal: checked("goal") };
+  const details = { sex, age: read("age"), height: read("height"), weight: read("weight"), activity: Number(activity.value), goal: checked("goal") };
   const missing = ["age", "height", "weight"].find((key) => details[key] === null);
   if (missing) {
     inputs.get(missing).control.focus();
@@ -347,7 +346,6 @@ function fillSaved() {
       paintSlider(slider);
     }
   }
-  root.querySelector(`input[name="sex"][value="${body.sex}"]`).checked = true;
   root.querySelector(`input[name="goal"][value="${body.goal}"]`).checked = true;
   activity.value = String(body.activity);
   root.querySelector("[data-saved-note]").hidden = false;

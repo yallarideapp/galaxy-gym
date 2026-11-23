@@ -4,9 +4,7 @@ import {
   limits, loadLog, update, clearLog, sanitize, newId, today, addDays, fromKey, validDay, membershipEnd,
   currentMembership, membershipState, sessionsBetween, daysBetween, monthSummary,
 } from "./training-log.js";
-import {
-  restingEnergy, restingEnergyFromLeanMass, fatFreeMass, calorieTarget, goalMacros, bodyMassIndex, bodyFatLevel, healthyFatWeightRange,
-} from "./fitness-math.js";
+import { scanComposition, dailyFuel, bodyMassIndex } from "./fitness-math.js";
 
 const strings = JSON.parse(document.querySelector("#workout-copy").textContent);
 const arabic = document.documentElement.lang === "ar";
@@ -93,14 +91,13 @@ const nameOpen = find("[data-name-open]");
 const nameForm = find("[data-name-form]");
 const glance = new Map(Array.from(document.querySelectorAll("[data-glance]"), (node) => [node.dataset.glance, node]));
 
-// The member's daily numbers from what they saved in the calculator (same rules as the calculator).
+// The member's daily numbers from what they saved in the calculator (same rules as the calculator: a body fat or muscle
+// reading gives the fat-free mass the calories and protein follow; men's formulas, as Galaxy is a men's gym).
 function bodyNumbers(body) {
-  const lean = typeof body.fat === "number" ? fatFreeMass(body.weight, body.fat) : null;
-  const resting = lean !== null ? restingEnergyFromLeanMass(lean) : restingEnergy(body.sex, body.weight, body.height, body.age);
-  const target = calorieTarget(resting * body.activity, body.goal, body.sex).calories;
-  const fatLevel = lean !== null ? bodyFatLevel(body.sex, body.age, body.fat) : null;
-  const proteinWeight = lean !== null && fatLevel >= 2 ? Math.min(body.weight, healthyFatWeightRange(body.sex, body.age, lean)[1]) : body.weight;
-  return { calories: target, protein: goalMacros(target, proteinWeight, body.goal).protein, bmi: bodyMassIndex(body.weight, body.height) };
+  const sex = "m";
+  const scan = scanComposition(sex, body.weight, { fat: body.fat ?? null, muscle: body.muscle ?? null });
+  const fuel = dailyFuel({ sex, age: body.age, height: body.height, weight: body.weight, activity: body.activity, goal: body.goal, lean: scan ? scan.lean : null });
+  return { calories: fuel.target.calories, protein: fuel.protein, bmi: bodyMassIndex(body.weight, body.height) };
 }
 
 function renderHeader() {

@@ -33,7 +33,8 @@ export function restingEnergy(sex, weight, height, age) {
   return 10 * weight + 6.25 * height - 5 * age + (sex === "m" ? 5 : -161);
 }
 
-// Cunningham equation (1991): resting energy from fat-free mass, for when a body-fat reading is known.
+// Katch–McArdle equation (370 + 21.6 × fat-free mass, from Cunningham 1991): resting energy when a body-scan
+// reading gives the fat-free mass.
 export function restingEnergyFromLeanMass(leanMass) {
   return 370 + 21.6 * leanMass;
 }
@@ -60,6 +61,26 @@ export function muscleLevel(sex, age, percent) {
   return levelOf(percent, muscleBands[sex][ageGroup(age)]);
 }
 
+// A body-scan reading turned into body fat % and fat-free mass, read the same way as the Hydrogen calculator.
+// Body fat % is the direct reading and wins when both are given. Muscle % comes in two kinds: Omron-type scales give
+// skeletal muscle (about 25–45%; they show 50% at most), while Tanita, Xiaomi, Renpho and similar give "muscle mass",
+// all lean tissue except bone (about 60–85%). So a muscle reading above 50% is muscle mass, and with bone (about 5% of
+// lean mass) it is the fat-free mass. Skeletal muscle is looser: a straight line that puts Omron's "normal" muscle at
+// an average build, so the result is rough.
+// Returns null without a usable reading; source is "fat", "muscleMass" or "skeletal".
+export function scanComposition(sex, weight, { fat = null, muscle = null } = {}) {
+  let fatPercent;
+  let source;
+  if (fat !== null) [fatPercent, source] = [fat, "fat"];
+  else if (muscle !== null && muscle > 50) [fatPercent, source] = [100 - muscle / 0.95, "muscleMass"];
+  else if (muscle !== null) {
+    const leanShare = sex === "m" ? (muscle + 19) / 0.72 : (muscle + 5.5) / 0.47;
+    [fatPercent, source] = [100 - Math.min(Math.max(leanShare, 45), 96), "skeletal"];
+  } else return null;
+  if (!(fatPercent > 0 && fatPercent < 100)) return null;
+  return { fatPercent, lean: fatFreeMass(weight, fatPercent), source };
+}
+
 // The body weights at which this fat-free mass would sit at the bottom and the top of the healthy body-fat range.
 export function healthyFatWeightRange(sex, age, leanMass) {
   const [low, healthy] = fatBands[sex][ageGroup(age)];
@@ -75,15 +96,22 @@ export function calorieTarget(maintenance, goal, sex) {
   return { calories: Math.min(calories, maintenance), floored: maintenance - 500 < minimum };
 }
 
-export const proteinPerKg = { lose: 2, keep: 1.6, gain: 1.8 };
+// Protein per kg of body weight, or per kg of fat-free mass when a scan reading gives it (for an average build the two
+// land close together). Same figures as the Hydrogen calculator.
+export const proteinPerKg = { lose: 1.8, keep: 1.6, gain: 1.8 };
+export const proteinPerLeanKg = { lose: 2.4, keep: 2.1, gain: 2.4 };
 
-// Protein from body weight (or the reference weight passed in its place), fat as a quarter of calories,
-// carbohydrate as the remainder.
-export function goalMacros(calories, weight, goal) {
-  const protein = weight * (proteinPerKg[goal] ?? proteinPerKg.keep);
-  const fat = calories * 0.25 / 9;
-  const carbs = Math.max((calories - protein * 4 - fat * 9) / 4, 0);
-  return { protein, carbs, fat };
+// The day's fuel: resting and maintenance calories, the target for the goal, and the macros on it (protein as above,
+// fat 27% of calories, carbohydrate the rest). With fat-free mass the resting calories come from it (Katch–McArdle),
+// otherwise from weight, height and age (Mifflin–St Jeor).
+export function dailyFuel({ sex, age, height, weight, activity, goal, lean = null }) {
+  const resting = lean !== null ? restingEnergyFromLeanMass(lean) : restingEnergy(sex, weight, height, age);
+  const maintenance = resting * activity;
+  const target = calorieTarget(maintenance, goal, sex);
+  const protein = lean !== null ? lean * (proteinPerLeanKg[goal] ?? proteinPerLeanKg.keep) : weight * (proteinPerKg[goal] ?? proteinPerKg.keep);
+  const fat = target.calories * 0.27 / 9;
+  const carbs = Math.max((target.calories - protein * 4 - fat * 9) / 4, 0);
+  return { resting, maintenance, target, protein, carbs, fat };
 }
 
 export function macroGrams(calories, protein, fat) {
@@ -95,9 +123,12 @@ export function macroGrams(calories, protein, fat) {
   };
 }
 
-// Rule of thumb: 30–35 ml per kg of body weight a day, in litres.
-export function waterRange(weight) {
-  return [weight * 0.03, weight * 0.035];
+// Water a day, in litres: about 33 ml per kg of body weight, plus 350 ml for every 30 minutes of training (as at
+// Hydrogen). With a scan reading it follows fat-free mass instead, since the body's water sits in lean tissue (about
+// 73% water) far more than in fat: 41 ml per kg of fat-free mass, the same amount for a man at 20% body fat.
+export function dailyWater(weight, trainingMinutes = 0, lean = null) {
+  const base = lean !== null ? lean * 0.041 : weight * 0.033;
+  return base + (trainingMinutes / 30) * 0.35;
 }
 
 // Tanaka equation.

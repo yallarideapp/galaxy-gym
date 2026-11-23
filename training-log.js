@@ -5,7 +5,7 @@ const storageKey = "galaxy-gym-log-v1";
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
 export const limits = {
-  name: 60, note: 120, person: 40, minutes: [1, 600], weight: [20, 400], fat: [3, 60], muscle: [10, 60], paid: [0, 5000],
+  name: 60, note: 120, person: 40, minutes: [1, 600], weight: [20, 400], fat: [3, 60], muscle: [10, 90], paid: [0, 5000],
 };
 export const planMonths = [1, 3, 6, 12];
 export const activityLevels = [1.2, 1.375, 1.55, 1.725];
