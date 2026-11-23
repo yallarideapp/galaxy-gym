@@ -285,8 +285,11 @@
     if (!plans.on || !items.length) { slot.hidden = true; slot.replaceChildren(); return; }
     const best = bestValue(items);
     const heading = slot.dataset.plans === "h1" ? "h1" : "h2";
-    slot.replaceChildren(
-      el("div", { class: "plans-head" }, el(heading, { id: "plans-title" }, pick(plans.title) || w.plansTitle), pick(plans.note) ? el("p", {}, pick(plans.note)) : null),
+    // The home page's short cards: "Join" opens the form on the prices page (the header button links there on every page).
+    const compact = slot.dataset.plans === "compact";
+    const pricesHref = document.querySelector(".header-join")?.getAttribute("href") || (ar ? "/prices/" : "/en/prices/");
+    slot.replaceChildren(...[
+      compact ? null : el("div", { class: "plans-head" }, el(heading, { id: "plans-title" }, pick(plans.title) || w.plansTitle), pick(plans.note) ? el("p", {}, pick(plans.note)) : null),
       el("ul", { class: "plans-grid", role: "list" }, items.map((plan) => {
         const offer = plan.offer && plan.offer < plan.price ? plan.offer : null;
         const paid = offer || plan.price;
@@ -295,6 +298,17 @@
         const perks = pick(plan.perks).split("\n").map((line) => line.trim()).filter(Boolean);
         const badge = plan.popular ? w.popular : offer ? w.offer : plan.id === best ? w.best : "";
         const action = (kind, label, text) => el("a", { class: `button${kind === "renew" ? " button-quiet" : ""}`, href: whatsappLink(fill(text, { n: name })), target: "_blank", rel: "noopener noreferrer", "data-plan-action": kind, "data-plan": plan.id }, label);
+        if (compact) {
+          return el("li", { class: `plan is-compact${plan.popular ? " is-popular" : ""}${offer ? " has-offer" : ""}${plan.months ? "" : " is-pass"}`, "data-plan-id": plan.id },
+            el("div", { class: "plan-ribbon" }, plan.code ? el("span", { class: "plan-code" }, fill(w.code, { c: plan.code })) : null, el("h3", {}, name)),
+            badge ? el("span", { class: "plan-badge" }, badge) : null,
+            length && length !== name ? el("p", { class: "plan-length" }, length) : null,
+            el("div", { class: "plan-cost" },
+              el("p", { class: "plan-price" }, el("strong", {}, number.format(paid)), el("span", {}, ` ${w.currency}`), offer ? el("s", {}, fill(w.instead, { p: price(plan.price) })) : null),
+              plan.months > 1 ? el("p", { class: "plan-month" }, fill(w.perMonth, { p: price(Math.round((paid / plan.months) * 10) / 10) })) : null),
+            plan.renewal ? el("p", { class: "plan-renew" }, fill(w.renew, { p: price(plan.renewal) })) : null,
+            el("div", { class: "plan-action" }, el("a", { class: "button", href: `${pricesHref}#join-${plan.id}`, "data-plan": plan.id }, w.join)));
+        }
         return el("li", { class: `plan${plan.popular ? " is-popular" : ""}${offer ? " has-offer" : ""}${plan.months ? "" : " is-pass"}`, "data-plan-id": plan.id },
           el("div", { class: "plan-ribbon" }, plan.code ? el("span", { class: "plan-code" }, fill(w.code, { c: plan.code })) : null, el("h3", {}, name)),
           badge ? el("span", { class: "plan-badge" }, badge) : null,
@@ -308,7 +322,7 @@
             plan.freezes ? el("span", { class: "plan-pips", "aria-hidden": "true" }, Array.from({ length: Math.min(plan.freezes, 6) }, () => el("i"))) : null) : null,
           perks.length ? el("ul", { class: "plan-perks" }, perks.map((perk) => el("li", {}, perk))) : null,
           el("div", { class: "plan-action" }, action("join", w.join, w.joinText), plan.renewal ? action("renew", w.renewAction, w.renewText) : null));
-      })));
+      }))].filter(Boolean));
     slot.hidden = false;
   }
   // The amount for a membership of this length (a renewal uses the renewal price when there is one).

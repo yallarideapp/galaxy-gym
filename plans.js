@@ -144,12 +144,16 @@ if (dialog && form && j && G) {
   form.querySelector("[data-join-close]").addEventListener("click", () => dialog.close());
   dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
   dialog.addEventListener("close", () => {
-    if (location.hash === "#renew" || location.hash === "#join") history.replaceState(history.state, "", location.pathname + location.search);
+    if (linked()) history.replaceState(history.state, "", location.pathname + location.search);
     opener?.focus();
   });
 
-  // The account page's "Renew" link lands here with #renew (#join works the same way).
-  const fromHash = () => { if ((location.hash === "#renew" || location.hash === "#join") && !dialog.open) open(location.hash.slice(1), null, null); };
+  // Links from other pages open the form: #renew from the account page, #join-<plan> from the home page's cards.
+  const linked = () => location.hash.match(/^#(join|renew)(?:-([a-z0-9]{1,20}))?$/);
+  const fromHash = () => {
+    const match = linked();
+    if (match && !dialog.open) open(match[1], plans().some((plan) => plan.id === match[2]) ? match[2] : null, null);
+  };
   fromHash();
   window.addEventListener("hashchange", fromHash);
 }
