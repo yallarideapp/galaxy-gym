@@ -56,24 +56,37 @@ export function bodyFatLevel(sex, age, percent) {
   return levelOf(percent, fatBands[sex][ageGroup(age)]);
 }
 
-// 0 low, 1 normal, 2 high, 3 very high.
+// Muscle % means different things on different scales, so a reading is read by where it falls:
+// - up to 45%: skeletal muscle as Omron-type scales give it (normal for men about 33–39%);
+// - above 45% and up to 65%: the skeletal muscle rate of Renpho, Fitdays and similar apps (normal for men about 49–59%);
+// - above 65%: muscle mass, all the muscle (Tanita, Xiaomi and similar; about 70–85% for men).
+export function muscleReadingKind(percent) {
+  return percent > 65 ? "muscleMass" : percent > 45 ? "skeletalRate" : "skeletal";
+}
+const skeletalRateBands = [49, 59, 63];
+
+// 0 low, 1 normal, 2 high, 3 very high; null for a muscle-mass reading, which is judged through body fat.
 export function muscleLevel(sex, age, percent) {
-  return levelOf(percent, muscleBands[sex][ageGroup(age)]);
+  const kind = muscleReadingKind(percent);
+  if (kind === "muscleMass") return null;
+  return levelOf(percent, kind === "skeletalRate" ? skeletalRateBands : muscleBands[sex][ageGroup(age)]);
 }
 
-// A body-scan reading turned into body fat % and fat-free mass, read the same way as the Hydrogen calculator.
-// Body fat % is the direct reading and wins when both are given. Muscle % comes in two kinds: Omron-type scales give
-// skeletal muscle (about 25–45%; they show 50% at most), while Tanita, Xiaomi, Renpho and similar give "muscle mass",
-// all lean tissue except bone (about 60–85%). So a muscle reading above 50% is muscle mass, and with bone (about 5% of
-// lean mass) it is the fat-free mass. Skeletal muscle is looser: a straight line that puts Omron's "normal" muscle at
-// an average build, so the result is rough.
-// Returns null without a usable reading; source is "fat", "muscleMass" or "skeletal".
+// A body-scan reading turned into body fat % and fat-free mass (the Hydrogen calculator's rules, with the skeletal
+// muscle rate of Renpho-type apps added). Body fat % is the direct reading and wins when both are given.
+// - Muscle mass (above 65%) plus bone (about 5% of lean mass) is the fat-free mass.
+// - Skeletal muscle is looser: a straight line that puts each kind of scale's "normal" range at an average build
+//   (Omron: (muscle + 19) ÷ 0.72; Renpho-type: 77% fat-free at 49%, one point more for each point of muscle),
+//   so the result is rough.
+// Returns null without a usable reading; source is "fat", "muscleMass", "skeletalRate" or "skeletal".
 export function scanComposition(sex, weight, { fat = null, muscle = null } = {}) {
   let fatPercent;
   let source;
+  const kind = muscle !== null ? muscleReadingKind(muscle) : null;
   if (fat !== null) [fatPercent, source] = [fat, "fat"];
-  else if (muscle !== null && muscle > 50) [fatPercent, source] = [100 - muscle / 0.95, "muscleMass"];
-  else if (muscle !== null) {
+  else if (kind === "muscleMass") [fatPercent, source] = [100 - muscle / 0.95, "muscleMass"];
+  else if (kind === "skeletalRate") [fatPercent, source] = [100 - Math.min(Math.max(77 + (muscle - 49), 60), 95), "skeletalRate"];
+  else if (kind === "skeletal") {
     const leanShare = sex === "m" ? (muscle + 19) / 0.72 : (muscle + 5.5) / 0.47;
     [fatPercent, source] = [100 - Math.min(Math.max(leanShare, 45), 96), "skeletal"];
   } else return null;

@@ -1,5 +1,5 @@
 import {
-  estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, scanComposition, bodyFatLevel, muscleLevel,
+  estimateOneRepMax, estimateBodyFat, bodyMassIndex, referenceWeightRange, scanComposition, bodyFatLevel, muscleLevel, muscleReadingKind,
   healthyFatWeightRange, dailyFuel, proteinPerKg, proteinPerLeanKg, dailyWater, loadBar, estimatedMaxHeartRate, heartRateZones,
 } from "./fitness-math.js";
 import { loadLog, recordBody } from "./training-log.js";
@@ -125,11 +125,13 @@ function update() {
   }
   const scan = weight !== null ? scanComposition(sex, weight, { fat: fatReading, muscle: muscleReading }) : null;
   const lean = scan ? scan.lean : null;
-  // A body fat reading, or a total-muscle-mass reading (close to it), is judged on body fat; skeletal muscle on its own bands.
-  const byFat = scan !== null && scan.source !== "skeletal";
+  // A body fat reading, or a muscle-mass reading (close to it), is judged on body fat; skeletal muscle on its own bands,
+  // and only a body-fat-based reading gives "a good weight for you" (a skeletal-muscle estimate is too rough for that).
+  const rough = scan !== null && scan.source.startsWith("skeletal");
+  const byFat = scan !== null && !rough;
   const fatLevel = byFat && age !== null ? bodyFatLevel(sex, age, scan.fatPercent) : null;
-  const totalMuscle = muscleReading !== null && muscleReading > 50;
-  const muscleBand = muscleReading !== null && !totalMuscle && age !== null ? muscleLevel(sex, age, muscleReading) : null;
+  const muscleKind = muscleReading !== null ? muscleReadingKind(muscleReading) : null;
+  const muscleBand = muscleReading !== null && age !== null ? muscleLevel(sex, age, muscleReading) : null;
 
   // Calories, then the macros built on them.
   const energyReady = age !== null && height !== null && weight !== null;
@@ -142,7 +144,7 @@ function update() {
   if (energyReady) {
     const fuel = dailyFuel({ sex, age, height, weight, activity: Number(activity.value), goal, lean });
     const { resting, maintenance, target } = fuel;
-    reveal("resting-basis", lean !== null ? `${fill(t.restingLean, loose.format(lean))}${scan.source === "skeletal" ? ` ${t.restingRough}` : ""}` : "");
+    reveal("resting-basis", lean !== null ? `${fill(t.restingLean, loose.format(lean))}${rough ? ` ${t.restingRough}` : ""}` : "");
     set("target", whole.format(target.calories));
     set("glance-target", whole.format(target.calories));
     set("target-note", t.targetNotes[goal]);
@@ -231,7 +233,7 @@ function update() {
   if (muscleReading !== null) {
     reveal("muscle-band", muscleBand === null ? "" : t.muscleBands[muscleBand]);
     outputs.get("muscle-band").dataset.level = muscleBand === null ? "" : ["over", "ok", "ok", "ok"][muscleBand];
-    reveal("muscle-kind", totalMuscle ? t.muscleTotal : "");
+    reveal("muscle-kind", t.muscleKinds[muscleKind]);
     set("muscle-percent", `${loose.format(muscleReading)}%`);
     set("muscle-mass", weight === null ? "—" : `${loose.format(weight * muscleReading / 100)} ${t.kg}`);
   }
